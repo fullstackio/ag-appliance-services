@@ -24,7 +24,7 @@ export const CodeIcon = (p: IconProps) => (
   </svg>
 );
 
-/** Chevrons pointing in/out — used by service + skill "Frontend" icon. */
+/** Chevrons pointing in/out. */
 export const CodeChevronIcon = (p: IconProps) => (
   <svg {...base} strokeWidth={1.6} {...p}>
     <polyline points="8 7 3 12 8 17" />
@@ -81,6 +81,63 @@ export const CmsIcon = (p: IconProps) => (
 export const WrenchIcon = (p: IconProps) => (
   <svg {...base} strokeWidth={1.7} {...p}>
     <path d="M14.7 6.3a4 4 0 0 0-5.6 5.6l-6 6a1 1 0 0 0 1.4 1.4l6-6a4 4 0 0 0 5.6-5.6l-2.1 2.1-2.1-.7-.7-2.1z" />
+  </svg>
+);
+
+/** Snowflake — used for AC / cooling / refrigeration. */
+export const SnowflakeIcon = (p: IconProps) => (
+  <svg {...base} strokeWidth={1.5} {...p}>
+    <line x1="12" y1="2" x2="12" y2="22" />
+    <line x1="2" y1="12" x2="22" y2="12" />
+    <line x1="5.5" y1="5.5" x2="18.5" y2="18.5" />
+    <line x1="18.5" y1="5.5" x2="5.5" y2="18.5" />
+    <path d="M12 2l-2.5 2.5M12 2l2.5 2.5M12 22l-2.5-2.5M12 22l2.5-2.5" />
+    <path d="M2 12l2.5-2.5M2 12l2.5 2.5M22 12l-2.5-2.5M22 12l-2.5 2.5" />
+  </svg>
+);
+
+/** Refrigerator — two-door fridge with handles. */
+export const FridgeIcon = (p: IconProps) => (
+  <svg {...base} strokeWidth={1.5} {...p}>
+    <rect x="6" y="2" width="12" height="20" rx="2" />
+    <line x1="6" y1="9" x2="18" y2="9" />
+    <line x1="9" y1="5" x2="9" y2="7" />
+    <line x1="9" y1="12" x2="9" y2="16" />
+  </svg>
+);
+
+/** Washing machine — cabinet with a round drum. */
+export const WashingMachineIcon = (p: IconProps) => (
+  <svg {...base} strokeWidth={1.5} {...p}>
+    <rect x="4" y="2" width="16" height="20" rx="2" />
+    <circle cx="12" cy="13" r="5" />
+    <circle cx="12" cy="13" r="2" />
+    <line x1="7" y1="6" x2="9" y2="6" />
+    <line x1="15" y1="6" x2="17" y2="6" />
+  </svg>
+);
+
+/** Electric plug — used for power / kitchen appliances. */
+export const PlugIcon = (p: IconProps) => (
+  <svg {...base} strokeWidth={1.6} {...p}>
+    <path d="M9 2v6M15 2v6" />
+    <path d="M6 8h12v3a6 6 0 0 1-12 0z" />
+    <line x1="12" y1="17" x2="12" y2="22" />
+  </svg>
+);
+
+/** Gear / cog — used for maintenance & tools. */
+export const GearIcon = (p: IconProps) => (
+  <svg {...base} strokeWidth={1.5} {...p}>
+    <circle cx="12" cy="12" r="3" />
+    <path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M19.1 4.9L17 7M7 17l-2.1 2.1" />
+  </svg>
+);
+
+/** Thermometer — used for temperature / diagnostics. */
+export const ThermometerIcon = (p: IconProps) => (
+  <svg {...base} strokeWidth={1.6} {...p}>
+    <path d="M14 14.76V5a2 2 0 0 0-4 0v9.76a4 4 0 1 0 4 0z" />
   </svg>
 );
 

@@ -45,11 +45,11 @@ export function Testimonials() {
     <section className="block plain testimonials" id="testimonials" data-aos="fade-up" suppressHydrationWarning>
       <p className="eyebrow center">WHAT PEOPLE ARE SAYING</p>
       <blockquote className="testimonials__quote">
-        &ldquo;Avijit fixed our AC the same day and later built the booking app
-        for my business — <span className="accent">one person I fully trust</span>{" "}
-        for the screen and the spanner&rdquo;
+        &ldquo;Lorem ipsum dolor sit amet, consectetur adipiscing elit —{" "}
+        <span className="accent">sed do eiusmod tempor</span> incididunt ut
+        labore et dolore magna aliqua&rdquo;
         <cite>
-          Rahul Sen <span>Small Business Owner</span>
+          Rahul Sen <span>Homeowner</span>
         </cite>
       </blockquote>
 

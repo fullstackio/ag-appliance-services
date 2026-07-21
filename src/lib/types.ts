@@ -8,7 +8,7 @@ export interface NavLink {
 export interface ServiceCard {
   title: string;
   description: string;
-  icon: "code" | "cms" | "bolt";
+  icon: "cooling" | "laundry" | "kitchen";
 }
 
 export interface ExperienceItem {
@@ -21,7 +21,7 @@ export interface ExperienceItem {
 
 export interface SkillGroup {
   title: string;
-  icon: "code" | "database" | "tools";
+  icon: "cooling" | "power" | "tools";
   tags: string[];
 }
 

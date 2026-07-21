@@ -5,6 +5,7 @@ import Link from "next/link";
 import { cn } from "@/lib/utils";
 import type { NavLink } from "@/lib/types";
 import { ThemeToggle } from "@/components/layout/theme-toggle";
+import { useHireMe } from "@/components/layout/hire-me-drawer";
 import {
   Sheet,
   SheetTrigger,
@@ -16,7 +17,6 @@ import {
 interface SiteHeaderProps {
   links: NavLink[];
   brandHref: string;
-  ctaHref: string;
   /** Force the active link on non-scrollspy pages (e.g. "/blog"). */
   activeHref?: string;
   /** Enable in-page scrollspy (home page only). */
@@ -26,10 +26,10 @@ interface SiteHeaderProps {
 export function SiteHeader({
   links,
   brandHref,
-  ctaHref,
   activeHref,
   scrollSpy = false,
 }: SiteHeaderProps) {
+  const { open: openHireMe } = useHireMe();
   const [stuck, setStuck] = useState(false);
   const [open, setOpen] = useState(false);
   const [current, setCurrent] = useState<string>(activeHref ?? "");
@@ -59,8 +59,6 @@ export function SiteHeader({
     return () => window.removeEventListener("scroll", onScroll);
   }, [links, scrollSpy]);
 
-  const isContact = (label: string) => label === "Contact" || label === "Contacts";
-
   return (
     <header className={cn("site-header", stuck && "is-stuck")} id="siteHeader">
       <div className="site-header__inner">
@@ -77,7 +75,7 @@ export function SiteHeader({
               return (
                 <li key={link.href}>
                   <Link
-                    className={cn(!isContact(link.label) && "has-caret", isActive && "is-active")}
+                    className={cn(isActive && "is-active")}
                     href={link.href}
                     aria-current={isActive ? "page" : undefined}
                   >
@@ -92,9 +90,13 @@ export function SiteHeader({
         <ThemeToggle />
 
         <span className="animated-border-box header__cta-box">
-          <Link className="btn btn--pill header__cta" href={ctaHref}>
+          <button
+            type="button"
+            className="btn btn--pill header__cta"
+            onClick={openHireMe}
+          >
             Hire Me
-          </Link>
+          </button>
         </span>
 
         {/* Mobile navigation — shadcn Sheet (side drawer). */}
@@ -136,12 +138,16 @@ export function SiteHeader({
                   );
                 })}
               </ul>
-              <SheetClose
-                nativeButton={false}
-                render={<Link className="btn btn--pill main-nav__cta" href={ctaHref} />}
+              <button
+                type="button"
+                className="btn btn--pill main-nav__cta"
+                onClick={() => {
+                  setOpen(false);
+                  openHireMe();
+                }}
               >
                 Hire Me <span aria-hidden="true">↗</span>
-              </SheetClose>
+              </button>
             </nav>
           </SheetContent>
         </Sheet>

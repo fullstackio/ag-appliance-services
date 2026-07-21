@@ -1,10 +1,10 @@
 import { AnimHead } from "@/components/common/anim-head";
-import { CodeChevronIcon, DatabaseIcon, WrenchIcon } from "@/components/icons";
+import { SnowflakeIcon, BoltIcon, WrenchIcon } from "@/components/icons";
 import { skillGroups, relocateLocations } from "@/lib/data/portfolio";
 
 const iconMap = {
-  code: CodeChevronIcon,
-  database: DatabaseIcon,
+  cooling: SnowflakeIcon,
+  power: BoltIcon,
   tools: WrenchIcon,
 } as const;
 
@@ -18,7 +18,7 @@ export function Skills() {
           className="skills__title"
           lines={[
             <>
-              THE STACK <span className="accent">I BUILD WITH</span>
+              WHAT I <span className="accent">SERVICE &amp; FIX</span>
             </>,
           ]}
         />

@@ -28,19 +28,19 @@ const ibmPlexMono = IBM_Plex_Mono({
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://avijitghosh.example"),
-  title: "Avijit Ghosh — Sr. Software Engineer | WordPress & Frontend Developer",
+  title: "Avijit Ghosh — Home Appliance Repair & Service Technician",
   description:
-    "Avijit Ghosh — Sr. Software Engineer with 8+ years building scalable, high-performance websites and enterprise apps. Expert in React, Next.js, WordPress VIP/Multisite, Core Web Vitals, APIs and pixel-perfect UI.",
+    "Avijit Ghosh — trusted home appliance repair technician with 8+ years servicing AC, refrigerators, washing machines, microwaves and kitchen appliances. Fast, reliable, same-day service.",
   keywords: [
-    "Frontend Engineer",
-    "WordPress Developer",
-    "React Developer",
-    "Next.js",
-    "Redux",
-    "TypeScript",
-    "WordPress VIP",
-    "Core Web Vitals",
-    "Software Engineer",
+    "Appliance Repair",
+    "AC Repair",
+    "Refrigerator Repair",
+    "Washing Machine Repair",
+    "Microwave Repair",
+    "Home Appliance Service",
+    "Kitchen Appliance Repair",
+    "Service Technician",
+    "Kolkata",
     "Avijit Ghosh",
   ],
   authors: [{ name: "Avijit Ghosh" }],
@@ -48,20 +48,18 @@ export const metadata: Metadata = {
   icons: { icon: "/assets/images/favicon.svg" },
   openGraph: {
     type: "website",
-    title:
-      "Avijit Ghosh — Sr. Software Engineer | WordPress & Frontend Developer",
+    title: "Avijit Ghosh — Home Appliance Repair & Service Technician",
     description:
-      "8+ years building scalable, high-performance websites and enterprise applications with React, Next.js and WordPress.",
+      "8+ years repairing and servicing home appliances — AC, refrigerators, washing machines, microwaves and kitchen appliances.",
     images: ["/assets/images/og-cover.svg"],
     url: "https://avijitghosh.example/",
     siteName: "Avijit Ghosh",
   },
   twitter: {
     card: "summary_large_image",
-    title:
-      "Avijit Ghosh — Sr. Software Engineer | WordPress & Frontend Developer",
+    title: "Avijit Ghosh — Home Appliance Repair & Service Technician",
     description:
-      "8+ years of frontend & WordPress engineering — React, Next.js, Core Web Vitals and pixel-perfect UI.",
+      "8+ years of home appliance repair — AC, refrigerators, washing machines and kitchen appliances. Reliable, same-day service.",
     images: ["/assets/images/og-cover.svg"],
   },
 };

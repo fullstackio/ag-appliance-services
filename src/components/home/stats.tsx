@@ -27,7 +27,7 @@ export function Stats() {
         <AnimHead
           as="h2"
           className="stats__title"
-          lines={["ENGINEERING", "FOR A FASTER", "WEB"]}
+          lines={["TRUSTED CARE", "FOR EVERY", "APPLIANCE"]}
         />
         <div className="stats__right">
           {stats.map((stat) => (

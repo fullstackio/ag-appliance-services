@@ -10,26 +10,25 @@ export function About() {
           className="about__title"
           lines={[
             <>
-              SCALABLE <span className="accent">FRONTEND</span>
+              TRUSTED <span className="accent">APPLIANCE</span>
             </>,
             <>
-              <span className="accent">ENGINEERING</span> &amp; WORDPRESS
+              <span className="accent">REPAIR</span> &amp; SERVICE
             </>,
-            "FOR HIGH-TRAFFIC SYSTEMS",
+            "FOR EVERY HOME",
           ]}
         />
         <div className="about__copy">
           <p>
-            I&apos;m Avijit Ghosh, a Sr. Software Engineer with 8+ years building
-            scalable, high-performance websites and enterprise applications. I
-            bring strong expertise in WordPress VIP, Multisite and custom
-            theme/plugin development.
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
+            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
+            ad minim veniam, quis nostrud exercitation ullamco laboris.
           </p>
           <p className="muted">
-            Proven ability to optimize Core Web Vitals, integrate APIs and
-            deliver pixel-perfect UI with modern front-end technologies — React,
-            Next.js, Redux and TypeScript. Immediate joiner with a valid passport
-            and exposure to international projects.
+            Duis aute irure dolor in reprehenderit in voluptate velit esse
+            cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
+            cupidatat non proident, sunt in culpa qui officia deserunt mollit
+            anim id est laborum.
           </p>
         </div>
       </div>

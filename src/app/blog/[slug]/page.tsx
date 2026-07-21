@@ -40,7 +40,7 @@ export default async function BlogDetailsPage({ params }: PageProps) {
 
   return (
     <>
-      <SiteHeader links={pageNav} brandHref="/" ctaHref="/#contact" activeHref="/blog" />
+      <SiteHeader links={pageNav} brandHref="/" activeHref="/blog" />
       <main id="main">
         <article>
           <header
@@ -86,7 +86,7 @@ export default async function BlogDetailsPage({ params }: PageProps) {
                 <div>
                   <p className="author-bar__name">{post.author}</p>
                   <p className="author-bar__role">
-                    Fullstack Engineer &amp; Service Pro
+                    Home Appliance Repair &amp; Service Pro
                   </p>
                 </div>
               </div>

@@ -30,8 +30,8 @@ export function Projects() {
             ]}
           />
           <p className="muted projects__head-copy">
-            A slice of recent builds across e-commerce, health, ERP and insurance
-            — from WordPress &amp; WooCommerce to React and Angular.
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit sed do
+            eiusmod tempor incididunt ut labore et dolore magna aliqua ut enim.
           </p>
         </div>
       </div>

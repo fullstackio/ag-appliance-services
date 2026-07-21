@@ -67,8 +67,9 @@ export function Workflow() {
           <p className="eyebrow">HOW I WORK</p>
           <AnimHead as="h2" className="section-title" lines={["MY WORKFLOW"]} />
           <p className="muted">
-            A clear, repeatable process for every engagement — from discovery to
-            delivery — so each build ships dependable, performant and on time.
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit sed do
+            eiusmod tempor incididunt ut labore et dolore magna aliqua ut enim
+            ad minim veniam quis nostrud.
           </p>
         </div>
 

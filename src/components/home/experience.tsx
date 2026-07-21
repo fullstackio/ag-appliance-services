@@ -31,9 +31,9 @@ export function Experience() {
             ]}
           />
           <p className="muted exp__head-copy">
-            Eight years across product teams and agencies — from web design to
-            leading frontend builds. Drag, swipe or use the arrows to move
-            through the timeline.
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit sed do
+            eiusmod tempor incididunt ut labore. Drag, swipe or use the arrows
+            to move through the timeline.
           </p>
         </div>
       </div>

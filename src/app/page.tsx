@@ -36,16 +36,16 @@ const BlogSlider = dynamic(
 export default function HomePage() {
   return (
     <>
-      <SiteHeader links={homeNav} brandHref="#home" ctaHref="#contact" scrollSpy />
+      <SiteHeader links={homeNav} brandHref="#home" scrollSpy />
       <BackgroundDeco />
       <main id="main">
         <Hero />
         <About />
         <Services />
-        <Stats />
-        <Experience />
+        {/* <Stats /> */}
+        {/* <Experience /> */}
         <Skills />
-        <Projects />
+        {/* <Projects /> */}
         <Education />
         <Workflow />
         <Features />

@@ -58,14 +58,14 @@ export function Features() {
           variant="light"
           media="/assets/images/home22-img1.webp"
           title="Reliable, On-Time Service"
-          copy="Punctual, dependable and tidy — whether at your home for a repair or delivering a software release on schedule."
+          copy="Lorem ipsum dolor sit amet, consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
           cta={{ label: "Contact Me", className: "btn btn--primary btn--sm" }}
         />
         <FeatureCard
           variant="gradient"
           media="/assets/images/home22-img2.webp"
           title="Trusted by the Community"
-          copy="Used by households and businesses alike — years of word-of-mouth referrals from people who count on me again and again."
+          copy="Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur excepteur sint occaecat."
           cta={{ label: "Get in Touch", className: "btn btn--pill btn--sm" }}
           withAvatars
         />

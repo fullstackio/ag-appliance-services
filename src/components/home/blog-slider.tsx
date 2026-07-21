@@ -47,9 +47,9 @@ export function BlogSlider() {
           />
           <div className="blog__head-copy">
             <p className="muted">
-              Notes from the codebase and the workshop — the 7 most recent
-              articles on software, home appliance care and keeping your ride
-              road-ready.
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit sed do
+              eiusmod tempor incididunt ut labore et dolore magna — the 7 most
+              recent articles.
             </p>
             <Link className="btn btn--primary btn--sm blog__viewall" href="/blog">
               View all Posts <span aria-hidden="true">↗</span>

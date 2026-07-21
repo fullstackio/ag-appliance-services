@@ -2,14 +2,14 @@
 
 import Link from "next/link";
 import { AnimHead } from "@/components/common/anim-head";
-import { CodeChevronIcon, CmsIcon, BoltIcon } from "@/components/icons";
+import { SnowflakeIcon, WashingMachineIcon, PlugIcon } from "@/components/icons";
 import { useServices } from "@/lib/hooks/use-portfolio-data";
 import type { ServiceCard } from "@/lib/types";
 
 const iconMap = {
-  code: CodeChevronIcon,
-  cms: CmsIcon,
-  bolt: BoltIcon,
+  cooling: SnowflakeIcon,
+  laundry: WashingMachineIcon,
+  kitchen: PlugIcon,
 } as const;
 
 function SkeletonCard() {
@@ -59,12 +59,12 @@ export function Services() {
       <div className="services__other">
         <p className="services__other-label">Also offering locally</p>
         <p className="services__other-text">
-          Beyond software, I&apos;m a trusted local hand for{" "}
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit — I&apos;m a
+          trusted local hand for{" "}
           <strong>
-            home-appliance repair
-          </strong>{" "}
-          (AC, washing machine, fridge, microwave &amp; more) and{" "}
-          <strong>bike &amp; car wash and maintenance</strong>.{" "}
+            geysers, chimneys, dishwashers, water purifiers &amp; more
+          </strong>
+          . Sed do eiusmod tempor incididunt ut labore.{" "}
           <Link href="#contact">Get in touch ↗</Link>
         </p>
       </div>

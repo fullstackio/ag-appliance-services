@@ -4,9 +4,9 @@ export const siteConfig = {
   name: "Avijit Ghosh",
   phone: "+91 85838 22906",
   phoneHref: "tel:+918583822906",
-  emails: ["fullstack.avi@gmail.com", "ui.avi462@outlook.com"],
+  emails: ["service.avi@gmail.com", "support.avi462@outlook.com"],
   location: "Barrackpore, Kolkata 700122",
-  linkedin: "https://www.linkedin.com/in/avijit-frontend-developer",
+  linkedin: "https://www.linkedin.com/in/avijit-appliance-technician",
   github: "https://github.com/",
 };
 
@@ -14,9 +14,7 @@ export const siteConfig = {
 export const homeNav: NavLink[] = [
   { label: "Home", href: "#home" },
   { label: "About", href: "#about" },
-  { label: "Experience", href: "#experience" },
   { label: "Skills", href: "#skills" },
-  { label: "Projects", href: "#projects" },
   { label: "Services", href: "#services" },
   { label: "Contact", href: "#contact" },
 ];

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { AnimHead } from "@/components/common/anim-head";
 import { PhoneIcon } from "@/components/icons";
+import { HireMeButton } from "@/components/layout/hire-me-drawer";
 import { siteConfig } from "@/lib/data/site";
 
 export function Hero() {
@@ -25,7 +26,7 @@ export function Hero() {
       </div>
       <div className="hero__content">
         <h1 className="hero__title">
-          <AnimHead as="span" lines={["SOFTWARE ENGINEER", "& SERVICE TECHNICIAN"]} />
+          <AnimHead as="span" lines={["HOME APPLIANCE", "REPAIR SPECIALIST"]} />
         </h1>
         <p className="hero__display" aria-hidden="true">
           BUILT ON
@@ -34,19 +35,19 @@ export function Hero() {
         </p>
         <div className="hero__card">
           <p>
-            Building modern web applications with React, Next.js and WordPress
-            while delivering reliable AC, Refrigerator, PCB and all home-appliance
-            repair services. One trusted professional for both digital solutions
-            and technical support.
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
+            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
+            ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
+            aliquip ex ea commodo consequat.
           </p>
           <div className="hero__actions">
             <span className="animated-border-box">
-              <Link className="btn btn--pill" href="#contact">
+              <HireMeButton className="btn btn--pill">
                 Hire Me <span aria-hidden="true">↗</span>
-              </Link>
+              </HireMeButton>
             </span>
-            <Link className="btn btn--outline" href="#projects">
-              View Projects
+            <Link className="btn btn--outline" href="#testimonials">
+              Client Speaks
             </Link>
           </div>
           <a

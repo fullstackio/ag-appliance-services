@@ -180,13 +180,32 @@ main {
 .btn:hover { transform: translateY(-2px); }
 .btn--primary { background: #11183a; color: #fff; }
 .btn--primary:hover { background: #1c2750; }
-.btn--outline { background: transparent; color: #fff; border: 1px solid rgba(255,255,255,.4); }
-.btn--outline:hover { background: rgba(255,255,255,.12); }
+.btn--outline { background: transparent; color: #1c2750; border: 1px solid rgba(0,0,0,.28); }
+.btn--outline:hover { background: rgba(0,0,0,.06); }
+.dark .btn--outline { color: #fff; border-color: rgba(255,255,255,.4); }
+.dark .btn--outline:hover { background: rgba(255,255,255,.12); }
 .btn--light { background: #fff; color: #1c2750; }
 .btn--pill { background: linear-gradient(115deg, #c4b0f6 0%, #d3c6ff 48%, #dbe7ff 100%); color: #2a1d6b; box-shadow: 0 8px 24px rgba(150,130,234,.32); }
 .btn--pill:hover { filter: brightness(1.06); }
 .btn--sm { padding: .72em 1.4em; font-size: .82rem; }
 .btn--block { width: 100%; justify-content: center; }
+
+/* Hire-me drawer: taller inputs & selects on desktop for easier use.
+   Inputs and select triggers share the same height AND font size so every
+   field looks identical — whether a dropdown has a value or shows its
+   placeholder. */
+@media (min-width: 768px) {
+  .hire-form input,
+  .hire-form [data-slot="select-trigger"] {
+    height: 2.75rem;
+    font-size: .95rem;
+  }
+  /* Keep the selected value and the placeholder the exact same size. */
+  .hire-form [data-slot="select-trigger"] [data-slot="select-value"] {
+    font-size: inherit;
+    line-height: 1.2;
+  }
+}
 
 /* Animated rotating gradient border (brand colours).
    Wrap a button: <span class="animated-border-box"><a class="btn …">…</a></span>

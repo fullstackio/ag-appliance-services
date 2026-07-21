@@ -7,9 +7,9 @@ export const homeFooterColumns: FooterColumn[] = [
   {
     title: "Expertise",
     links: [
-      { label: "Frontend & React", href: "#skills" },
-      { label: "WordPress & CMS", href: "#services" },
-      { label: "Performance & APIs", href: "#services" },
+      { label: "AC & Cooling", href: "#skills" },
+      { label: "Refrigeration", href: "#services" },
+      { label: "Washing Machines", href: "#services" },
       { label: "Experience", href: "#experience" },
       { label: "Projects", href: "#projects" },
     ],
@@ -31,9 +31,9 @@ export const pageFooterColumns: FooterColumn[] = [
   {
     title: "Services",
     links: [
-      { label: "Software Development", href: "/#services" },
-      { label: "Appliance Repair", href: "/#services" },
-      { label: "Bike & Car Wash", href: "/#services" },
+      { label: "AC Repair", href: "/#services" },
+      { label: "Refrigerator Repair", href: "/#services" },
+      { label: "Washing Machine Repair", href: "/#services" },
       { label: "My Workflow", href: "/#workflow" },
       { label: "Experience", href: "/#stats" },
     ],

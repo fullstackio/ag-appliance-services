@@ -34,3 +34,18 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# docker
+# (Dockerfile, .dockerignore and docker-compose.yml ARE committed; these are
+#  local artifacts that should not be.)
+docker-compose.override.yml
+*.local.env
+
+# editor / OS
+.vscode/
+.idea/
+Thumbs.db
+
+# logs
+logs
+*.log

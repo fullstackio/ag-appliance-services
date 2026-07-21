@@ -1,0 +1,151 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import Link from "next/link";
+import { cn } from "@/lib/utils";
+import type { NavLink } from "@/lib/types";
+import { ThemeToggle } from "@/components/layout/theme-toggle";
+import {
+  Sheet,
+  SheetTrigger,
+  SheetContent,
+  SheetClose,
+  SheetTitle,
+} from "@/components/ui/sheet";
+
+interface SiteHeaderProps {
+  links: NavLink[];
+  brandHref: string;
+  ctaHref: string;
+  /** Force the active link on non-scrollspy pages (e.g. "/blog"). */
+  activeHref?: string;
+  /** Enable in-page scrollspy (home page only). */
+  scrollSpy?: boolean;
+}
+
+export function SiteHeader({
+  links,
+  brandHref,
+  ctaHref,
+  activeHref,
+  scrollSpy = false,
+}: SiteHeaderProps) {
+  const [stuck, setStuck] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [current, setCurrent] = useState<string>(activeHref ?? "");
+
+  // Sticky header + optional scrollspy.
+  useEffect(() => {
+    const anchors = scrollSpy
+      ? links
+          .filter((l) => l.href.startsWith("#"))
+          .map((l) => ({ href: l.href, el: document.querySelector<HTMLElement>(l.href) }))
+          .filter((x): x is { href: string; el: HTMLElement } => !!x.el)
+      : [];
+
+    const onScroll = () => {
+      const y = window.pageYOffset;
+      setStuck(y > 40);
+      if (scrollSpy && anchors.length) {
+        let active = "";
+        anchors.forEach(({ href, el }) => {
+          if (y >= el.offsetTop - 140) active = href;
+        });
+        if (active) setCurrent(active);
+      }
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+    return () => window.removeEventListener("scroll", onScroll);
+  }, [links, scrollSpy]);
+
+  const isContact = (label: string) => label === "Contact" || label === "Contacts";
+
+  return (
+    <header className={cn("site-header", stuck && "is-stuck")} id="siteHeader">
+      <div className="site-header__inner">
+        <Link className="brand" href={brandHref} aria-label="Avijit Ghosh — Home">
+          <span className="brand__mark" aria-hidden="true" />
+          <span className="brand__name">Avijit&nbsp;Ghosh</span>
+        </Link>
+
+        {/* Desktop navigation (hidden on mobile via CSS; the drawer takes over). */}
+        <nav className="main-nav" id="mainNav" aria-label="Primary">
+          <ul className="main-nav__list">
+            {links.map((link) => {
+              const isActive = current === link.href;
+              return (
+                <li key={link.href}>
+                  <Link
+                    className={cn(!isContact(link.label) && "has-caret", isActive && "is-active")}
+                    href={link.href}
+                    aria-current={isActive ? "page" : undefined}
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
+        </nav>
+
+        <ThemeToggle />
+
+        <span className="animated-border-box header__cta-box">
+          <Link className="btn btn--pill header__cta" href={ctaHref}>
+            Hire Me
+          </Link>
+        </span>
+
+        {/* Mobile navigation — shadcn Sheet (side drawer). */}
+        <Sheet open={open} onOpenChange={setOpen}>
+          <SheetTrigger
+            render={
+              <button
+                className="nav-toggle"
+                aria-label="Toggle navigation menu"
+              />
+            }
+          >
+            <span />
+            <span />
+            <span />
+          </SheetTrigger>
+
+          <SheetContent side="left" className="site-drawer">
+            <SheetTitle className="sr-only">Navigation menu</SheetTitle>
+            <nav className="site-drawer__nav" aria-label="Mobile">
+              <ul className="main-nav__list">
+                {links.map((link) => {
+                  const isActive = current === link.href;
+                  return (
+                    <li key={link.href}>
+                      <SheetClose
+                        nativeButton={false}
+                        render={
+                          <Link
+                            className={cn(isActive && "is-active")}
+                            href={link.href}
+                            aria-current={isActive ? "page" : undefined}
+                          />
+                        }
+                      >
+                        {link.label}
+                      </SheetClose>
+                    </li>
+                  );
+                })}
+              </ul>
+              <SheetClose
+                nativeButton={false}
+                render={<Link className="btn btn--pill main-nav__cta" href={ctaHref} />}
+              >
+                Hire Me <span aria-hidden="true">↗</span>
+              </SheetClose>
+            </nav>
+          </SheetContent>
+        </Sheet>
+      </div>
+    </header>
+  );
+}

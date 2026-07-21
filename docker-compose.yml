@@ -1,0 +1,33 @@
+# Docker Compose for ag-appliance-services.
+#
+#   docker compose up --build      # build + run the production image
+#   docker compose up -d           # run detached
+#   docker compose down            # stop and remove
+#
+# The app is served at http://localhost:3000
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        NODE_VERSION: 22-alpine
+    image: ag-appliance-services:latest
+    container_name: ag-appliance-services
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      HOSTNAME: 0.0.0.0
+      NEXT_TELEMETRY_DISABLED: 1
+    restart: unless-stopped
+    healthcheck:
+      # server.js listens on $PORT; a TCP connect check keeps the image
+      # dependency-free (no curl/wget needed in the runtime layer).
+      test: ["CMD", "node", "-e", "require('net').connect(3000,'127.0.0.1').on('connect',()=>process.exit(0)).on('error',()=>process.exit(1))"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 20s

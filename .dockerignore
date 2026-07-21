@@ -1,0 +1,36 @@
+# Dependencies — reinstalled inside the image from the lockfile
+node_modules
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Build output
+.next
+out
+build
+dist
+
+# Env & secrets — never bake these into the image
+.env
+.env*.local
+
+# Version control & CI
+.git
+.gitignore
+.github
+
+# Editor / OS cruft
+.vscode
+.idea
+.DS_Store
+
+# Docker files themselves
+Dockerfile
+.dockerignore
+docker-compose.yml
+
+# Misc
+README.md
+*.tsbuildinfo
+coverage
+.vercel

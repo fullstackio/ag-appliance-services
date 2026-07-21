@@ -1,0 +1,200 @@
+/* ============================================================
+   Avijit Ghosh — Portfolio
+   responsive.css — breakpoints for all devices
+   Layered on top of custom.css
+   ============================================================ */
+
+/* ---- Wide screens (>= 1700px): keep generous gutters ---- */
+@media (min-width: 1700px) {
+    :root { --gutter: 30px; --vgap: 24px; }
+}
+
+/* ---- Small laptops / tablets landscape (<= 1080px) ---- */
+@media (max-width: 1080px) {
+    /* stats: switch from absolute overlay to stacked flow */
+    .stats { min-height: auto; }
+    .stats__title { position: static; max-width: 100%; margin-bottom: 30px; }
+    .stats__right { position: static; width: 100%; }
+    .workflow__inner { grid-template-columns: 1fr; }
+    .about__grid { grid-template-columns: 1fr; }
+    .about__copy { padding-top: 0; }
+    .blog__head-grid { grid-template-columns: 1fr; gap: 18px; align-items: start; }
+    .feature-card__body { max-width: 72%; }
+}
+
+/* ---- <= 1260px: hide desktop menu; the shadcn Sheet drawer takes over ---- */
+@media (max-width: 1260px) {
+    .nav-toggle { display: flex; margin-left: 0; }
+    /* header keeps just the theme toggle + hamburger (pushed right); the
+       "Hire Me" CTA moves into the drawer menu below */
+    .theme-toggle { margin-left: auto; }
+    .header__cta, .header__cta-box { display: none; }
+    /* the inline desktop nav is replaced by the drawer on mobile */
+    .main-nav { display: none; }
+    /* Hire Me inside the drawer — full-width, sits under the nav links */
+    .main-nav__cta { display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: 100%; margin-top: 20px; }
+    /* vertical link list inside the drawer (reuses the desktop link styling) */
+    .main-nav__list { flex-direction: column; align-items: stretch; gap: 4px; background: transparent; border: 0; padding: 0; -webkit-backdrop-filter: none; backdrop-filter: none; }
+    .main-nav__list a { display: block; padding: 12px 14px; font-size: 1.05rem; }
+}
+
+/* ---- shadcn Sheet drawer skin (dark app-style panel, opens from left) ---- */
+.site-drawer {
+    width: min(82vw, 340px);
+    max-width: none;
+    padding: 88px 28px 28px;
+    gap: 6px;
+    background: rgba(10, 15, 30, .96);
+    -webkit-backdrop-filter: blur(16px);
+    backdrop-filter: blur(16px);
+    border: 0;
+    color: var(--c-on-dark);
+    overflow-y: auto;
+}
+.site-drawer__nav { display: flex; flex-direction: column; }
+.site-drawer [data-slot="sheet-close-x"] { color: #fff; }
+
+/* ---- Tablets portrait (<= 900px): layout stacking ---- */
+@media (max-width: 900px) {
+    .hero__title { font-size: clamp(1.6rem, 4.4vw, 2.3rem); }
+    .services__grid { grid-template-columns: 1fr 1fr; }
+    .contact__inner { grid-template-columns: 1fr; }
+    .footer__news { grid-template-columns: 1fr; }
+    .features__grid { grid-template-columns: 1fr; }
+    .footer__top { grid-template-columns: 1fr; gap: 30px; }
+    .blog__skeleton { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* ---- Mobile (<= 680px) ---- */
+@media (max-width: 680px) {
+    body { font-size: 15px; }
+
+    .hero { min-height: auto; }
+    /* stack hero content instead of absolute positioning on small screens */
+    .hero__content { display: flex; flex-direction: column; gap: 28px; padding-top: clamp(96px, 16vh, 130px); padding-bottom: 40px; }
+    .hero__display { position: static; text-align: left; font-size: clamp(1.5rem, 5.6vw, 2.2rem); }
+    .hero__card { position: static; max-width: 100%; }
+
+    .services__grid { grid-template-columns: 1fr; gap: 28px; }
+    .stats__right { grid-template-columns: 1fr; gap: 26px; }
+    .stat--offset { grid-column: 1; }
+    .feature-card__body { max-width: 100%; }
+    .contact__rows { grid-template-columns: 1fr; }
+    .footer__cols { grid-template-columns: 1fr; }
+    .testimonials__track { grid-auto-columns: 82%; }
+    .blog__skeleton { grid-template-columns: 1fr; }
+    .footer__bottom { justify-content: center; text-align: center; }
+}
+
+/* ---- Compact mobile spacing (<= 680px) ----
+   Shrink the layout tokens so every card gutter, gap and inner pad tightens
+   at once, then trim the header + section block padding for a denser layout. */
+@media (max-width: 680px) {
+    :root {
+        --gutter: 10px;      /* page edge gutter (was min 14px) */
+        --vgap: 10px;        /* gap between cards (was min 14px) */
+        --card-pad: 20px;    /* card inner padding (was min 26px) */
+    }
+
+    /* floating header: pull it in tight to the edges */
+    .site-header { margin: 0.9rem 0.7rem 0; padding: 10px 14px; border-radius: 22px; }
+    .site-header.is-stuck { margin: 0.7rem 0.7rem 0; padding-block: 8px; }
+    .site-header__inner { gap: 12px; }
+
+    /* vertical rhythm: trim section block padding */
+    .plain { padding-block: 28px; }
+    .services, .skills { padding-block: 28px; }
+    .stats__inner { padding-block: 32px; }
+    .contact { padding-block: 36px; }
+    .site-footer { padding-block: 32px; }
+    .features__grid { gap: 12px; }
+
+    /* hero: less top clearance now the header is smaller */
+    .hero__content { padding-top: clamp(78px, 13vh, 104px); padding-bottom: 28px; gap: 20px; }
+}
+
+/* ---- Small mobile (<= 480px): scale type down + tighten spacing ---- */
+@media (max-width: 480px) {
+    body { font-size: 14.5px; }
+
+    .hero__title { font-size: clamp(1.4rem, 6.4vw, 1.95rem); }
+    .hero__display { font-size: 1.6rem; }
+    .hero__card { padding: 22px 20px; }
+    .hero__card p { font-size: .92rem; }
+    .hero__actions { flex-direction: column; align-items: stretch; }
+    .hero__actions .btn { justify-content: center; }
+
+    .section-title { font-size: 1.35rem; }
+    .about__title, .blog__title { font-size: 1.4rem; }
+    .stats__title { font-size: 1.55rem; }
+    .stat__num { font-size: 2.5rem; }
+    .contact__title { font-size: 1.55rem; }
+    .footer__heading { font-size: 2.1rem; }
+    .footer__news-text h2 { font-size: 1.2rem; }
+
+    .page-hero__title { font-size: 1.55rem; }
+    .page-hero--article .page-hero__title { font-size: 1.4rem; }
+    .post__title { font-size: 1.05rem; }
+    .post__body { max-width: 76%; }
+    .article__lead { font-size: .98rem; }
+    .article__body h2 { font-size: 1.2rem; }
+}
+
+/* ---- Extra-small mobile (<= 360px, down to 320px) ---- */
+@media (max-width: 360px) {
+    body { font-size: 14px; }
+
+    .hero__title { font-size: clamp(1.25rem, 5.6vw, 1.6rem); }
+    .hero__display { font-size: 1.35rem; }
+    .hero__card { padding: 18px 16px; }
+    .hero__card p { font-size: .88rem; }
+
+    .section-title { font-size: 1.2rem; }
+    .about__title, .blog__title { font-size: 1.25rem; }
+    .stats__title { font-size: 1.4rem; }
+    .stat__num { font-size: 2.2rem; }
+    .contact__title { font-size: 1.4rem; }
+    .footer__heading { font-size: 1.85rem; }
+
+    .page-hero__title { font-size: 1.35rem; }
+    .page-hero--article .page-hero__title { font-size: 1.2rem; }
+    .post__title { font-size: 1rem; }
+    .post__body { max-width: 82%; }
+    .breadcrumb, .article-meta { font-size: .72rem; }
+}
+
+/* ---- Touch devices: disable custom cursor ---- */
+@media (hover: none), (pointer: coarse) {
+    .cursor-dot, .cursor-ring { display: none !important; }
+    .has-custom-cursor, .has-custom-cursor a, .has-custom-cursor button { cursor: auto; }
+}
+
+/* ---- Landscape phones ---- */
+@media (max-height: 520px) and (orientation: landscape) {
+    .hero { min-height: auto; }
+    .hero__content { padding-top: 90px; padding-bottom: 36px; }
+}
+
+/* ---- Print ---- */
+@media print {
+    .site-header, .to-top, .cursor-dot, .cursor-ring, .preloader, .hero__video { display: none !important; }
+    body { color: #000; background: #fff; }
+    .card--dark, .contact, .site-footer { background: #fff !important; color: #000 !important; }
+}
+
+/* ---- Blog pages (listing + details) ---- */
+@media (max-width: 1080px) {
+    .blog-list { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 900px) {
+    .related__grid { grid-template-columns: 1fr 1fr; }
+    .blog-toolbar__filters { margin-left: 0; width: 100%; }
+    .author-bar__inner { justify-content: flex-start; }
+}
+@media (max-width: 680px) {
+    .blog-list { grid-template-columns: 1fr; }
+    .related__grid { grid-template-columns: 1fr; }
+    .article__foot { flex-direction: column; align-items: flex-start; }
+    .blog-select, .blog-select select { width: 100%; }
+    .blog-select { flex: 1 1 100%; }
+}

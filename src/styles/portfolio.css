@@ -927,7 +927,7 @@ main {
 .notfound__brand { margin-top: 46px; }
 .notfound__scan { position: absolute; inset: 0; z-index: 1; overflow: hidden; pointer-events: none; --scan-1: #4f7bff; --scan-2: #7aa6ff; }
 .dark .notfound__scan { --scan-1: #22c55e; --scan-2: #6ee7a8; }
-
+.test-class{}
 /* ============================================================
    Blog toolbar — shadcn <Select> trigger themed to match .blog-select
    ============================================================ */

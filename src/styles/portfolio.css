@@ -947,9 +947,10 @@ main {
 .notfound__scan { position: absolute; inset: 0; z-index: 1; overflow: hidden; pointer-events: none; --scan-1: #4f7bff; --scan-2: #7aa6ff; }
 .dark .notfound__scan { --scan-1: #22c55e; --scan-2: #6ee7a8; }
 .test-class{}
-/* ============================================================
+
+/*** ============================================================
    Blog toolbar — shadcn <Select> trigger themed to match .blog-select
-   ============================================================ */
+   ============================================================ ***/
 .blog-shadcn-select {
     font-family: var(--font-body); font-size: .86rem; font-weight: 500; color: var(--c-ink);
     background: var(--c-bg-page); border: 1px solid var(--c-line); border-radius: 999px;

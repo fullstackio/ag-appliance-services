@@ -42,7 +42,9 @@
 .site-drawer {
     width: min(82vw, 340px);
     max-width: none;
-    padding: 88px 28px 28px;
+    padding: 24px 28px 28px;
+    display: flex;
+    flex-direction: column;
     gap: 6px;
     background: rgba(10, 15, 30, .96);
     -webkit-backdrop-filter: blur(16px);
@@ -51,8 +53,38 @@
     color: var(--c-on-dark);
     overflow-y: auto;
 }
+/* logo at the top of the drawer */
+.site-drawer__brand { margin: 0 0 26px; padding-right: 40px; }
 .site-drawer__nav { display: flex; flex-direction: column; }
 .site-drawer [data-slot="sheet-close-x"] { color: #fff; }
+
+/* contact block pinned to the drawer bottom (phone + email) */
+.site-drawer__contact {
+    margin-top: auto;
+    padding-top: 22px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    border-top: 1px solid rgba(255, 255, 255, .12);
+}
+.drawer-contact {
+    display: flex; align-items: center; gap: 12px;
+    padding: 10px 12px; border-radius: 14px;
+    background: rgba(255, 255, 255, .05);
+    border: 1px solid rgba(255, 255, 255, .1);
+    color: var(--c-on-dark);
+    transition: border-color .2s var(--ease), background .2s var(--ease);
+}
+.drawer-contact:hover { border-color: var(--c-accent-2); background: rgba(79, 123, 255, .14); }
+.drawer-contact__icon {
+    display: inline-grid; place-items: center; flex: none;
+    width: 38px; height: 38px; border-radius: 999px;
+    color: #fff; background: var(--grad-btn);
+    box-shadow: 0 0 16px rgba(79, 123, 255, .5);
+}
+.drawer-contact__text { display: flex; flex-direction: column; line-height: 1.3; min-width: 0; }
+.drawer-contact__label { font-size: .68rem; letter-spacing: .07em; text-transform: uppercase; color: var(--c-on-dark-soft); }
+.drawer-contact__value { font-family: var(--font-display); font-size: .98rem; font-weight: 600; color: #fff; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
 /* ---- Tablets portrait (<= 900px): layout stacking ---- */
 @media (max-width: 900px) {
@@ -63,19 +95,28 @@
     .features__grid { grid-template-columns: 1fr; }
     .footer__top { grid-template-columns: 1fr; gap: 30px; }
     .blog__skeleton { grid-template-columns: repeat(2, 1fr); }
+    /* skills: 3 fixed columns overflow on tablets — drop to 2 */
+    .skills__grid { grid-template-columns: 1fr 1fr; }
 }
 
 /* ---- Mobile (<= 680px) ---- */
 @media (max-width: 680px) {
     body { font-size: 15px; }
 
-    .hero { min-height: auto; }
+    /* banner height on mobile (svh accounts for browser chrome) */
+    .hero { min-height: 98vh; min-height: 98svh; }
     /* stack hero content instead of absolute positioning on small screens */
-    .hero__content { display: flex; flex-direction: column; gap: 28px; padding-top: clamp(96px, 16vh, 130px); padding-bottom: 40px; }
+    .hero__content { display: flex; flex-direction: column; justify-content: center; min-height: 98vh; min-height: 98svh; gap: 28px; padding-top: clamp(96px, 16vh, 130px); padding-bottom: 40px; }
     .hero__display { position: static; text-align: left; font-size: clamp(1.5rem, 5.6vw, 2.2rem); }
     .hero__card { position: static; max-width: 100%; }
 
     .services__grid { grid-template-columns: 1fr; gap: 28px; }
+    /* skills + education: stack into a single column on phones */
+    .skills__grid { grid-template-columns: 1fr; gap: 18px; }
+    .skill-tags { gap: 7px; }
+    .skill-tags li { padding: 6px 12px; }
+    .skill-group__title { margin-bottom: 12px; padding-bottom: 10px; }
+    .edu__grid { grid-template-columns: 1fr; }
     .stats__right { grid-template-columns: 1fr; gap: 26px; }
     .stat--offset { grid-column: 1; }
     .feature-card__body { max-width: 100%; }
@@ -109,8 +150,26 @@
     .site-footer { padding-block: 32px; }
     .features__grid { gap: 12px; }
 
+    /* features: compact the cards — shorter, tighter padding */
+    .feature-card { min-height: clamp(200px, 46vw, 260px); }
+    .feature-card__body { padding: 22px 20px; }
+    .feature-card h3 { margin-bottom: 8px; }
+    .feature-card p { font-size: .9rem; margin-bottom: 14px; }
+
     /* hero: less top clearance now the header is smaller */
     .hero__content { padding-top: clamp(78px, 13vh, 104px); padding-bottom: 28px; gap: 20px; }
+
+    /* buttons: compact, app-style — tighter padding + auto width (no stretching) */
+    .btn { padding: .62em 1.15em; font-size: .82rem; gap: .4em; }
+    .btn--sm { padding: .5em 1em; font-size: .78rem; }
+    /* don't force full-width; let buttons size to content */
+    .btn--block { width: auto; }
+    .hero__actions { flex-direction: row; flex-wrap: wrap; align-items: center; }
+    .hero__actions .btn { width: auto; }
+
+    /* exceptions: keep these full-width (primary page actions) */
+    .main-nav__cta, .contact__form .btn { width: 100%; justify-content: center; }
+    .contact__form .btn { padding: .82em 1.4em; }
 }
 
 /* ---- Small mobile (<= 480px): scale type down + tighten spacing ---- */
@@ -121,8 +180,8 @@
     .hero__display { font-size: 1.6rem; }
     .hero__card { padding: 22px 20px; }
     .hero__card p { font-size: .92rem; }
-    .hero__actions { flex-direction: column; align-items: stretch; }
-    .hero__actions .btn { justify-content: center; }
+    .hero__actions { flex-direction: row; flex-wrap: wrap; align-items: center; }
+    .hero__actions .btn { width: auto; justify-content: center; }
 
     .section-title { font-size: 1.35rem; }
     .about__title, .blog__title { font-size: 1.4rem; }
@@ -136,6 +195,7 @@
     .page-hero--article .page-hero__title { font-size: 1.4rem; }
     .post__title { font-size: 1.05rem; }
     .post__body { max-width: 76%; }
+    .post { min-height: clamp(220px, 62vw, 280px); }
     .article__lead { font-size: .98rem; }
     .article__body h2 { font-size: 1.2rem; }
 }

@@ -6,6 +6,8 @@ import { cn } from "@/lib/utils";
 import type { NavLink } from "@/lib/types";
 import { ThemeToggle } from "@/components/layout/theme-toggle";
 import { useHireMe } from "@/components/layout/hire-me-drawer";
+import { PhoneIcon, MailIcon } from "@/components/icons";
+import { siteConfig } from "@/lib/data/site";
 import {
   Sheet,
   SheetTrigger,
@@ -116,6 +118,21 @@ export function SiteHeader({
 
           <SheetContent side="left" className="site-drawer">
             <SheetTitle className="sr-only">Navigation menu</SheetTitle>
+
+            <SheetClose
+              nativeButton={false}
+              render={
+                <Link
+                  className="brand site-drawer__brand"
+                  href={brandHref}
+                  aria-label="Avijit Ghosh — Home"
+                />
+              }
+            >
+              <span className="brand__mark" aria-hidden="true" />
+              <span className="brand__name">Avijit&nbsp;Ghosh</span>
+            </SheetClose>
+
             <nav className="site-drawer__nav" aria-label="Mobile">
               <ul className="main-nav__list">
                 {links.map((link) => {
@@ -149,6 +166,39 @@ export function SiteHeader({
                 Hire Me <span aria-hidden="true">↗</span>
               </button>
             </nav>
+
+            <div className="site-drawer__contact">
+              <a
+                className="drawer-contact"
+                href={siteConfig.phoneHref}
+                aria-label={`Call me at ${siteConfig.phone}`}
+              >
+                <span className="drawer-contact__icon" aria-hidden="true">
+                  <PhoneIcon width={18} height={18} />
+                </span>
+                <span className="drawer-contact__text">
+                  <span className="drawer-contact__label">
+                    Available now — talk to me directly
+                  </span>
+                  <span className="drawer-contact__value">{siteConfig.phone}</span>
+                </span>
+              </a>
+              <a
+                className="drawer-contact"
+                href={`mailto:${siteConfig.emails[0]}`}
+                aria-label={`Email me at ${siteConfig.emails[0]}`}
+              >
+                <span className="drawer-contact__icon" aria-hidden="true">
+                  <MailIcon width={18} height={18} />
+                </span>
+                <span className="drawer-contact__text">
+                  <span className="drawer-contact__label">Drop me a line</span>
+                  <span className="drawer-contact__value">
+                    {siteConfig.emails[0]}
+                  </span>
+                </span>
+              </a>
+            </div>
           </SheetContent>
         </Sheet>
       </div>

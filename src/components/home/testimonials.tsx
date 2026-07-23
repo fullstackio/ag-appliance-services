@@ -1,9 +1,8 @@
 "use client";
 
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Autoplay, Pagination } from "swiper/modules";
+import { Autoplay } from "swiper/modules";
 import "swiper/css";
-import "swiper/css/pagination";
 import { useReviews } from "@/lib/hooks/use-portfolio-data";
 import { usePrefersReducedMotion } from "@/lib/hooks/use-media";
 import type { Review } from "@/lib/types";
@@ -59,7 +58,7 @@ export function Testimonials() {
         ) : (
           <Swiper
             className="reviews-swiper"
-            modules={[Autoplay, Pagination]}
+            modules={[Autoplay]}
             slidesPerView={1.2}
             spaceBetween={22}
             grabCursor
@@ -70,7 +69,6 @@ export function Testimonials() {
                 ? false
                 : { delay: 0, disableOnInteraction: false, pauseOnMouseEnter: false }
             }
-            pagination={{ clickable: true }}
             breakpoints={{
               560: { slidesPerView: 2.2 },
               900: { slidesPerView: 3.2 },

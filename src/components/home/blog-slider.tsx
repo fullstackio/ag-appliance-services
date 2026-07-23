@@ -65,7 +65,7 @@ export function BlogSlider() {
           <Swiper
             className="blog-swiper"
             modules={[Pagination]}
-            slidesPerView={1.05}
+            slidesPerView={1.2}
             spaceBetween={26}
             grabCursor
             speed={600}
@@ -73,8 +73,8 @@ export function BlogSlider() {
             watchSlidesProgress
             pagination={{ clickable: true }}
             breakpoints={{
-              560: { slidesPerView: 1.4 },
-              900: { slidesPerView: 1.9 },
+              560: { slidesPerView: 1.5 },
+              900: { slidesPerView: 2.3 },
               1280: { slidesPerView: 2.5 },
             }}
           >

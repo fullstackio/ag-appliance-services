@@ -160,6 +160,13 @@ export const PhoneIcon = (p: IconProps) => (
   </svg>
 );
 
+export const MailIcon = (p: IconProps) => (
+  <svg {...base} strokeWidth={1.7} {...p}>
+    <rect x="2" y="4" width="20" height="16" rx="2" />
+    <path d="m22 7-10 6L2 7" />
+  </svg>
+);
+
 export const ChevronLeftIcon = (p: IconProps) => (
   <svg {...base} strokeWidth={1.8} {...p}>
     <polyline points="15 18 9 12 15 6" />

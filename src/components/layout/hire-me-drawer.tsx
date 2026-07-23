@@ -404,11 +404,11 @@ function HireMeDrawer({
         )}
       >
         <SheetHeader className="pb-2">
-          <SheetTitle className="text-2xl">Let&apos;s work together</SheetTitle>
+          <SheetTitle className="text-2xl">Book a repair</SheetTitle>
           <SheetDescription className="text-xs">
-            Tell me about your appliance or project and I&apos;ll get back to you
-            shortly. Fields marked <span className="text-destructive">*</span> are
-            required.
+            Tell me about the appliance that needs fixing and I&apos;ll get back
+            to you shortly to schedule a visit. Fields marked{" "}
+            <span className="text-destructive">*</span> are required.
           </SheetDescription>
         </SheetHeader>
 
@@ -416,7 +416,7 @@ function HireMeDrawer({
           <form
             onSubmit={onSubmit}
             noValidate
-            className="hire-form grid grid-cols-1 gap-4 px-6 pb-8 sm:grid-cols-2"
+            className="hire-form grid grid-cols-1 gap-4 px-6 pb-0 sm:grid-cols-2 sm:pb-8"
           >
             <FormField
               control={form.control}
@@ -705,7 +705,7 @@ function HireMeDrawer({
               )}
             />
 
-            <div className="flex gap-3 pt-2 sm:col-span-2">
+            <div className="sticky bottom-0 z-10 -mx-6 flex gap-3 border-t border-border bg-background px-6 py-4 sm:static sm:z-auto sm:mx-0 sm:border-0 sm:bg-transparent sm:px-0 sm:pt-2 sm:col-span-2">
               <button
                 type="submit"
                 className="btn btn--pill flex-1 justify-center disabled:pointer-events-none disabled:opacity-60"

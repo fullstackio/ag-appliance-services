@@ -10,7 +10,7 @@
 :where(.site a) {
   text-decoration: none;
 }
-/* plain links inherit text colour; shadcn Buttons keep their own (Tailwind layer) colours */
+/* plain links inherit text colour; shadcn Buttons keep their own (Tailwind layer) colours issues log */
 .site a:not([data-slot="button"]) {
   color: inherit;
 }

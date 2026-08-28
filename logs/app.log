@@ -1,0 +1,21 @@
+{"time":"2026-08-28T00:00:00.000Z","level":"info","msg":"Log file initialised — AG Appliance Service","meta":{"author":"Avijit Ghosh"}}
+{"time":"2026-08-27T21:17:01.598Z","level":"info","msg":"MongoDB connected","meta":{"db":"ag_appliance"}}
+{"time":"2026-08-27T21:22:29.659Z","level":"info","msg":"MongoDB connected","meta":{"db":"ag_appliance"}}
+{"time":"2026-08-27T21:32:39.502Z","level":"info","msg":"MongoDB connected","meta":{"db":"ag_appliance"}}
+{"time":"2026-08-27T21:35:36.833Z","level":"info","msg":"MongoDB connected","meta":{"db":"ag_appliance"}}
+{"time":"2026-08-27T21:36:59.844Z","level":"info","msg":"User registered","meta":{"email":"owner@agappliance.test","role":"owner","status":"active"}}
+{"time":"2026-08-27T21:37:00.618Z","level":"info","msg":"Login","meta":{"email":"owner@agappliance.test","role":"owner"}}
+{"time":"2026-08-27T21:37:01.468Z","level":"info","msg":"User registered","meta":{"email":"staff@agappliance.test","role":"admin","status":"pending"}}
+{"time":"2026-08-27T21:37:01.521Z","level":"info","msg":"Booking created","meta":{"id":"6a90adfdf5c819b7ac68d364","appliance":"ac"}}
+{"time":"2026-08-27T21:39:02.403Z","level":"info","msg":"MongoDB connected","meta":{"db":"ag_appliance"}}
+{"time":"2026-08-27T21:39:04.550Z","level":"info","msg":"Login","meta":{"email":"owner@agappliance.test","role":"owner"}}
+{"time":"2026-08-27T21:42:48.324Z","level":"info","msg":"MongoDB connected","meta":{"db":"ag_appliance"}}
+{"time":"2026-08-27T21:44:08.048Z","level":"info","msg":"MongoDB connected","meta":{"db":"ag_appliance"}}
+{"time":"2026-08-27T21:45:25.541Z","level":"info","msg":"MongoDB connected","meta":{"db":"ag_appliance"}}
+{"time":"2026-08-27T21:45:26.275Z","level":"info","msg":"Login","meta":{"email":"owner@agappliance.test","role":"owner"}}
+{"time":"2026-08-27T21:49:02.738Z","level":"info","msg":"MongoDB connected","meta":{"db":"ag_appliance"}}
+{"time":"2026-08-27T21:52:10.362Z","level":"info","msg":"MongoDB connected","meta":{"db":"ag_appliance"}}
+{"time":"2026-08-27T23:42:03.367Z","level":"info","msg":"MongoDB connected","meta":{"db":"ag_appliance"}}
+{"time":"2026-08-28T07:28:37.734Z","level":"info","msg":"MongoDB connected","meta":{"db":"ag_appliance"}}
+{"time":"2026-08-28T08:01:01.000Z","level":"info","msg":"MongoDB connected","meta":{"db":"ag_appliance"}}
+{"time":"2026-08-28T08:10:06.568Z","level":"info","msg":"MongoDB connected","meta":{"db":"ag_appliance"}}

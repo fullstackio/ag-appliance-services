@@ -1,0 +1,12 @@
+# Development image — hot reload with the source bind-mounted by docker-compose
+FROM node:24-alpine
+WORKDIR /app
+ENV NEXT_TELEMETRY_DISABLED=1 \
+    WATCHPACK_POLLING=true \
+    LOG_DIR=/app/logs
+RUN apk add --no-cache libc6-compat
+COPY package.json package-lock.json* ./
+RUN npm ci --no-audit --no-fund
+COPY . .
+EXPOSE 3000
+CMD ["npm", "run", "dev", "--", "-H", "0.0.0.0"]

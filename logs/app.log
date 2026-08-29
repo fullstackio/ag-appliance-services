@@ -19,3 +19,25 @@
 {"time":"2026-08-28T07:28:37.734Z","level":"info","msg":"MongoDB connected","meta":{"db":"ag_appliance"}}
 {"time":"2026-08-28T08:01:01.000Z","level":"info","msg":"MongoDB connected","meta":{"db":"ag_appliance"}}
 {"time":"2026-08-28T08:10:06.568Z","level":"info","msg":"MongoDB connected","meta":{"db":"ag_appliance"}}
+{"time":"2026-08-28T18:56:54.752Z","level":"error","msg":"getSiteContent failed — serving default content","meta":{"error":"Error: MONGODB_URI is not set. Add it to .env (see .env.example)."}}
+{"time":"2026-08-28T19:25:36.570Z","level":"error","msg":"getSiteContent failed — serving default content","meta":{"error":"Error: MONGODB_URI is not set. Add it to .env (see .env.example)."}}
+{"time":"2026-08-28T19:26:52.394Z","level":"error","msg":"getSiteContent failed — serving default content","meta":{"error":"Error: MONGODB_URI is not set. Add it to .env (see .env.example)."}}
+{"time":"2026-08-28T19:27:17.462Z","level":"error","msg":"getSiteContent failed — serving default content","meta":{"error":"Error: MONGODB_URI is not set. Add it to .env (see .env.example)."}}
+{"time":"2026-08-28T19:27:21.672Z","level":"error","msg":"getSiteContent failed — serving default content","meta":{"error":"Error: MONGODB_URI is not set. Add it to .env (see .env.example)."}}
+{"time":"2026-08-28T19:28:09.426Z","level":"error","msg":"getSiteContent failed — serving default content","meta":{"error":"Error: MONGODB_URI is not set. Add it to .env (see .env.example)."}}
+{"time":"2026-08-28T19:28:25.702Z","level":"error","msg":"getSiteContent failed — serving default content","meta":{"error":"Error: MONGODB_URI is not set. Add it to .env (see .env.example)."}}
+{"time":"2026-08-28T19:29:07.326Z","level":"error","msg":"getSiteContent failed — serving default content","meta":{"error":"Error: MONGODB_URI is not set. Add it to .env (see .env.example)."}}
+{"time":"2026-08-28T19:29:23.012Z","level":"error","msg":"getSiteContent failed — serving default content","meta":{"error":"Error: MONGODB_URI is not set. Add it to .env (see .env.example)."}}
+{"time":"2026-08-28T19:29:39.678Z","level":"error","msg":"getSiteContent failed — serving default content","meta":{"error":"Error: MONGODB_URI is not set. Add it to .env (see .env.example)."}}
+{"time":"2026-08-28T19:30:06.509Z","level":"error","msg":"getSiteContent failed — serving default content","meta":{"error":"Error: MONGODB_URI is not set. Add it to .env (see .env.example)."}}
+{"time":"2026-08-28T19:30:41.504Z","level":"error","msg":"getSiteContent failed — serving default content","meta":{"error":"Error: MONGODB_URI is not set. Add it to .env (see .env.example)."}}
+{"time":"2026-08-28T19:35:54.090Z","level":"error","msg":"getSiteContent failed — serving default content","meta":{"error":"Error: MONGODB_URI is not set. Add it to .env (see .env.example)."}}
+{"time":"2026-08-28T19:36:13.263Z","level":"error","msg":"getSiteContent failed — serving default content","meta":{"error":"Error: MONGODB_URI is not set. Add it to .env (see .env.example)."}}
+{"time":"2026-08-28T19:38:34.642Z","level":"error","msg":"getSiteContent failed — serving default content","meta":{"error":"Error: MONGODB_URI is not set. Add it to .env (see .env.example)."}}
+{"time":"2026-08-28T19:39:48.302Z","level":"error","msg":"getSiteContent failed — serving default content","meta":{"error":"Error: MONGODB_URI is not set. Add it to .env (see .env.example)."}}
+{"time":"2026-08-28T19:41:01.138Z","level":"error","msg":"getSiteContent failed — serving default content","meta":{"error":"Error: MONGODB_URI is not set. Add it to .env (see .env.example)."}}
+{"time":"2026-08-28T19:43:34.808Z","level":"error","msg":"getSiteContent failed — serving default content","meta":{"error":"Error: MONGODB_URI is not set. Add it to .env (see .env.example)."}}
+{"time":"2026-08-28T19:45:34.515Z","level":"error","msg":"getSiteContent failed — serving default content","meta":{"error":"Error: MONGODB_URI is not set. Add it to .env (see .env.example)."}}
+{"time":"2026-08-28T19:46:40.796Z","level":"error","msg":"getSiteContent failed — serving default content","meta":{"error":"Error: MONGODB_URI is not set. Add it to .env (see .env.example)."}}
+{"time":"2026-08-28T20:24:13.293Z","level":"error","msg":"getSiteContent failed — serving default content","meta":{"error":"Error: MONGODB_URI is not set. Add it to .env (see .env.example)."}}
+{"time":"2026-08-29T15:23:21.823Z","level":"error","msg":"getSiteContent failed — serving default content","meta":{"error":"Error: MONGODB_URI is not set. Add it to .env (see .env.example)."}}

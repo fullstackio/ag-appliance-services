@@ -27,6 +27,15 @@
     "vercel:deploy": "vercel --prod",
     "db:seed": "tsx scripts/seed.ts"
   },
+  "lint-staged": {
+    "*.{ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{js,jsx,mjs,json,css,md}": [
+      "prettier --write"
+    ]
+  },
   "dependencies": {
     "@base-ui/react": "^1.7.0",
     "@hookform/resolvers": "^5.9.1",

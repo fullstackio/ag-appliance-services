@@ -125,7 +125,8 @@
   stroke-linejoin: round;
 }
 .site nav {
-  background: #fff;
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(16px) saturate(160%);
   border-bottom: 1px solid var(--line);
   /* LinkedIn-style: sticky, slides away on scroll-down, back on scroll-up */
   position: sticky;
@@ -374,7 +375,11 @@
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, rgba(18, 18, 18, 0) 40%, rgba(18, 18, 18, 0.85) 100%);
+  background: linear-gradient(
+    180deg,
+    rgba(18, 18, 18, 0) 40%,
+    rgba(18, 18, 18, 0.85) 100%
+  );
 }
 .site .visual .badge {
   position: absolute;
@@ -785,6 +790,26 @@
 }
 .site .areas.sec {
   padding: 56px 0;
+  overflow: hidden;
+}
+.site .areas .wrap {
+  position: relative;
+}
+.site .areas .wrap::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: url("/images/kolkata-watermark.svg") no-repeat left bottom / 44%
+    auto;
+  opacity: 0.16;
+  pointer-events: none;
+}
+.site .areas .pill,
+.site .areas h2,
+.site .areas ul,
+.site .areas .map {
+  position: relative;
+  z-index: 1;
 }
 .site .areas .wrap > div:first-child {
   display: contents; /* heading + list go left, .map goes right */
@@ -856,7 +881,12 @@
   height: 520px;
   border-radius: 20px;
   background:
-    radial-gradient(circle at 35% 40%, rgba(232, 178, 92, 0.12), transparent 45%), #0e0e10;
+    radial-gradient(
+      circle at 35% 40%,
+      rgba(232, 178, 92, 0.12),
+      transparent 45%
+    ),
+    #0e0e10;
   border: 1px solid rgba(232, 178, 92, 0.3);
   position: relative;
 }
@@ -1329,7 +1359,11 @@ html:not(.dark) .site .map .landmass {
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, rgba(0, 0, 0, 0) 45%, rgba(18, 18, 18, 0.85) 100%);
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0) 45%,
+    rgba(18, 18, 18, 0.85) 100%
+  );
 }
 .site .g .cap {
   position: absolute;
@@ -1426,7 +1460,8 @@ html:not(.dark) .site .map .landmass {
   color: var(--ink);
 }
 .dark .site nav {
-  background: #0f0f10;
+  background: rgba(15, 15, 16, 0.68);
+  backdrop-filter: blur(16px) saturate(160%);
   border-bottom: 1px solid #2a2a2e;
 }
 .dark .site nav ul {
@@ -1965,7 +2000,10 @@ html:not(.dark) .site .map .landmass {
     line-height: 1.2;
   }
   .site .services .grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr)); /* 2 service cards per row on phones */
+    grid-template-columns: repeat(
+      2,
+      minmax(0, 1fr)
+    ); /* 2 service cards per row on phones */
     gap: 12px;
   }
   .site .svc {

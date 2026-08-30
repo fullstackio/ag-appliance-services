@@ -78,13 +78,19 @@ export const siteSettingsSchema = z.object({
   // rendered as "© {current year} {copyright}" — never store the year, it is added at render time
   copyright: shortText.default("AG Appliance Services. All Rights Reserved."),
   legalText: shortText.default("Privacy Policy • Terms & Conditions"),
-  seoTitle: shortText.default("AG Appliance Services — Appliance Repair in Kolkata"),
+  seoTitle: shortText.default(
+    "AG Appliance Services — Appliance Repair in Kolkata",
+  ),
   seoDescription: longText.default(""),
 });
 export type SiteSettings = z.infer<typeof siteSettingsSchema>;
 
 // ---------------------------------------------------------------- menus
-export const MENU_LOCATIONS = ["header", "footerQuick", "footerServices"] as const;
+export const MENU_LOCATIONS = [
+  "header",
+  "footerQuick",
+  "footerServices",
+] as const;
 export const menuLocationSchema = z.enum(MENU_LOCATIONS);
 export type MenuLocation = z.infer<typeof menuLocationSchema>;
 
@@ -100,7 +106,7 @@ export const menuItemSchema = z.object({
         label: shortText,
         href: url.default("#"),
         visible: z.boolean().default(true),
-      })
+      }),
     )
     .default([]),
 });
@@ -163,7 +169,11 @@ const baseSection = {
   visible: z.boolean().default(true),
 };
 
-export const statItemSchema = z.object({ icon: iconKeySchema, value: shortText, label: shortText });
+export const statItemSchema = z.object({
+  icon: iconKeySchema,
+  value: shortText,
+  label: shortText,
+});
 export const serviceItemSchema = z.object({
   icon: iconKeySchema,
   title: shortText,
@@ -175,8 +185,16 @@ export const serviceCategorySchema = z.object({
   title: shortText,
   chips: z.array(shortText).default([]),
 });
-export const whyItemSchema = z.object({ icon: iconKeySchema, title: shortText, text: longText });
-export const stepItemSchema = z.object({ icon: iconKeySchema, title: shortText, text: longText });
+export const whyItemSchema = z.object({
+  icon: iconKeySchema,
+  title: shortText,
+  text: longText,
+});
+export const stepItemSchema = z.object({
+  icon: iconKeySchema,
+  title: shortText,
+  text: longText,
+});
 export const testimonialSchema = z.object({
   quote: longText,
   name: shortText,
@@ -195,10 +213,15 @@ export const galleryItemSchema = z.object({
 });
 export const brandItemSchema = z.object({ name: shortText, logo: imagePath });
 export const areaItemSchema = z.object({ name: shortText });
-export const faqItemSchema = z.object({ question: shortText, answer: longText });
+export const faqItemSchema = z.object({
+  question: shortText,
+  answer: longText,
+});
 export const videoSchema = z.object({
   ...baseSection,
   image: imagePath.default("/images/gallery-3.jpg"),
+  /** Optional background video (mp4); autoplays muted/looped behind the overlay + text. */
+  video: imagePath.optional(),
   primaryCta: ctaSchema,
   secondaryCta: ctaSchema.optional(),
 });
@@ -215,21 +238,53 @@ export const gallerySchema = z.object({
 
 /** Discriminated by `key`; every section is stored as one document. */
 export const sectionSchema = z.discriminatedUnion("key", [
-  z.object({ key: z.literal("stats"), ...baseSection, items: z.array(statItemSchema) }),
-  z.object({ key: z.literal("services"), ...baseSection, items: z.array(serviceItemSchema) }),
+  z.object({
+    key: z.literal("stats"),
+    ...baseSection,
+    items: z.array(statItemSchema),
+  }),
+  z.object({
+    key: z.literal("services"),
+    ...baseSection,
+    items: z.array(serviceItemSchema),
+  }),
   z.object({
     key: z.literal("serviceCategories"),
     ...baseSection,
     items: z.array(serviceCategorySchema),
   }),
-  z.object({ key: z.literal("why"), ...baseSection, items: z.array(whyItemSchema) }),
-  z.object({ key: z.literal("steps"), ...baseSection, items: z.array(stepItemSchema) }),
+  z.object({
+    key: z.literal("why"),
+    ...baseSection,
+    items: z.array(whyItemSchema),
+  }),
+  z.object({
+    key: z.literal("steps"),
+    ...baseSection,
+    items: z.array(stepItemSchema),
+  }),
   z.object({ key: z.literal("video"), ...videoSchema.shape }),
-  z.object({ key: z.literal("testimonials"), ...baseSection, items: z.array(testimonialSchema) }),
+  z.object({
+    key: z.literal("testimonials"),
+    ...baseSection,
+    items: z.array(testimonialSchema),
+  }),
   z.object({ key: z.literal("gallery"), ...gallerySchema.shape }),
-  z.object({ key: z.literal("brands"), ...baseSection, items: z.array(brandItemSchema) }),
-  z.object({ key: z.literal("areas"), ...baseSection, items: z.array(areaItemSchema) }),
-  z.object({ key: z.literal("faqs"), ...baseSection, items: z.array(faqItemSchema) }),
+  z.object({
+    key: z.literal("brands"),
+    ...baseSection,
+    items: z.array(brandItemSchema),
+  }),
+  z.object({
+    key: z.literal("areas"),
+    ...baseSection,
+    items: z.array(areaItemSchema),
+  }),
+  z.object({
+    key: z.literal("faqs"),
+    ...baseSection,
+    items: z.array(faqItemSchema),
+  }),
   z.object({ key: z.literal("cta"), ...ctaSectionSchema.shape }),
 ]);
 export type Section = z.infer<typeof sectionSchema>;

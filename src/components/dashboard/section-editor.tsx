@@ -2,7 +2,14 @@
 
 import { useState } from "react";
 
-import { ArrowDown, ArrowUp, Plus, RotateCcw, Save, Trash2 } from "lucide-react";
+import {
+  ArrowDown,
+  ArrowUp,
+  Plus,
+  RotateCcw,
+  Save,
+  Trash2,
+} from "lucide-react";
 import { toast } from "sonner";
 
 import { IconPicker } from "@/components/dashboard/icon-picker";
@@ -32,7 +39,15 @@ import {
 } from "@/lib/validations/content";
 
 // ---------------------------------------------------------------- field definitions per section
-type FieldType = "text" | "textarea" | "icon" | "image" | "number" | "boolean" | "chips" | "select";
+type FieldType =
+  | "text"
+  | "textarea"
+  | "icon"
+  | "image"
+  | "number"
+  | "boolean"
+  | "chips"
+  | "select";
 interface FieldDef {
   name: string;
   label: string;
@@ -45,7 +60,12 @@ const ITEM_FIELDS: Record<SectionKey, FieldDef[]> = {
   stats: [
     { name: "icon", label: "Icon", type: "icon" },
     { name: "value", label: "Value (e.g. 650+)", type: "text" },
-    { name: "label", label: "Label (use a new line to break)", type: "textarea", wide: true },
+    {
+      name: "label",
+      label: "Label (use a new line to break)",
+      type: "textarea",
+      wide: true,
+    },
   ],
   services: [
     { name: "icon", label: "Icon", type: "icon" },
@@ -56,7 +76,12 @@ const ITEM_FIELDS: Record<SectionKey, FieldDef[]> = {
   serviceCategories: [
     { name: "icon", label: "Icon", type: "icon" },
     { name: "title", label: "Title", type: "text" },
-    { name: "chips", label: "Chips (comma separated)", type: "chips", wide: true },
+    {
+      name: "chips",
+      label: "Chips (comma separated)",
+      type: "chips",
+      wide: true,
+    },
   ],
   why: [
     { name: "icon", label: "Icon", type: "icon" },
@@ -81,7 +106,12 @@ const ITEM_FIELDS: Record<SectionKey, FieldDef[]> = {
     { name: "category", label: "Category (matches a tab)", type: "text" },
     { name: "title", label: "Title", type: "text" },
     { name: "subtitle", label: "Subtitle", type: "text" },
-    { name: "size", label: "Tile size", type: "select", options: GALLERY_SIZES },
+    {
+      name: "size",
+      label: "Tile size",
+      type: "select",
+      options: GALLERY_SIZES,
+    },
     { name: "feature", label: "Highlight (copper outline)", type: "boolean" },
   ],
   brands: [
@@ -163,10 +193,21 @@ function FieldInput({
         />
       );
     case "icon":
-      return <IconPicker id={id} value={(value as IconKey) ?? "check"} onChange={onChange} />;
+      return (
+        <IconPicker
+          id={id}
+          value={(value as IconKey) ?? "check"}
+          onChange={onChange}
+        />
+      );
     case "image":
       return (
-        <ImageField id={id} value={String(value ?? "")} onChange={onChange} aspect="aspect-[4/3]" />
+        <ImageField
+          id={id}
+          value={String(value ?? "")}
+          onChange={onChange}
+          aspect="aspect-[4/3]"
+        />
       );
     case "number":
       return (
@@ -178,7 +219,13 @@ function FieldInput({
         />
       );
     case "boolean":
-      return <Switch id={id} checked={Boolean(value)} onCheckedChange={(c) => onChange(c)} />;
+      return (
+        <Switch
+          id={id}
+          checked={Boolean(value)}
+          onCheckedChange={(c) => onChange(c)}
+        />
+      );
     case "chips":
       return (
         <Input
@@ -189,7 +236,7 @@ function FieldInput({
               e.target.value
                 .split(",")
                 .map((s) => s.trim())
-                .filter(Boolean)
+                .filter(Boolean),
             )
           }
         />
@@ -211,7 +258,11 @@ function FieldInput({
       );
     default:
       return (
-        <Input id={id} value={String(value ?? "")} onChange={(e) => onChange(e.target.value)} />
+        <Input
+          id={id}
+          value={String(value ?? "")}
+          onChange={(e) => onChange(e.target.value)}
+        />
       );
   }
 }
@@ -225,7 +276,8 @@ export function SectionEditor({ sectionKey }: { sectionKey: SectionKey }) {
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   // Local edits win; otherwise show the server document. Saving/resetting clears local edits.
-  const draft: AnyRecord | null = edited ?? (data ? (data as unknown as AnyRecord) : null);
+  const draft: AnyRecord | null =
+    edited ?? (data ? (data as unknown as AnyRecord) : null);
 
   if (isLoading || !draft) {
     return <Skeleton className="h-64 w-full" />;
@@ -234,7 +286,10 @@ export function SectionEditor({ sectionKey }: { sectionKey: SectionKey }) {
   const items = (draft.items as AnyRecord[] | undefined) ?? [];
   const setTop = (k: string, v: unknown) => setDraft({ ...draft, [k]: v });
   const setItem = (i: number, k: string, v: unknown) =>
-    setDraft({ ...draft, items: items.map((it, idx) => (idx === i ? { ...it, [k]: v } : it)) });
+    setDraft({
+      ...draft,
+      items: items.map((it, idx) => (idx === i ? { ...it, [k]: v } : it)),
+    });
   const move = (i: number, dir: -1 | 1) => {
     const next = [...items];
     const j = i + dir;
@@ -244,8 +299,10 @@ export function SectionEditor({ sectionKey }: { sectionKey: SectionKey }) {
     [next[i], next[j]] = [next[j] as AnyRecord, next[i] as AnyRecord];
     setDraft({ ...draft, items: next });
   };
-  const remove = (i: number) => setDraft({ ...draft, items: items.filter((_, idx) => idx !== i) });
-  const add = () => setDraft({ ...draft, items: [...items, emptyItem(sectionKey)] });
+  const remove = (i: number) =>
+    setDraft({ ...draft, items: items.filter((_, idx) => idx !== i) });
+  const add = () =>
+    setDraft({ ...draft, items: [...items, emptyItem(sectionKey)] });
 
   const onSave = async () => {
     const parsed = sectionSchema.safeParse({ ...draft, key: sectionKey });
@@ -270,7 +327,9 @@ export function SectionEditor({ sectionKey }: { sectionKey: SectionKey }) {
 
   const onReset = async () => {
     if (
-      !window.confirm("Reset this section to the approved mockup content? This cannot be undone.")
+      !window.confirm(
+        "Reset this section to the approved mockup content? This cannot be undone.",
+      )
     ) {
       return;
     }
@@ -307,12 +366,16 @@ export function SectionEditor({ sectionKey }: { sectionKey: SectionKey }) {
                     onChange={(e) => setTop(k, e.target.value)}
                     aria-invalid={Boolean(err(k))}
                   />
-                  {err(k) ? <p className="text-destructive text-xs">{err(k)}</p> : null}
+                  {err(k) ? (
+                    <p className="text-destructive text-xs">{err(k)}</p>
+                  ) : null}
                 </Field>
               ))}
             </div>
             <Field>
-              <FieldLabel htmlFor="top-subtitle">Subtitle / paragraph</FieldLabel>
+              <FieldLabel htmlFor="top-subtitle">
+                Subtitle / paragraph
+              </FieldLabel>
               <Textarea
                 id="top-subtitle"
                 rows={2}
@@ -321,14 +384,29 @@ export function SectionEditor({ sectionKey }: { sectionKey: SectionKey }) {
               />
             </Field>
             {sectionKey === "video" ? (
-              <Field>
-                <FieldLabel htmlFor="top-image">Background image</FieldLabel>
-                <ImageField
-                  id="top-image"
-                  value={String(draft.image ?? "")}
-                  onChange={(v) => setTop("image", v)}
-                />
-              </Field>
+              <>
+                <Field>
+                  <FieldLabel htmlFor="top-image">
+                    Background image (poster / fallback)
+                  </FieldLabel>
+                  <ImageField
+                    id="top-image"
+                    value={String(draft.image ?? "")}
+                    onChange={(v) => setTop("image", v)}
+                  />
+                </Field>
+                <Field>
+                  <FieldLabel htmlFor="top-video">
+                    Background video (mp4 path, optional)
+                  </FieldLabel>
+                  <Input
+                    id="top-video"
+                    value={String(draft.video ?? "")}
+                    onChange={(e) => setTop("video", e.target.value)}
+                    placeholder="/video/how-we-work.mp4"
+                  />
+                </Field>
+              </>
             ) : null}
             {sectionKey === "gallery" ? (
               <Field>
@@ -337,14 +415,16 @@ export function SectionEditor({ sectionKey }: { sectionKey: SectionKey }) {
                 </FieldLabel>
                 <Input
                   id="top-tabs"
-                  value={((draft.tabs as string[] | undefined) ?? []).join(", ")}
+                  value={((draft.tabs as string[] | undefined) ?? []).join(
+                    ", ",
+                  )}
                   onChange={(e) =>
                     setTop(
                       "tabs",
                       e.target.value
                         .split(",")
                         .map((s) => s.trim())
-                        .filter(Boolean)
+                        .filter(Boolean),
                     )
                   }
                 />
@@ -353,24 +433,34 @@ export function SectionEditor({ sectionKey }: { sectionKey: SectionKey }) {
             {HAS_CTAS.includes(sectionKey) ? (
               <div className="grid gap-4 sm:grid-cols-2">
                 {(["primaryCta", "secondaryCta"] as const).map((k) => {
-                  const cta = (draft[k] as { label?: string; href?: string } | undefined) ?? {};
+                  const cta =
+                    (draft[k] as
+                      { label?: string; href?: string } | undefined) ?? {};
                   return (
                     <div key={k} className="space-y-2 rounded-md border p-3">
                       <div className="text-sm font-medium">
-                        {k === "primaryCta" ? "Primary button" : "Secondary button"}
+                        {k === "primaryCta"
+                          ? "Primary button"
+                          : "Secondary button"}
                       </div>
                       <Input
                         placeholder="Label"
                         value={cta.label ?? ""}
-                        onChange={(e) => setTop(k, { ...cta, label: e.target.value })}
+                        onChange={(e) =>
+                          setTop(k, { ...cta, label: e.target.value })
+                        }
                       />
                       <Input
                         placeholder="Link (#book, tel:…, https://…)"
                         value={cta.href ?? ""}
-                        onChange={(e) => setTop(k, { ...cta, href: e.target.value })}
+                        onChange={(e) =>
+                          setTop(k, { ...cta, href: e.target.value })
+                        }
                       />
                       {err(`${k}.label`) ? (
-                        <p className="text-destructive text-xs">{err(`${k}.label`)}</p>
+                        <p className="text-destructive text-xs">
+                          {err(`${k}.label`)}
+                        </p>
                       ) : null}
                     </div>
                   );
@@ -432,7 +522,10 @@ export function SectionEditor({ sectionKey }: { sectionKey: SectionKey }) {
                     const id = `item-${i}-${def.name}`;
                     const e = err(`items.${i}.${def.name}`);
                     return (
-                      <Field key={def.name} className={def.wide ? "sm:col-span-2" : undefined}>
+                      <Field
+                        key={def.name}
+                        className={def.wide ? "sm:col-span-2" : undefined}
+                      >
                         <FieldLabel htmlFor={id}>{def.label}</FieldLabel>
                         <FieldInput
                           def={def}
@@ -440,7 +533,9 @@ export function SectionEditor({ sectionKey }: { sectionKey: SectionKey }) {
                           value={item[def.name]}
                           onChange={(v) => setItem(i, def.name, v)}
                         />
-                        {e ? <p className="text-destructive text-xs">{e}</p> : null}
+                        {e ? (
+                          <p className="text-destructive text-xs">{e}</p>
+                        ) : null}
                       </Field>
                     );
                   })}

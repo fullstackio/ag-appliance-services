@@ -27,7 +27,12 @@ export const defaultSettings: SiteSettings = {
   logo: "/images/logo.png",
   footerAbout:
     "Reliable home appliance repair service in Kolkata. Fast, affordable & trusted by hundreds of happy customers. Reliable • Quality • Trusted — Since 2026.",
-  social: { facebook: "#", instagram: "#", whatsapp: "https://wa.me/919123667075", google: "#" },
+  social: {
+    facebook: "#",
+    instagram: "#",
+    whatsapp: "https://wa.me/919123667075",
+    google: "#",
+  },
   googleBusinessUrl: "#",
   copyright: "AG Appliance Services. All Rights Reserved.", // year is prefixed dynamically at render
   legalText: "Privacy Policy • Terms & Conditions",
@@ -42,11 +47,41 @@ export const defaultMenus: Record<MenuLocation, Menu> = {
     // same order as the sections on the page
     items: [
       { id: "home", label: "Home", href: "#home", visible: true, children: [] },
-      { id: "services", label: "Services", href: "#services", visible: true, children: [] },
-      { id: "steps", label: "How It Works", href: "#how-it-works", visible: true, children: [] },
-      { id: "testimonials", label: "Reviews", href: "#testimonials", visible: true, children: [] },
-      { id: "gallery", label: "Gallery", href: "#gallery", visible: true, children: [] },
-      { id: "areas", label: "Areas", href: "#areas", visible: true, children: [] },
+      {
+        id: "services",
+        label: "Services",
+        href: "#services",
+        visible: true,
+        children: [],
+      },
+      {
+        id: "steps",
+        label: "How It Works",
+        href: "#how-it-works",
+        visible: true,
+        children: [],
+      },
+      {
+        id: "testimonials",
+        label: "Reviews",
+        href: "#testimonials",
+        visible: true,
+        children: [],
+      },
+      {
+        id: "gallery",
+        label: "Gallery",
+        href: "#gallery",
+        visible: true,
+        children: [],
+      },
+      {
+        id: "areas",
+        label: "Areas",
+        href: "#areas",
+        visible: true,
+        children: [],
+      },
       { id: "faqs", label: "FAQs", href: "#faqs", visible: true, children: [] },
     ],
   },
@@ -55,9 +90,21 @@ export const defaultMenus: Record<MenuLocation, Menu> = {
     title: "Quick Links",
     items: [
       { id: "home", label: "Home", href: "#home", visible: true, children: [] },
-      { id: "services", label: "Services", href: "#services", visible: true, children: [] },
+      {
+        id: "services",
+        label: "Services",
+        href: "#services",
+        visible: true,
+        children: [],
+      },
       { id: "faqs", label: "FAQs", href: "#faqs", visible: true, children: [] },
-      { id: "book", label: "Book Service", href: "#book", visible: true, children: [] },
+      {
+        id: "book",
+        label: "Book Service",
+        href: "#book",
+        visible: true,
+        children: [],
+      },
     ],
   },
   footerServices: {
@@ -92,7 +139,13 @@ export const defaultMenus: Record<MenuLocation, Menu> = {
         visible: true,
         children: [],
       },
-      { id: "geyser", label: "Geyser Repair", href: "#services", visible: true, children: [] },
+      {
+        id: "geyser",
+        label: "Geyser Repair",
+        href: "#services",
+        visible: true,
+        children: [],
+      },
       {
         id: "micro",
         label: "Microwave Oven Repair",
@@ -344,6 +397,7 @@ export const defaultSections: { [K in SectionKey]: SectionOf<K> } = {
     subtitle:
       "Our certified technicians diagnose, repair and test your AC, fridge and kitchen appliances at your home — book your visit in under a minute.",
     image: "/images/gallery-3.jpg",
+    video: "/video/how-we-work.mp4",
     primaryCta: { label: "📞 Call Us Now", href: "tel:9123667075" },
     secondaryCta: { label: "📅 Book A Service", href: "#book" },
     visible: true,
@@ -593,11 +647,13 @@ export const defaultSections: { [K in SectionKey]: SectionOf<K> } = {
       },
       {
         question: "How can I book a service?",
-        answer: "Call or WhatsApp 9123667075, or use the Book Service button on this page.",
+        answer:
+          "Call or WhatsApp 9123667075, or use the Book Service button on this page.",
       },
       {
         question: "What is the service warranty?",
-        answer: "Every repair carries a 90-day service warranty on the work done.",
+        answer:
+          "Every repair carries a 90-day service warranty on the work done.",
       },
       {
         question: "What payment methods do you accept?",

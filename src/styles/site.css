@@ -186,6 +186,9 @@
 .site .brand .name {
   white-space: nowrap;
 }
+.site .nav-burger {
+  display: none;
+}
 /* 11 menu items: tighten before handing over to the burger */
 @media (max-width: 1700px) {
   .site nav ul {
@@ -1618,6 +1621,9 @@ html:not(.dark) .site .map .landmass {
 }
 .site .video {
   position: relative;
+  /* establishes a stacking context so .video-bg's z-index:-1 stays local to this
+     section instead of escaping to the page's root stacking context */
+  z-index: 0;
   /* fill the viewport below the sticky header (header height is published as --header-h) */
   height: calc(100vh - var(--header-h, 87px));
   height: calc(100svh - var(--header-h, 87px));
@@ -1637,6 +1643,14 @@ html:not(.dark) .site .map .landmass {
     rgba(74, 40, 14, 0.72) 0%,
     rgba(18, 18, 18, 0.9) 70%
   );
+}
+.site .video .video-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: -1; /* behind ::before's darkening overlay and the .wrap text */
 }
 .site .video .wrap {
   position: relative;
@@ -1931,10 +1945,15 @@ html:not(.dark) .site .map .landmass {
 .site .video {
   background-image: var(--video-bg);
 }
-.site .nav-burger {
-  display: none;
-}
 @media (max-width: 1100px) {
+  /* app-like compact top bar on tablets/phones instead of a shrunk desktop header */
+  .site nav .wrap {
+    height: 64px;
+  }
+  .site .brand img {
+    width: 46px;
+    height: 46px;
+  }
   .site .hero .wrap {
     grid-template-columns: 1fr;
     padding: 50px 0 100px;
@@ -2094,15 +2113,21 @@ html:not(.dark) .site .map .landmass {
     font-size: 10px;
     padding: 5px 12px;
   }
+  .site nav .wrap {
+    height: 56px;
+  }
+  .site .brand {
+    gap: 8px;
+  }
   .site .brand img {
-    width: 44px;
-    height: 44px;
+    width: 38px;
+    height: 38px;
   }
   .site .brand .name {
-    font-size: 15px;
+    font-size: 14px;
   }
   .site .brand .name span {
-    font-size: 11px;
+    font-size: 10px;
   }
   .site .hero .tag {
     font-size: 10px;

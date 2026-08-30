@@ -18,11 +18,13 @@ const SectionSchema = new Schema(
     items: { type: Schema.Types.Mixed, default: undefined },
     tabs: { type: [String], default: undefined },
     image: String,
+    video: String,
     primaryCta: { type: Schema.Types.Mixed, default: undefined },
     secondaryCta: { type: Schema.Types.Mixed, default: undefined },
   },
-  { timestamps: true, minimize: false, strict: false }
+  { timestamps: true, minimize: false, strict: false },
 );
 
 export const SectionModel =
-  (models.Section as Model<Section> | undefined) ?? model<Section>("Section", SectionSchema);
+  (models.Section as Model<Section> | undefined) ??
+  model<Section>("Section", SectionSchema);

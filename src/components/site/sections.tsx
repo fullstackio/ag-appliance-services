@@ -8,7 +8,10 @@ import { AreasMap } from "@/components/site/areas-map";
 import { CardSlider } from "@/components/site/card-slider";
 import { Icon } from "@/components/site/icons";
 import { ScrollReveal } from "@/components/site/scroll-reveal";
-import { AccentHeading, SectionHeading } from "@/components/site/section-heading";
+import {
+  AccentHeading,
+  SectionHeading,
+} from "@/components/site/section-heading";
 import { SiteButton } from "@/components/site/site-link";
 import type { SectionOf, SiteSettings } from "@/lib/validations/content";
 
@@ -212,21 +215,51 @@ export function VideoCta({ section }: { section: SectionOf<"video"> }) {
     return null;
   }
   return (
-    <section className="video" id="about" style={{ backgroundImage: `url('${section.image}')` }}>
+    <section
+      className="video"
+      id="about"
+      style={
+        section.video
+          ? undefined
+          : { backgroundImage: `url('${section.image}')` }
+      }
+    >
+      {section.video ? (
+        <video
+          className="video-bg"
+          src={section.video}
+          poster={section.image}
+          autoPlay
+          loop
+          muted
+          playsInline
+        />
+      ) : null}
       <div className="wrap">
         <ScrollReveal className="video-head">
           <span className="tag">{section.pill}</span>
           <h2>
-            <AccentHeading heading={section.heading} accent={section.headingAccent} />
+            <AccentHeading
+              heading={section.heading}
+              accent={section.headingAccent}
+            />
           </h2>
         </ScrollReveal>
         <p>{section.subtitle}</p>
         <div className="actions">
-          <SiteButton variant="copper" size="site-lg" href={section.primaryCta.href}>
+          <SiteButton
+            variant="copper"
+            size="site-lg"
+            href={section.primaryCta.href}
+          >
             {section.primaryCta.label}
           </SiteButton>
           {section.secondaryCta ? (
-            <SiteButton variant="gold" size="site-lg" href={section.secondaryCta.href}>
+            <SiteButton
+              variant="gold"
+              size="site-lg"
+              href={section.secondaryCta.href}
+            >
               {section.secondaryCta.label}
             </SiteButton>
           ) : null}
@@ -245,7 +278,11 @@ function initials(name: string): string {
     .join("");
 }
 
-export function Testimonials({ section }: { section: SectionOf<"testimonials"> }) {
+export function Testimonials({
+  section,
+}: {
+  section: SectionOf<"testimonials">;
+}) {
   if (!section.visible) {
     return null;
   }
@@ -293,7 +330,9 @@ export function Brands({ section }: { section: SectionOf<"brands"> }) {
   if (!section.visible) {
     return null;
   }
-  const rows = [0, 1, 2].map((r) => section.items.filter((_, i) => i % 3 === r));
+  const rows = [0, 1, 2].map((r) =>
+    section.items.filter((_, i) => i % 3 === r),
+  );
   return (
     <section className="sec brands" id="brands">
       <div className="wrap">
@@ -310,8 +349,13 @@ export function Brands({ section }: { section: SectionOf<"brands"> }) {
             {["a", "b"].flatMap((dup) =>
               row.map((b) => (
                 // eslint-disable-next-line @next/next/no-img-element -- SVG logos, no optimisation needed
-                <img key={`${dup}-${b.name}`} src={b.logo} alt={b.name} loading="lazy" />
-              ))
+                <img
+                  key={`${dup}-${b.name}`}
+                  src={b.logo}
+                  alt={b.name}
+                  loading="lazy"
+                />
+              )),
             )}
           </div>
         ))}
@@ -331,7 +375,10 @@ export function Areas({ section }: { section: SectionOf<"areas"> }) {
         <div>
           <span className="pill">{section.pill}</span>
           <h2>
-            <AccentHeading heading={section.heading} accent={section.headingAccent} />
+            <AccentHeading
+              heading={section.heading}
+              accent={section.headingAccent}
+            />
           </h2>
           <AreasMap items={section.items} />
         </div>
@@ -357,7 +404,11 @@ export function CtaBand({ section }: { section: SectionOf<"cta"> }) {
             {section.primaryCta.label}
           </SiteButton>
           {section.secondaryCta ? (
-            <SiteButton variant="light" href={section.secondaryCta.href} className="border-0">
+            <SiteButton
+              variant="light"
+              href={section.secondaryCta.href}
+              className="border-0"
+            >
               {section.secondaryCta.label}
             </SiteButton>
           ) : null}
@@ -384,7 +435,9 @@ export function ProfileCards({ settings }: { settings: SiteSettings }) {
         FIND US ON GOOGLE
         <div
           className="bar"
-          style={{ background: "linear-gradient(135deg,var(--copper2),var(--bronze))" }}
+          style={{
+            background: "linear-gradient(135deg,var(--copper2),var(--bronze))",
+          }}
         >
           BUSINESS PROFILE
         </div>
@@ -396,11 +449,19 @@ export function ProfileCards({ settings }: { settings: SiteSettings }) {
         rel="noreferrer"
       >
         <b>
-          <Image src="/brands/whatsapp.svg" alt="WhatsApp" width={18} height={18} />
+          <Image
+            src="/brands/whatsapp.svg"
+            alt="WhatsApp"
+            width={18}
+            height={18}
+          />
           WhatsApp
         </b>
         CHAT WITH US
-        <div className="bar" style={{ background: "linear-gradient(135deg,#1f9d55,#146a3a)" }}>
+        <div
+          className="bar"
+          style={{ background: "linear-gradient(135deg,#1f9d55,#146a3a)" }}
+        >
           BUSINESS PROFILE
         </div>
       </a>

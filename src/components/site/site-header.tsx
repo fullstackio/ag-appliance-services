@@ -15,6 +15,7 @@ import {
   Sheet,
   SheetContent,
   SheetDescription,
+  SheetFooter,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
@@ -55,8 +56,18 @@ export function Brand({
   base?: string;
 }) {
   return (
-    <a href={`${base}#home`} className="brand" style={light ? { color: "#fff" } : undefined}>
-      <Image src={settings.logo} alt={settings.businessName} width={62} height={62} priority />
+    <a
+      href={`${base}#home`}
+      className="brand"
+      style={light ? { color: "#fff" } : undefined}
+    >
+      <Image
+        src={settings.logo}
+        alt={settings.businessName}
+        width={62}
+        height={62}
+        priority
+      />
       <div className="name">
         {settings.brandLine1}
         <span>{settings.brandLine2}</span>
@@ -96,7 +107,8 @@ function useHeaderScroll() {
     };
     // keep the bar visible while an anchor link is smooth-scrolling the page
     const onLock = (e: Event) => {
-      lockedUntil = performance.now() + ((e as CustomEvent<number>).detail ?? 800);
+      lockedUntil =
+        performance.now() + ((e as CustomEvent<number>).detail ?? 800);
       setHidden(false);
     };
 
@@ -123,7 +135,10 @@ function useHeaderHeightVar(ref: React.RefObject<HTMLElement | null>) {
       return;
     }
     const apply = () =>
-      document.documentElement.style.setProperty("--header-h", `${el.offsetHeight}px`);
+      document.documentElement.style.setProperty(
+        "--header-h",
+        `${el.offsetHeight}px`,
+      );
     apply();
     const ro = new ResizeObserver(apply);
     ro.observe(el);
@@ -138,6 +153,7 @@ export function SiteHeader({ settings, menu, base = "" }: SiteHeaderProps) {
   const [active, setActive] = useState<string>(menu.items[0]?.href ?? "#home");
   const { scrolled, hidden } = useHeaderScroll();
   const items = menu.items.filter((i) => i.visible);
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   // scroll-spy: highlight the menu item whose section is in view
   useEffect(() => {
@@ -157,7 +173,7 @@ export function SiteHeader({ settings, menu, base = "" }: SiteHeaderProps) {
           setActive(`#${visible.target.id}`);
         }
       },
-      { rootMargin: "-40% 0px -50% 0px", threshold: [0, 0.25, 0.5] }
+      { rootMargin: "-40% 0px -50% 0px", threshold: [0, 0.25, 0.5] },
     );
     els.forEach((el) => obs.observe(el));
     return () => obs.disconnect();
@@ -168,13 +184,18 @@ export function SiteHeader({ settings, menu, base = "" }: SiteHeaderProps) {
       ref={navRef}
       id="top"
       data-site-header
-      className={[scrolled ? "is-scrolled" : "", hidden ? "is-hidden" : ""].join(" ").trim()}
+      className={[scrolled ? "is-scrolled" : "", hidden ? "is-hidden" : ""]
+        .join(" ")
+        .trim()}
     >
       <div className="wrap">
         <Brand settings={settings} base={base} />
         <ul>
           {items.map((item) => (
-            <li key={item.id} className={active === item.href ? "active" : undefined}>
+            <li
+              key={item.id}
+              className={active === item.href ? "active" : undefined}
+            >
               <a href={sectionHref(item.href, base)}>{item.label}</a>
             </li>
           ))}
@@ -187,7 +208,7 @@ export function SiteHeader({ settings, menu, base = "" }: SiteHeaderProps) {
             📅 Book Service
           </SiteButton>
           <ThemeToggle />
-          <Sheet>
+          <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
             <SheetTrigger
               render={
                 <Button
@@ -200,33 +221,57 @@ export function SiteHeader({ settings, menu, base = "" }: SiteHeaderProps) {
             >
               <MenuIcon />
             </SheetTrigger>
-            <SheetContent side="right" className="w-80">
-              <SheetHeader>
-                <SheetTitle>{settings.businessName}</SheetTitle>
-                <SheetDescription>{settings.tagline}</SheetDescription>
-              </SheetHeader>
-              <nav className="flex flex-col gap-1 px-4">
-                {items.map((item) => (
-                  <a
-                    key={item.id}
-                    href={sectionHref(item.href, base)}
-                    className="hover:bg-muted rounded-md px-3 py-2 text-sm font-medium"
+            <SheetContent side="left" className="w-80 gap-0 p-0">
+              {/* .site re-establishes the brand CSS variables + Poppins font-family that this
+                  panel loses by being portalled outside the page's <div className="site"> root */}
+              <div className="site flex h-full flex-col">
+                <SheetHeader className="gap-2 border-b border-(--line) px-4 py-4">
+                  <Brand settings={settings} base={base} />
+                  <SheetTitle className="sr-only">
+                    {settings.businessName} menu
+                  </SheetTitle>
+                  <SheetDescription className="text-xs">
+                    {settings.tagline}
+                  </SheetDescription>
+                </SheetHeader>
+                <nav className="flex flex-1 flex-col gap-1 overflow-y-auto px-4 py-4">
+                  {items.map((item) => (
+                    <a
+                      key={item.id}
+                      href={sectionHref(item.href, base)}
+                      onClick={() => setMobileOpen(false)}
+                      className="hover:bg-muted rounded-md px-3 py-2 text-sm font-medium"
+                    >
+                      {item.label}
+                    </a>
+                  ))}
+                </nav>
+                <SheetFooter className="gap-2 border-t border-(--line)">
+                  <Button
+                    variant="copper"
+                    size="site"
+                    onClick={() => {
+                      setMobileOpen(false);
+                      openDialog();
+                    }}
                   >
-                    {item.label}
-                  </a>
-                ))}
-                <Button variant="copper" size="site" className="mt-4" onClick={() => openDialog()}>
-                  📅 Book Service
-                </Button>
-                <Button
-                  variant="ink"
-                  size="site"
-                  nativeButton={false}
-                  render={<a href={`tel:${settings.phone}`} />}
-                >
-                  <Icon name="phone" /> {settings.phone}
-                </Button>
-              </nav>
+                    📅 Book Service
+                  </Button>
+                  <Button
+                    variant="ink"
+                    size="site"
+                    nativeButton={false}
+                    render={
+                      <a
+                        href={`tel:${settings.phone}`}
+                        onClick={() => setMobileOpen(false)}
+                      />
+                    }
+                  >
+                    <Icon name="phone" /> {settings.phone}
+                  </Button>
+                </SheetFooter>
+              </div>
             </SheetContent>
           </Sheet>
         </div>

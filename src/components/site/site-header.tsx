@@ -7,6 +7,7 @@ import Image from "next/image";
 import { Menu as MenuIcon } from "lucide-react";
 import { useTheme } from "next-themes";
 
+import { ContactDialog } from "@/components/site/contact-dialog";
 import { Icon, MoonIcon, SunIcon } from "@/components/site/icons";
 import { sectionHref } from "@/components/site/section-href";
 import { SiteButton } from "@/components/site/site-link";
@@ -201,9 +202,7 @@ export function SiteHeader({ settings, menu, base = "" }: SiteHeaderProps) {
           ))}
         </ul>
         <div className="nav-cta">
-          <SiteButton variant="ink" href={`tel:${settings.phone}`}>
-            <Icon name="phone" /> {settings.phone}
-          </SiteButton>
+          <ContactDialog />
           <SiteButton variant="copper" href="#book">
             📅 Book Service
           </SiteButton>

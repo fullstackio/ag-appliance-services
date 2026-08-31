@@ -1,8 +1,11 @@
 /* AG Appliance Services — public site styles.
    Ported 1:1 from mockup/ag-appliance-mockup-v3.html (approved design), scoped under .site.
    Dark mode: html.dark (driven by the theme toggle). Author: Avijit Ghosh */
-/* zero-specificity reset so every mockup rule (and Tailwind on shadcn buttons) still wins */
-:where(.site *:not([data-slot="button"])) {
+/* zero-specificity reset so every mockup rule (and Tailwind on shadcn buttons) still wins.
+   Excluded by the "group/button" class (always present via buttonVariants()) rather than
+   [data-slot="button"] — a DialogTrigger/SheetTrigger `render` composition overwrites
+   data-slot with its own trigger slot name, so that attribute isn't a reliable marker. */
+:where(.site *:not(.group\/button)) {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
@@ -11,10 +14,10 @@
   text-decoration: none;
 }
 /* plain links inherit text colour; shadcn Buttons keep their own (Tailwind layer) colours issues log */
-.site a:not([data-slot="button"]) {
+.site a:not(.group\/button) {
   color: inherit;
 }
-:where(.site button) {
+:where(.site button:not(.group\/button)) {
   font: inherit;
   color: inherit;
 }
@@ -198,7 +201,7 @@
 }
 @media (max-width: 1500px) {
   /* number is repeated in hero / CTA / footer; free room for the 11 menu items */
-  .site .nav-cta a[href^="tel:"] {
+  .site .nav-cta .nav-contact-btn {
     display: none;
   }
 }
@@ -2080,9 +2083,8 @@ html:not(.dark) .site .map .landmass {
   .site .areas ul {
     grid-template-columns: repeat(2, 1fr);
   }
-  .site .nav-cta a[href="#book"],
-  .site .nav-cta a[href^="tel:"] {
-    display: none; /* both live in the mobile sheet */
+  .site .nav-cta a[href="#book"] {
+    display: none; /* lives in the mobile sheet */
   }
   .site .stats .wrap {
     grid-template-columns: repeat(2, minmax(0, 1fr));

@@ -22,7 +22,7 @@ const buttonVariants = cva(
         copper:
           "bg-linear-135 from-brand-copper2 to-brand-copper text-white shadow-[0_8px_20px_rgba(184,113,47,.35)] hover:brightness-110 hover:shadow-[0_14px_28px_rgba(184,113,47,.45)]",
         gold: "border-[1.5px] border-brand-gold bg-[rgba(18,18,18,.35)] text-white hover:bg-brand-gold hover:text-brand-ink hover:shadow-[0_10px_24px_rgba(232,178,92,.35)]",
-        ink: "bg-brand-ink text-white hover:bg-brand-ink2 hover:shadow-[0_12px_24px_rgba(0,0,0,.35)] dark:bg-brand-copper dark:hover:bg-brand-copper2",
+        ink: "bg-brand-ink text-white hover:bg-brand-ink2 hover:shadow-[0_12px_24px_rgba(0,0,0,.35)] dark:bg-white dark:text-brand-ink dark:hover:bg-brand-cream",
         light:
           "border-[1.5px] border-brand-line bg-white text-brand-ink hover:bg-brand-cream hover:border-brand-copper2 hover:shadow-[0_10px_24px_rgba(0,0,0,.12)] dark:border-[#3a3a3f] dark:bg-[#232326] dark:text-white",
       },
@@ -48,7 +48,7 @@ const buttonVariants = cva(
       variant: "default",
       size: "default",
     },
-  }
+  },
 );
 
 function Button({

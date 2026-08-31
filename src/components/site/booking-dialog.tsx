@@ -49,7 +49,8 @@ export function BookingDialog({ phone }: { phone: string }) {
   const setField = useBookingStore((s) => s.setField);
   const resetDraft = useBookingStore((s) => s.reset);
   const create = useCreateBooking();
-  const isMobile = useIsMobile();
+  // below lg: full-width bottom sheet (phones and tablets alike); lg+: right-side panel
+  const isCompact = useIsMobile(1024);
 
   const form = useForm<FormValues>({
     resolver: zodResolver(bookingInputSchema),
@@ -110,13 +111,13 @@ export function BookingDialog({ phone }: { phone: string }) {
   return (
     <Sheet open={open} onOpenChange={handleOpenChange}>
       <SheetContent
-        side={isMobile ? "bottom" : "right"}
-        className="site gap-0 p-0 sm:max-w-lg data-[side=bottom]:max-h-[85vh]"
+        side={isCompact ? "bottom" : "right"}
+        className="gap-0 p-0 lg:max-w-lg data-[side=bottom]:max-h-[85vh]"
       >
         <form
           onSubmit={onSubmit}
           noValidate
-          className="flex h-full flex-col overflow-hidden"
+          className="site flex h-full flex-col overflow-hidden"
         >
           <SheetHeader className="border-b border-(--line) px-6 py-5">
             <SheetTitle>Book a Service</SheetTitle>

@@ -1,5 +1,7 @@
 "use client";
 
+import { useEffect } from "react";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -64,6 +66,14 @@ export function BookingDialog({ phone }: { phone: string }) {
       preferredDate: draft.preferredDate || undefined,
     },
   });
+
+  // the form mounts once; re-sync the appliance field whenever a service card
+  // re-opens the (already-mounted) dialog with a different pre-selected appliance
+  useEffect(() => {
+    if (open && appliance) {
+      form.setValue("appliance", appliance as ApplianceType);
+    }
+  }, [open, appliance, form]);
 
   // persist the draft (Zustand + localStorage) when the dialog closes so input isn't lost
   const handleOpenChange = (next: boolean) => {

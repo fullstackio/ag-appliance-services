@@ -100,7 +100,7 @@ export const defaultMenus: Record<MenuLocation, Menu> = {
       { id: "faqs", label: "FAQs", href: "#faqs", visible: true, children: [] },
       {
         id: "book",
-        label: "Book Service",
+        label: "Book A Service",
         href: "#book",
         visible: true,
         children: [],
@@ -184,7 +184,7 @@ export const defaultBanners: Banner[] = [
     heading: "Appliance Repair\nService in",
     headingAccent: "Kolkata",
     text: "Expert technicians for AC, Refrigerator, Geyser, Microwave & more — right at your doorstep. Same-day service with 100% customer satisfaction.",
-    primaryCta: { label: "📅 Book Service", href: "#book" },
+    primaryCta: { label: "📅 Book A Service", href: "#book" },
     secondaryCta: { label: "📞 9123667075", href: "tel:9123667075" },
     image: "/images/technician.jpg",
     images: [
@@ -648,7 +648,7 @@ export const defaultSections: { [K in SectionKey]: SectionOf<K> } = {
       {
         question: "How can I book a service?",
         answer:
-          "Call or WhatsApp 9123667075, or use the Book Service button on this page.",
+          "Call or WhatsApp 9123667075, or use the Book A Service button on this page.",
       },
       {
         question: "What is the service warranty?",
@@ -675,7 +675,7 @@ export const defaultSections: { [K in SectionKey]: SectionOf<K> } = {
     key: "cta",
     heading: "Need an Appliance Fixed?",
     subtitle: "Call us now or book online. We are ready to help you!",
-    primaryCta: { label: "Book Service Now", href: "#book" },
+    primaryCta: { label: "Book A Service Now", href: "#book" },
     secondaryCta: { label: "📞 9123667075", href: "tel:9123667075" },
     visible: true,
   },

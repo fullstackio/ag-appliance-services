@@ -203,8 +203,8 @@ export function SiteHeader({ settings, menu, base = "" }: SiteHeaderProps) {
         </ul>
         <div className="nav-cta">
           <ContactDialog />
-          <SiteButton variant="copper" href="#book">
-            📅 Book Service
+          <SiteButton variant="copper" href="#book" className="book-cta">
+            📅 Book A Service
           </SiteButton>
           <ThemeToggle />
           <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
@@ -254,7 +254,7 @@ export function SiteHeader({ settings, menu, base = "" }: SiteHeaderProps) {
                       openDialog();
                     }}
                   >
-                    📅 Book Service
+                    📅 Book A Service
                   </Button>
                   <Button
                     variant="ink"

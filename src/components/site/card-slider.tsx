@@ -23,10 +23,8 @@ interface CardSliderProps {
   label: string;
 }
 
-/** Below this width the carousel switches to a centred, non-looping, one-at-a-time layout. */
+/** Below this width the carousel switches to a non-looping, one-at-a-time layout. */
 const COMPACT_MAX_WIDTH = 1100;
-/** Peek of the neighbouring cards on each side of the centred slide, on mobile/tablet. */
-const CENTER_PADDING = "12%";
 
 /**
  * Cards visible for the current container width. Measured with ResizeObserver on the slider's
@@ -35,7 +33,7 @@ const CENTER_PADDING = "12%";
 function useSlidesToShow(
   ref: React.RefObject<HTMLDivElement | null>,
   perView: number,
-  responsive: Array<[number, number]>
+  responsive: Array<[number, number]>,
 ): { show: number; compact: boolean } {
   // pick(0) — used for both the server render and the client's pre-hydration render — must be
   // window-independent so the two match exactly; only the post-mount ResizeObserver measurement
@@ -71,8 +69,9 @@ function useSlidesToShow(
 
 /**
  * Auto-rotating card carousel (react-slick): equal-height cards, dots only, no arrows.
- * On mobile/tablet it switches to a centred, non-looping, one-card-at-a-time view (with a
- * peek of its neighbours) — the hero banner slider is a separate component and is unaffected.
+ * On mobile/tablet it switches to a non-looping, left-aligned view showing 1.4 cards per
+ * row (a peek of the next card, never centred) — the hero banner slider is a separate
+ * component and is unaffected.
  */
 export function CardSlider({
   children,
@@ -89,7 +88,11 @@ export function CardSlider({
 }: CardSliderProps) {
   const wrapRef = useRef<HTMLDivElement>(null);
   const count = children.length;
-  const { show: rawShow, compact } = useSlidesToShow(wrapRef, perView, responsive);
+  const { show: rawShow, compact } = useSlidesToShow(
+    wrapRef,
+    perView,
+    responsive,
+  );
   const show = Math.min(rawShow, count);
   const canLoop = count > show;
   // mobile / tablet: no autoplay, no loop — browse by swipe or dots, one card at a time, centred
@@ -107,9 +110,9 @@ export function CardSlider({
         autoplaySpeed={autoplaySpeed}
         speed={700}
         pauseOnHover
-        centerMode={compact && count > 1}
-        centerPadding={compact ? CENTER_PADDING : "0px"}
-        slidesToShow={compact ? 1 : show}
+        centerMode={false}
+        centerPadding="0px"
+        slidesToShow={compact ? 1.4 : show}
         slidesToScroll={1}
         cssEase="cubic-bezier(0.4, 0, 0.2, 1)"
         dotsClass="slick-dots card-dots"

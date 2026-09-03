@@ -12,6 +12,7 @@ import {
   AccentHeading,
   SectionHeading,
 } from "@/components/site/section-heading";
+import { ServiceCard } from "@/components/site/service-card";
 import { SiteButton } from "@/components/site/site-link";
 import type { SectionOf, SiteSettings } from "@/lib/validations/content";
 
@@ -93,13 +94,12 @@ export function Services({
         />
         <div className="grid">
           {section.items.map((svc) => (
-            <div className="svc" key={svc.title}>
-              <div className="ico">
-                <Icon name={svc.icon} />
-              </div>
-              <b>{svc.title}</b>
-              <small>{svc.subtitle}</small>
-            </div>
+            <ServiceCard
+              key={svc.title}
+              icon={svc.icon}
+              title={svc.title}
+              subtitle={svc.subtitle}
+            />
           ))}
         </div>
         {categories.visible ? (

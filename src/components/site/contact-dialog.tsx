@@ -32,17 +32,26 @@ import {
 
 type FormValues = ContactInput;
 
+// bg-neutral-* (not bg-muted): site.css redefines --muted for its own mockup text color,
+// which collides with the shadcn --muted design token used by the bg-muted/text-muted utilities.
+const FIELD_CLASS =
+  "h-[45px] rounded-lg border-transparent bg-neutral-100 dark:bg-neutral-800";
+const TEXTAREA_CLASS =
+  "rounded-lg border-transparent bg-neutral-100 dark:bg-neutral-800";
+
 /** "Get In Touch" nav CTA — opens a generic contact modal. */
 export function ContactDialog() {
   const create = useCreateContact();
   const form = useForm<FormValues>({
     resolver: zodResolver(contactInputSchema),
+    mode: "onTouched",
     defaultValues: {
       firstName: "",
       lastName: "",
       email: "",
       phone: "",
-      comment: "",
+      subject: "",
+      message: "",
     },
   });
 
@@ -67,6 +76,7 @@ export function ContactDialog() {
 
   return (
     <Dialog
+      defaultOpen
       onOpenChange={(next) => {
         if (!next) {
           form.reset();
@@ -80,7 +90,7 @@ export function ContactDialog() {
           </Button>
         }
       />
-      <DialogContent className="z-70 sm:max-w-lg">
+      <DialogContent className="z-70 p-6 sm:max-w-lg">
         <div className="site flex flex-col gap-4">
           <DialogHeader>
             <DialogTitle>Get In Touch</DialogTitle>
@@ -103,6 +113,7 @@ export function ContactDialog() {
                         id="ct-first-name"
                         placeholder="First name"
                         autoComplete="given-name"
+                        className={FIELD_CLASS}
                         {...field}
                       />
                       <FieldError
@@ -123,6 +134,7 @@ export function ContactDialog() {
                         id="ct-last-name"
                         placeholder="Last name"
                         autoComplete="family-name"
+                        className={FIELD_CLASS}
                         {...field}
                       />
                       <FieldError
@@ -145,6 +157,7 @@ export function ContactDialog() {
                       type="email"
                       placeholder="you@example.com"
                       autoComplete="email"
+                      className={FIELD_CLASS}
                       {...field}
                     />
                     <FieldError
@@ -164,6 +177,7 @@ export function ContactDialog() {
                       inputMode="numeric"
                       placeholder="10-digit mobile"
                       autoComplete="tel"
+                      className={FIELD_CLASS}
                       {...field}
                     />
                     <FieldError
@@ -174,14 +188,33 @@ export function ContactDialog() {
               />
               <Controller
                 control={form.control}
-                name="comment"
+                name="subject"
                 render={({ field, fieldState }) => (
                   <Field data-invalid={fieldState.invalid}>
-                    <FieldLabel htmlFor="ct-comment">Comment</FieldLabel>
+                    <FieldLabel htmlFor="ct-subject">Subject</FieldLabel>
+                    <Input
+                      id="ct-subject"
+                      placeholder="What is this about?"
+                      className={FIELD_CLASS}
+                      {...field}
+                    />
+                    <FieldError
+                      errors={fieldState.error ? [fieldState.error] : undefined}
+                    />
+                  </Field>
+                )}
+              />
+              <Controller
+                control={form.control}
+                name="message"
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid}>
+                    <FieldLabel htmlFor="ct-message">Message</FieldLabel>
                     <Textarea
-                      id="ct-comment"
+                      id="ct-message"
                       rows={3}
                       placeholder="How can we help?"
+                      className={TEXTAREA_CLASS}
                       {...field}
                     />
                     <FieldError

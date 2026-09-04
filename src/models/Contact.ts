@@ -18,7 +18,8 @@ const ContactSchema = new Schema(
       maxlength: 254,
     },
     phone: { type: String, required: true, trim: true, match: /^[6-9]\d{9}$/ },
-    comment: { type: String, required: true, trim: true, maxlength: 1000 },
+    subject: { type: String, required: true, trim: true, maxlength: 150 },
+    message: { type: String, required: true, trim: true, maxlength: 1000 },
     status: {
       type: String,
       enum: ["new", "read", "closed"],

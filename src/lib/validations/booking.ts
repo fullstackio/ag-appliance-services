@@ -28,19 +28,54 @@ export const APPLIANCE_LABELS: Record<ApplianceType, string> = {
 };
 
 const indianMobile = /^[6-9]\d{9}$/;
+const zipCode = /^[A-Za-z0-9][A-Za-z0-9 -]{2,9}$/;
 
-export const bookingInputSchema = z.object({
-  name: z.string().trim().min(2, "Name is required").max(80, "Name is too long"),
-  phone: z.string().trim().regex(indianMobile, "Enter a valid 10-digit Indian mobile number"),
-  appliance: z.enum(APPLIANCE_TYPES, { message: "Select a valid appliance type" }),
-  address: z.string().trim().min(5, "Address is required").max(300, "Address is too long"),
-  message: z
+const optionalText = (max: number, message: string) =>
+  z
     .string()
     .trim()
-    .max(1000, "Message is too long")
+    .max(max, message)
     .optional()
-    .transform((v) => (v ? v : undefined)),
-  preferredDate: z.coerce.date({ message: "Preferred date is invalid" }).optional(),
+    .transform((v) => (v ? v : undefined));
+
+export const bookingInputSchema = z.object({
+  firstName: z
+    .string()
+    .trim()
+    .min(1, "First name is required")
+    .max(60, "First name is too long"),
+  lastName: z
+    .string()
+    .trim()
+    .min(1, "Last name is required")
+    .max(60, "Last name is too long"),
+  email: z
+    .string()
+    .trim()
+    .min(1, "Email is required")
+    .email("Enter a valid email address"),
+  phone: z
+    .string()
+    .trim()
+    .regex(indianMobile, "Enter a valid 10-digit Indian mobile number"),
+  appliance: z.enum(APPLIANCE_TYPES, {
+    message: "Select a valid service type",
+  }),
+  company: optionalText(120, "Company name is too long"),
+  country: z.string().trim().min(1, "Select a country"),
+  state: z.string().trim().min(1, "Select a state"),
+  city: z.string().trim().min(1, "Select a city"),
+  zipCode: z.string().trim().regex(zipCode, "Enter a valid zip / postal code"),
+  address: z
+    .string()
+    .trim()
+    .min(5, "Address is required")
+    .max(300, "Address is too long"),
+  landmark: optionalText(150, "Landmark is too long"),
+  message: optionalText(1000, "Message is too long"),
+  preferredDate: z.coerce
+    .date({ message: "Preferred date is invalid" })
+    .optional(),
 });
 
 export type BookingInput = z.input<typeof bookingInputSchema>;

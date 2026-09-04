@@ -421,8 +421,8 @@
   position: absolute;
   left: 22px;
   top: 22px;
-  width: 110px;
-  height: 110px;
+  width: 190px;
+  height: 190px;
   border-radius: 50%;
   box-shadow:
     0 10px 30px rgba(0, 0, 0, 0.6),
@@ -597,6 +597,80 @@
 .site .svc .ico .ic {
   width: 34px;
   height: 34px;
+}
+/* Service-card icon hover animation (see icons.tsx's ANIMATED_ICONS): a short accent line
+   ("flow") streams via a dashed stroke, a straight line ("spin") rotates about its own
+   center like a blade/turntable, a shape ("pulse") fades in/out for a glow read, and small
+   dots ("mist") fade in/drift/fade out — each element's own inline `animation-delay` (set
+   in icons.tsx) staggers multiples of the same piece. Only runs while the card is hovered;
+   each icon's static "case" pieces (see icons.tsx) are never touched. */
+.site .glow-card:hover .icon-flow {
+  stroke-dasharray: 1.4 1.4;
+  animation: icon-flow-anim 0.6s linear infinite;
+}
+@keyframes icon-flow-anim {
+  to {
+    stroke-dashoffset: -2.8;
+  }
+}
+.site .glow-card:hover .icon-spin {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: icon-spin-anim 1.4s linear infinite;
+}
+@keyframes icon-spin-anim {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.site .glow-card:hover .icon-pulse {
+  animation: icon-pulse-anim 1.2s ease-in-out infinite;
+}
+@keyframes icon-pulse-anim {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.45;
+  }
+}
+.site .icon-mist {
+  fill: currentColor;
+  stroke: none;
+  opacity: 0;
+}
+.site .glow-card:hover .icon-mist {
+  animation: icon-mist-down 1.1s ease-out infinite;
+}
+.site .glow-card:hover .icon-mist.icon-mist-up {
+  animation-name: icon-mist-up;
+}
+@keyframes icon-mist-down {
+  0% {
+    opacity: 0;
+    transform: translateY(0);
+  }
+  30% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+}
+@keyframes icon-mist-up {
+  0% {
+    opacity: 0;
+    transform: translateY(0);
+  }
+  30% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
 }
 .site .svc b {
   font-size: 14px;
@@ -1440,16 +1514,23 @@ html:not(.dark) .site .map .landmass {
   gap: 18px;
   padding: 6px 0; /* room for card glow */
   overflow-x: auto;
-  scroll-snap-type: x proximity;
+  /* no scroll-snap here on purpose: it fights the eased wheel-slide and mouse-drag panning
+     in gallery.tsx (the browser "correcting" to the nearest card right after either one
+     finishes reads as an unwanted jump), so this row free-scrolls instead of snapping. */
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
+  cursor: grab;
 }
 .site .gallery .g-track::-webkit-scrollbar {
   display: none;
 }
+.site .gallery .g-track.is-dragging,
+.site .gallery .g-track.is-dragging * {
+  cursor: grabbing !important;
+  user-select: none;
+}
 .site .gallery .g-slide {
   flex: 0 0 auto;
-  scroll-snap-align: start;
   height: 300px;
   width: calc((100% - 3 * 18px) / 4.3); /* ~4.3 cards visible on desktop */
 }
@@ -2069,6 +2150,10 @@ html:not(.dark) .site .map .landmass {
     height: 420px;
     order: -1; /* image/slider above the text block when stacked */
   }
+  .site .visual .badge {
+    width: 150px;
+    height: 150px;
+  }
   .site .stats .wrap {
     grid-template-columns: repeat(2, 1fr);
     gap: 20px;
@@ -2125,10 +2210,27 @@ html:not(.dark) .site .map .landmass {
   .site nav.is-hidden {
     transform: translateY(0);
   }
+  /* section rhythm: the 70px/56px desktop padding stacks into a huge dead gap between two
+     back-to-back sections on a short phone screen — tighten it up here */
+  .site .sec {
+    padding: 40px 0;
+  }
+  .site .sec-head {
+    margin-bottom: 24px;
+  }
+  .site .areas.sec {
+    padding: 32px 0;
+  }
   /* app-like heading scale on phones */
   .site .hero h1 {
     font-size: 24px;
     line-height: 1.2;
+  }
+  .site .visual .badge {
+    left: 14px;
+    top: 14px;
+    width: 110px;
+    height: 110px;
   }
   /* buttons: shadcn Button (data-slot="button") beats its own text-sm/text-[15px]
      utility class here since this selector is more specific */
@@ -2167,6 +2269,11 @@ html:not(.dark) .site .map .landmass {
   }
   .site .sec-head p {
     font-size: 13px;
+  }
+  .site .video {
+    height: auto;
+    min-height: 0;
+    padding: 60px 0;
   }
   .site .video h2 {
     font-size: 20px;
@@ -2254,6 +2361,14 @@ html:not(.dark) .site .map .landmass {
   .site .hero p {
     font-size: 13px;
     margin: 16px 0 22px;
+  }
+  .site .hero .actions {
+    gap: 10px;
+  }
+  .site .hero .actions > [data-slot="button"] {
+    flex: 1 1 0;
+    width: 50%;
+    min-width: 0;
   }
   .site .btn {
     font-size: 13px;
@@ -2383,6 +2498,7 @@ html:not(.dark) .site .map .landmass {
   justify-content: center;
 }
 .site .gallery .tabs button {
+  flex: none; /* override the shadcn Tabs default flex-1 so pills size to their label */
   font-size: 12.5px;
   font-weight: 500;
   padding: 8px 16px;

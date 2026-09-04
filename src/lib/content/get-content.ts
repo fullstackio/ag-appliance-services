@@ -20,7 +20,12 @@ import { MenuModel } from "@/models/Menu";
 import { SectionModel } from "@/models/Section";
 import { SiteSettingsModel } from "@/models/SiteSettings";
 
-import { defaultBanners, defaultMenus, defaultSections, defaultSettings } from "./defaults";
+import {
+  defaultBanners,
+  defaultMenus,
+  defaultSections,
+  defaultSettings,
+} from "./defaults";
 
 function strip<T>(doc: unknown): T {
   // Drop Mongo internals so the payload is serialisable for Server → Client components
@@ -54,7 +59,7 @@ async function loadSiteContent(): Promise<SiteContent> {
       MENU_LOCATIONS.map((loc) => {
         const found = menuDocs.find((m) => m.location === loc);
         return [loc, found ? strip<Menu>(found) : defaultMenus[loc]];
-      })
+      }),
     ) as Record<MenuLocation, Menu>;
 
     const banners: Banner[] = bannerDocs.length
@@ -64,13 +69,24 @@ async function loadSiteContent(): Promise<SiteContent> {
     const sections = Object.fromEntries(
       SECTION_KEYS.map((key) => {
         const found = sectionDocs.find((s) => s.key === key);
-        return [key, found ? strip<SectionOf<SectionKey>>(found) : defaultSections[key]];
-      })
+        return [
+          key,
+          found ? strip<SectionOf<SectionKey>>(found) : defaultSections[key],
+        ];
+      }),
     ) as SiteContent["sections"];
 
     return { settings, menus, banners, sections };
   } catch (err) {
-    logger.error("getSiteContent failed — serving default content", { error: String(err) });
+    // Missing MONGODB_URI is an expected, already-handled state in local/preview setups
+    // without a database configured — the defaults below are the intended fallback, so it's
+    // only worth a warning. A real connection failure (auth, network, timeout) stays an error.
+    const message = err instanceof Error ? err.message : String(err);
+    const isUnconfigured = message.includes("MONGODB_URI is not set");
+    logger[isUnconfigured ? "warn" : "error"](
+      "getSiteContent failed — serving default content",
+      { error: message },
+    );
     return {
       settings: defaultSettings,
       menus: defaultMenus,

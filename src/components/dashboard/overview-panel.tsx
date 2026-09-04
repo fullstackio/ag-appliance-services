@@ -20,10 +20,26 @@ export function OverviewPanel() {
   const { data, isLoading } = useOverview();
 
   const tiles = [
-    { label: "Bookings today", value: data?.bookingsToday, href: "/dashboard/bookings" },
-    { label: "New bookings", value: data?.bookingsNew, href: "/dashboard/bookings?status=new" },
-    { label: "New enquiries", value: data?.enquiriesNew, href: "/dashboard/enquiries?status=new" },
-    { label: "Users awaiting approval", value: data?.usersPending, href: "/dashboard/users" },
+    {
+      label: "Bookings today",
+      value: data?.bookingsToday,
+      href: "/dashboard/bookings",
+    },
+    {
+      label: "New bookings",
+      value: data?.bookingsNew,
+      href: "/dashboard/bookings?status=new",
+    },
+    {
+      label: "New enquiries",
+      value: data?.enquiriesNew,
+      href: "/dashboard/enquiries?status=new",
+    },
+    {
+      label: "Users awaiting approval",
+      value: data?.usersPending,
+      href: "/dashboard/users",
+    },
   ];
 
   return (
@@ -41,7 +57,9 @@ export function OverviewPanel() {
                 {isLoading ? (
                   <Skeleton className="h-9 w-16" />
                 ) : (
-                  <div className="text-brand-copper text-3xl font-extrabold">{t.value ?? 0}</div>
+                  <div className="text-brand-copper text-3xl font-extrabold">
+                    {t.value ?? 0}
+                  </div>
                 )}
               </CardContent>
             </Card>
@@ -75,11 +93,17 @@ export function OverviewPanel() {
                 data.recent.map((b) => (
                   <TableRow key={b._id}>
                     <TableCell>
-                      <div className="font-medium">{b.name}</div>
-                      <div className="text-muted-foreground text-xs">{b.phone}</div>
+                      <div className="font-medium">
+                        {b.firstName} {b.lastName}
+                      </div>
+                      <div className="text-muted-foreground text-xs">
+                        {b.phone}
+                      </div>
                     </TableCell>
                     <TableCell>{APPLIANCE_LABELS[b.appliance]}</TableCell>
-                    <TableCell className="max-w-[220px] truncate">{b.address}</TableCell>
+                    <TableCell className="max-w-[220px] truncate">
+                      {b.address}
+                    </TableCell>
                     <TableCell>
                       <StatusBadge status={b.status} />
                     </TableCell>
@@ -90,8 +114,12 @@ export function OverviewPanel() {
                 ))
               ) : (
                 <TableRow>
-                  <TableCell colSpan={5} className="text-muted-foreground py-8 text-center">
-                    No bookings yet — they&apos;ll appear here as customers book from the website.
+                  <TableCell
+                    colSpan={5}
+                    className="text-muted-foreground py-8 text-center"
+                  >
+                    No bookings yet — they&apos;ll appear here as customers book
+                    from the website.
                   </TableCell>
                 </TableRow>
               )}

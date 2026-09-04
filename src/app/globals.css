@@ -146,6 +146,15 @@
   html {
     @apply font-sans;
   }
+  /* Tailwind v4 preflight drops the browser's default pointer cursor on buttons — restore it
+     everywhere (site + dashboard); disabled buttons already get pointer-events:none so this
+     never shows a pointer over something that can't be clicked. */
+  button:not(:disabled),
+  a,
+  [role="button"],
+  [data-slot="button"] {
+    cursor: pointer;
+  }
 }
 
 /* ------------------------------------------------------------------

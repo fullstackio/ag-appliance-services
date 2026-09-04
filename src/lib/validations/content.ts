@@ -31,6 +31,10 @@ export const ICON_KEYS = [
   "user",
   "cog",
   "check",
+  "mail",
+  "building",
+  "globe",
+  "hash",
 ] as const;
 export const iconKeySchema = z.enum(ICON_KEYS);
 export type IconKey = z.infer<typeof iconKeySchema>;

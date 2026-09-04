@@ -186,12 +186,12 @@ export const defaultBanners: Banner[] = [
     text: "Expert technicians for AC, Refrigerator, Geyser, Microwave & more — right at your doorstep. Same-day service with 100% customer satisfaction.",
     primaryCta: { label: "📅 Book A Service", href: "#book" },
     secondaryCta: { label: "📞 9123667075", href: "tel:9123667075" },
-    image: "/images/technician.jpg",
+    image: "/images/banner_1.png",
     images: [
-      "/images/gallery-3.jpg",
-      "/images/gallery-1.jpg",
-      "/images/gallery-5.jpg",
-      "/images/tools.jpg",
+      "/images/banner_2.png",
+      "/images/banner_3.png",
+      "/images/banner_4.png",
+      "/images/banner_5.png",
     ],
     imagePosition: "60% 30%",
     badgeText: "SAME-DAY SERVICE",
@@ -447,7 +447,7 @@ export const defaultSections: { [K in SectionKey]: SectionOf<K> } = {
     subtitle:
       "A glimpse of our technicians in action and the appliances we bring back to life every day.",
     visible: true,
-    tabs: ["All", "AC", "Refrigerator", "Kitchen Appliances", "Our Team"],
+    tabs: ["All", "AC", "Refrigerator", "Kitchen Appliances"],
     items: [
       {
         image: "/images/technician.jpg",

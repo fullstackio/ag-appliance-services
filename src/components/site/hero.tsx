@@ -65,11 +65,20 @@ export function Hero({ banner, settings }: HeroProps) {
         </div>
         <div className="visual">
           <HeroSlider
-            images={[banner.image, ...banner.images.filter((i) => i !== banner.image)]}
+            images={[
+              banner.image,
+              ...banner.images.filter((i) => i !== banner.image),
+            ]}
             position={banner.imagePosition}
             alt="Expert technician at work"
           />
-          <Image className="badge" src={settings.logo} alt="" width={110} height={110} />
+          <Image
+            className="badge"
+            src={settings.logo}
+            alt=""
+            width={190}
+            height={190}
+          />
           <span className="tag2">{banner.badgeText}</span>
           <div className="card">
             <div className="ico">

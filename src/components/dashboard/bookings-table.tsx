@@ -22,14 +22,21 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { type BookingRow, useAdminBookings, useUpdateBooking } from "@/hooks/use-admin";
+import {
+  type BookingRow,
+  useAdminBookings,
+  useUpdateBooking,
+} from "@/hooks/use-admin";
+import { countryName, stateName } from "@/lib/geo";
 import { APPLIANCE_LABELS } from "@/lib/validations/booking";
 
 const STATUSES = ["new", "confirmed", "completed", "cancelled"] as const;
 
 export function BookingsTable({ initialStatus }: { initialStatus?: string }) {
   const [status, setStatus] = useState<string>(initialStatus ?? "all");
-  const { data, isLoading } = useAdminBookings(status === "all" ? undefined : status);
+  const { data, isLoading } = useAdminBookings(
+    status === "all" ? undefined : status,
+  );
   const update = useUpdateBooking();
 
   const change = async (b: BookingRow, next: BookingRow["status"]) => {
@@ -58,7 +65,7 @@ export function BookingsTable({ initialStatus }: { initialStatus?: string }) {
           <TableHeader>
             <TableRow>
               <TableHead>Customer</TableHead>
-              <TableHead>Appliance</TableHead>
+              <TableHead>Service</TableHead>
               <TableHead>Address</TableHead>
               <TableHead>Problem</TableHead>
               <TableHead>Received</TableHead>
@@ -76,16 +83,35 @@ export function BookingsTable({ initialStatus }: { initialStatus?: string }) {
               data.items.map((b) => (
                 <TableRow key={b._id}>
                   <TableCell>
-                    <div className="font-medium">{b.name}</div>
+                    <div className="font-medium">
+                      {b.firstName} {b.lastName}
+                    </div>
                     <a
                       href={`tel:${b.phone}`}
                       className="text-brand-copper text-xs hover:underline"
                     >
                       {b.phone}
                     </a>
+                    <div className="text-muted-foreground text-xs">
+                      {b.email}
+                    </div>
+                    {b.company ? (
+                      <div className="text-muted-foreground text-xs">
+                        {b.company}
+                      </div>
+                    ) : null}
                   </TableCell>
                   <TableCell>{APPLIANCE_LABELS[b.appliance]}</TableCell>
-                  <TableCell className="max-w-[220px] whitespace-normal">{b.address}</TableCell>
+                  <TableCell className="max-w-[220px] whitespace-normal">
+                    <div>
+                      {b.address}
+                      {b.landmark ? `, near ${b.landmark}` : ""}
+                    </div>
+                    <div className="text-muted-foreground text-xs">
+                      {b.city}, {stateName(b.country, b.state)} {b.zipCode},{" "}
+                      {countryName(b.country)}
+                    </div>
+                  </TableCell>
                   <TableCell className="text-muted-foreground max-w-[260px] text-xs whitespace-normal">
                     {b.message ?? "—"}
                   </TableCell>
@@ -95,7 +121,9 @@ export function BookingsTable({ initialStatus }: { initialStatus?: string }) {
                   <TableCell>
                     <Select
                       value={b.status}
-                      onValueChange={(v) => void change(b, v as BookingRow["status"])}
+                      onValueChange={(v) =>
+                        void change(b, v as BookingRow["status"])
+                      }
                     >
                       <SelectTrigger className="h-8 w-36">
                         <SelectValue>
@@ -115,7 +143,10 @@ export function BookingsTable({ initialStatus }: { initialStatus?: string }) {
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={6} className="text-muted-foreground py-10 text-center">
+                <TableCell
+                  colSpan={6}
+                  className="text-muted-foreground py-10 text-center"
+                >
                   No bookings in this view.
                 </TableCell>
               </TableRow>
@@ -123,7 +154,9 @@ export function BookingsTable({ initialStatus }: { initialStatus?: string }) {
           </TableBody>
         </Table>
       </div>
-      {data ? <p className="text-muted-foreground text-xs">{data.total} booking(s)</p> : null}
+      {data ? (
+        <p className="text-muted-foreground text-xs">{data.total} booking(s)</p>
+      ) : null}
     </div>
   );
 }

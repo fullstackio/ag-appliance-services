@@ -31,7 +31,7 @@ export function HeroSlider({ images, position, alt }: HeroSliderProps) {
   return (
     <Slider
       className="hero-slider"
-      dots
+      dots={false}
       arrows={false}
       infinite
       fade
@@ -39,14 +39,7 @@ export function HeroSlider({ images, position, alt }: HeroSliderProps) {
       autoplaySpeed={3800}
       speed={900}
       pauseOnHover={false}
-      pauseOnDotsHover
       cssEase="cubic-bezier(0.4, 0, 0.2, 1)"
-      dotsClass="slick-dots hero-dots"
-      customPaging={(i) => (
-        <button type="button" aria-label={`Show slide ${i + 1}`}>
-          <span />
-        </button>
-      )}
     >
       {slides.map((src, i) => (
         <div className="hero-slide" key={src}>

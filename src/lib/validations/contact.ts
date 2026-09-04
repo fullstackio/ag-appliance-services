@@ -24,11 +24,16 @@ export const contactInputSchema = z.object({
     .string()
     .trim()
     .regex(/^[6-9]\d{9}$/, "Enter a valid 10-digit Indian mobile number"),
-  comment: z
+  subject: z
     .string()
     .trim()
-    .min(5, "Comment is required")
-    .max(1000, "Comment is too long"),
+    .min(1, "Subject is required")
+    .max(150, "Subject is too long"),
+  message: z
+    .string()
+    .trim()
+    .min(5, "Message is required")
+    .max(1000, "Message is too long"),
 });
 
 export type ContactInput = z.input<typeof contactInputSchema>;

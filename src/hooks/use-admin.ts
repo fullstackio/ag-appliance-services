@@ -18,14 +18,26 @@ import type {
   SiteSettings,
 } from "@/lib/validations/content";
 
-export type WithId<T> = T & { _id: string; createdAt?: string; updatedAt?: string };
+export type WithId<T> = T & {
+  _id: string;
+  createdAt?: string;
+  updatedAt?: string;
+};
 
 export interface BookingRow {
   _id: string;
-  name: string;
+  firstName: string;
+  lastName: string;
+  email: string;
   phone: string;
   appliance: ApplianceType;
+  company?: string;
+  country: string;
+  state: string;
+  city: string;
+  zipCode: string;
   address: string;
+  landmark?: string;
   message?: string;
   preferredDate?: string;
   status: "new" | "confirmed" | "completed" | "cancelled";
@@ -65,8 +77,10 @@ export const adminKeys = {
   banners: ["admin", "banners"] as const,
   sections: ["admin", "sections"] as const,
   section: (key: SectionKey) => ["admin", "sections", key] as const,
-  bookings: (status?: string) => ["admin", "bookings", status ?? "all"] as const,
-  enquiries: (status?: string) => ["admin", "enquiries", status ?? "all"] as const,
+  bookings: (status?: string) =>
+    ["admin", "bookings", status ?? "all"] as const,
+  enquiries: (status?: string) =>
+    ["admin", "enquiries", status ?? "all"] as const,
   users: ["admin", "users"] as const,
 };
 
@@ -83,7 +97,8 @@ export const useOverview = () =>
 export const useSettings = () =>
   useQuery({
     queryKey: adminKeys.settings,
-    queryFn: () => unwrap(apiFetch<{ data: SiteSettings }>("/api/admin/settings")),
+    queryFn: () =>
+      unwrap(apiFetch<{ data: SiteSettings }>("/api/admin/settings")),
   });
 
 export function useSaveSettings() {
@@ -94,7 +109,7 @@ export function useSaveSettings() {
         apiFetch<{ data: SiteSettings }>("/api/admin/settings", {
           method: "PUT",
           body: JSON.stringify(data),
-        })
+        }),
       ),
     onSuccess: () => qc.invalidateQueries({ queryKey: adminKeys.settings }),
   });
@@ -112,10 +127,13 @@ export function useSaveMenu() {
   return useMutation({
     mutationFn: ({ location, ...data }: Menu) =>
       unwrap(
-        apiFetch<{ data: Menu }>(`/api/admin/menus/${location satisfies MenuLocation}`, {
-          method: "PUT",
-          body: JSON.stringify(data),
-        })
+        apiFetch<{ data: Menu }>(
+          `/api/admin/menus/${location satisfies MenuLocation}`,
+          {
+            method: "PUT",
+            body: JSON.stringify(data),
+          },
+        ),
       ),
     onSuccess: () => qc.invalidateQueries({ queryKey: adminKeys.menus }),
   });
@@ -125,7 +143,8 @@ export function useSaveMenu() {
 export const useBanners = () =>
   useQuery({
     queryKey: adminKeys.banners,
-    queryFn: () => unwrap(apiFetch<{ data: Array<WithId<Banner>> }>("/api/admin/banners")),
+    queryFn: () =>
+      unwrap(apiFetch<{ data: Array<WithId<Banner>> }>("/api/admin/banners")),
   });
 
 export function useCreateBanner() {
@@ -136,7 +155,7 @@ export function useCreateBanner() {
         apiFetch<{ data: WithId<Banner> }>("/api/admin/banners", {
           method: "POST",
           body: JSON.stringify(data),
-        })
+        }),
       ),
     onSuccess: () => qc.invalidateQueries({ queryKey: adminKeys.banners }),
   });
@@ -150,7 +169,7 @@ export function useUpdateBanner() {
         apiFetch<{ data: WithId<Banner> }>(`/api/admin/banners/${id}`, {
           method: "PATCH",
           body: JSON.stringify(data),
-        })
+        }),
       ),
     onSuccess: () => qc.invalidateQueries({ queryKey: adminKeys.banners }),
   });
@@ -160,7 +179,11 @@ export function useDeleteBanner() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: (id: string) =>
-      unwrap(apiFetch<{ data: { id: string } }>(`/api/admin/banners/${id}`, { method: "DELETE" })),
+      unwrap(
+        apiFetch<{ data: { id: string } }>(`/api/admin/banners/${id}`, {
+          method: "DELETE",
+        }),
+      ),
     onSuccess: () => qc.invalidateQueries({ queryKey: adminKeys.banners }),
   });
 }
@@ -175,7 +198,8 @@ export const useSections = () =>
 export const useSection = (key: SectionKey) =>
   useQuery({
     queryKey: adminKeys.section(key),
-    queryFn: () => unwrap(apiFetch<{ data: Section }>(`/api/admin/sections/${key}`)),
+    queryFn: () =>
+      unwrap(apiFetch<{ data: Section }>(`/api/admin/sections/${key}`)),
   });
 
 export function useSaveSection(key: SectionKey) {
@@ -186,7 +210,7 @@ export function useSaveSection(key: SectionKey) {
         apiFetch<{ data: Section }>(`/api/admin/sections/${key}`, {
           method: "PUT",
           body: JSON.stringify(data),
-        })
+        }),
       ),
     onSuccess: () => qc.invalidateQueries({ queryKey: adminKeys.sections }),
   });
@@ -196,7 +220,11 @@ export function useResetSection(key: SectionKey) {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: () =>
-      unwrap(apiFetch<{ data: Section }>(`/api/admin/sections/${key}`, { method: "DELETE" })),
+      unwrap(
+        apiFetch<{ data: Section }>(`/api/admin/sections/${key}`, {
+          method: "DELETE",
+        }),
+      ),
     onSuccess: () => qc.invalidateQueries({ queryKey: adminKeys.sections }),
   });
 }
@@ -208,20 +236,27 @@ export const useAdminBookings = (status?: string) =>
     queryFn: () =>
       unwrap(
         apiFetch<{ data: { items: BookingRow[]; total: number } }>(
-          `/api/admin/bookings${status ? `?status=${status}` : ""}`
-        )
+          `/api/admin/bookings${status ? `?status=${status}` : ""}`,
+        ),
       ),
   });
 
 export function useUpdateBooking() {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: ({ id, ...data }: { id: string; status?: BookingRow["status"]; note?: string }) =>
+    mutationFn: ({
+      id,
+      ...data
+    }: {
+      id: string;
+      status?: BookingRow["status"];
+      note?: string;
+    }) =>
       unwrap(
         apiFetch<{ data: BookingRow }>(`/api/admin/bookings/${id}`, {
           method: "PATCH",
           body: JSON.stringify(data),
-        })
+        }),
       ),
     onSuccess: () => {
       void qc.invalidateQueries({ queryKey: ["admin", "bookings"] });
@@ -236,20 +271,26 @@ export const useEnquiries = (status?: string) =>
     queryFn: () =>
       unwrap(
         apiFetch<{ data: { items: EnquiryRow[]; total: number } }>(
-          `/api/admin/enquiries${status ? `?status=${status}` : ""}`
-        )
+          `/api/admin/enquiries${status ? `?status=${status}` : ""}`,
+        ),
       ),
   });
 
 export function useUpdateEnquiry() {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: ({ id, status }: { id: string; status: EnquiryRow["status"] }) =>
+    mutationFn: ({
+      id,
+      status,
+    }: {
+      id: string;
+      status: EnquiryRow["status"];
+    }) =>
       unwrap(
         apiFetch<{ data: EnquiryRow }>(`/api/admin/enquiries/${id}`, {
           method: "PATCH",
           body: JSON.stringify({ status }),
-        })
+        }),
       ),
     onSuccess: () => qc.invalidateQueries({ queryKey: ["admin", "enquiries"] }),
   });
@@ -265,12 +306,19 @@ export const useUsers = () =>
 export function useUpdateUser() {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: ({ id, ...data }: { id: string; role?: UserRole; status?: UserStatus }) =>
+    mutationFn: ({
+      id,
+      ...data
+    }: {
+      id: string;
+      role?: UserRole;
+      status?: UserStatus;
+    }) =>
       unwrap(
         apiFetch<{ data: UserRow }>(`/api/admin/users/${id}`, {
           method: "PATCH",
           body: JSON.stringify(data),
-        })
+        }),
       ),
     onSuccess: () => {
       void qc.invalidateQueries({ queryKey: adminKeys.users });
@@ -283,7 +331,11 @@ export function useDeleteUser() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: (id: string) =>
-      unwrap(apiFetch<{ data: { id: string } }>(`/api/admin/users/${id}`, { method: "DELETE" })),
+      unwrap(
+        apiFetch<{ data: { id: string } }>(`/api/admin/users/${id}`, {
+          method: "DELETE",
+        }),
+      ),
     onSuccess: () => qc.invalidateQueries({ queryKey: adminKeys.users }),
   });
 }

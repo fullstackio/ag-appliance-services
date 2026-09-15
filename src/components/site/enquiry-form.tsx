@@ -6,15 +6,25 @@ import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import { DialogFooter } from "@/components/ui/dialog";
-import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field";
+import { Field, FieldError, FieldGroup } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useCreateEnquiry } from "@/hooks/use-enquiries";
 import { ApiError } from "@/lib/api-client";
-import { type EnquiryInput, enquiryInputSchema } from "@/lib/validations/content";
+import { cn } from "@/lib/utils";
+import {
+  type EnquiryInput,
+  enquiryInputSchema,
+} from "@/lib/validations/content";
 
 /** "Send us a message" — posts to /api/enquiries (shown in Dashboard → Enquiries). */
-export function EnquiryForm({ onDone, phone }: { onDone: () => void; phone: string }) {
+export function EnquiryForm({
+  onDone,
+  phone,
+}: {
+  onDone: () => void;
+  phone: string;
+}) {
   const create = useCreateEnquiry();
   const form = useForm<EnquiryInput>({
     resolver: zodResolver(enquiryInputSchema),
@@ -24,7 +34,9 @@ export function EnquiryForm({ onDone, phone }: { onDone: () => void; phone: stri
   const onSubmit = form.handleSubmit(async (values) => {
     try {
       await create.mutateAsync(values);
-      toast.success("Message sent!", { description: "We'll get back to you shortly." });
+      toast.success("Message sent!", {
+        description: "We'll get back to you shortly.",
+      });
       form.reset();
       onDone();
     } catch (err) {
@@ -33,9 +45,12 @@ export function EnquiryForm({ onDone, phone }: { onDone: () => void; phone: stri
           form.setError(k as keyof EnquiryInput, { message: msg });
         }
       }
-      toast.error(err instanceof Error ? err.message : "Could not send message", {
-        description: `You can also call us on ${phone}.`,
-      });
+      toast.error(
+        err instanceof Error ? err.message : "Could not send message",
+        {
+          description: `You can also call us on ${phone}.`,
+        },
+      );
     }
   });
 
@@ -48,9 +63,16 @@ export function EnquiryForm({ onDone, phone }: { onDone: () => void; phone: stri
             name="name"
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid}>
-                <FieldLabel htmlFor="eq-name">Your name</FieldLabel>
-                <Input id="eq-name" placeholder="Full name" autoComplete="name" {...field} />
-                <FieldError errors={fieldState.error ? [fieldState.error] : undefined} />
+                <Input
+                  id="eq-name"
+                  aria-label="Your name"
+                  placeholder="Full name"
+                  autoComplete="name"
+                  {...field}
+                />
+                <FieldError
+                  errors={fieldState.error ? [fieldState.error] : undefined}
+                />
               </Field>
             )}
           />
@@ -59,9 +81,29 @@ export function EnquiryForm({ onDone, phone }: { onDone: () => void; phone: stri
             name="phone"
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid}>
-                <FieldLabel htmlFor="eq-phone">Mobile number</FieldLabel>
-                <Input id="eq-phone" inputMode="numeric" placeholder="10-digit mobile" {...field} />
-                <FieldError errors={fieldState.error ? [fieldState.error] : undefined} />
+                <div className="relative">
+                  <span className="pointer-events-none absolute inset-y-0 left-0 flex items-center gap-1.5 pl-2.5 text-sm font-medium text-neutral-500 dark:text-neutral-400">
+                    +91
+                    <span className="h-4 w-px bg-neutral-300 dark:bg-neutral-600" />
+                  </span>
+                  <Input
+                    id="eq-phone"
+                    inputMode="numeric"
+                    aria-label="Mobile number"
+                    placeholder="10-digit mobile"
+                    maxLength={10}
+                    className={cn("pl-12")}
+                    {...field}
+                    onChange={(e) =>
+                      field.onChange(
+                        e.target.value.replace(/\D/g, "").slice(0, 10),
+                      )
+                    }
+                  />
+                </div>
+                <FieldError
+                  errors={fieldState.error ? [fieldState.error] : undefined}
+                />
               </Field>
             )}
           />
@@ -71,9 +113,16 @@ export function EnquiryForm({ onDone, phone }: { onDone: () => void; phone: stri
           name="message"
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid}>
-              <FieldLabel htmlFor="eq-message">Your message</FieldLabel>
-              <Textarea id="eq-message" rows={4} placeholder="How can we help?" {...field} />
-              <FieldError errors={fieldState.error ? [fieldState.error] : undefined} />
+              <Textarea
+                id="eq-message"
+                rows={4}
+                aria-label="Your message"
+                placeholder="How can we help?"
+                {...field}
+              />
+              <FieldError
+                errors={fieldState.error ? [fieldState.error] : undefined}
+              />
             </Field>
           )}
         />

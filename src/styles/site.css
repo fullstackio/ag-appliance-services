@@ -1,11 +1,13 @@
 /* AG Appliance Services — public site styles.
    Ported 1:1 from mockup/ag-appliance-mockup-v3.html (approved design), scoped under .site.
    Dark mode: html.dark (driven by the theme toggle). Author: Avijit Ghosh */
-/* zero-specificity reset so every mockup rule (and Tailwind on shadcn buttons) still wins.
+/* zero-specificity reset so every mockup rule (and Tailwind on shadcn components) still wins.
    Excluded by the "group/button" class (always present via buttonVariants()) rather than
    [data-slot="button"] — a DialogTrigger/SheetTrigger `render` composition overwrites
-   data-slot with its own trigger slot name, so that attribute isn't a reliable marker. */
-:where(.site *:not(.group\/button)) {
+   data-slot with its own trigger slot name, so that attribute isn't a reliable marker.
+   Also excluded: any element carrying [data-slot] — every other shadcn/ui primitive (Field,
+   Input, Select, Textarea, Drawer, ...) sets one, and none of them double as a trigger. */
+:where(.site *:not(.group\/button):not([data-slot])) {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
@@ -1502,39 +1504,35 @@ html:not(.dark) .site .map .landmass {
   border-color: var(--gold);
   box-shadow: none;
 }
-/* gallery cards ride a plain native-scroll flex row (not react-slick — see gallery.tsx):
-   wheel/trackpad/touch input moves it via the browser's own scrolling, so it's continuous
-   and inertial rather than jumping card-to-card. The slider lives outside .wrap so cards
-   bleed edge-to-edge. */
+/* gallery: a bento-style CSS grid (not a slider) — each card's `size` field
+   (normal/big/tall/wide) sets its column/row span so cards vary in scale, like a
+   portfolio showcase grid. grid-auto-flow: dense backfills gaps left by spanning
+   cards with later normal-sized items. */
 .site .gallery .gallery-full {
   width: 100%;
 }
-.site .gallery .g-track {
-  display: flex;
+.site .gallery .g-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-auto-rows: 160px;
+  grid-auto-flow: dense;
   gap: 18px;
   padding: 6px 0; /* room for card glow */
-  overflow-x: auto;
-  /* no scroll-snap here on purpose: it fights the eased wheel-slide and mouse-drag panning
-     in gallery.tsx (the browser "correcting" to the nearest card right after either one
-     finishes reads as an unwanted jump), so this row free-scrolls instead of snapping. */
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
-  cursor: grab;
 }
-.site .gallery .g-track::-webkit-scrollbar {
-  display: none;
+.site .gallery .g-item {
+  position: relative;
 }
-.site .gallery .g-track.is-dragging,
-.site .gallery .g-track.is-dragging * {
-  cursor: grabbing !important;
-  user-select: none;
+.site .gallery .g-item.size-wide {
+  grid-column: span 2;
 }
-.site .gallery .g-slide {
-  flex: 0 0 auto;
-  height: 300px;
-  width: calc((100% - 3 * 18px) / 4.3); /* ~4.3 cards visible on desktop */
+.site .gallery .g-item.size-tall {
+  grid-row: span 2;
 }
-.site .gallery .g-slide .g {
+.site .gallery .g-item.size-big {
+  grid-column: span 2;
+  grid-row: span 2;
+}
+.site .gallery .g-item .g {
   display: block;
   width: 100%;
   height: 100%;
@@ -2174,9 +2172,9 @@ html:not(.dark) .site .map .landmass {
     transform: rotate(90deg);
     padding: 10px 0;
   }
-  .site .gallery .g-slide {
-    height: 260px;
-    width: calc((100% - 18px) / 2.3); /* ~2.3 cards visible on tablet */
+  .site .gallery .g-grid {
+    grid-template-columns: repeat(2, 1fr);
+    grid-auto-rows: 200px;
   }
   .site .areas .wrap {
     grid-template-columns: 1fr;
@@ -2298,9 +2296,16 @@ html:not(.dark) .site .map .landmass {
   .site footer .cols {
     grid-template-columns: 1fr;
   }
-  .site .gallery .g-slide {
-    height: 220px;
-    width: calc((100% - 9px) / 1.5); /* ~1.5 cards visible on mobile */
+  .site .gallery .g-grid {
+    grid-template-columns: 1fr;
+    grid-auto-rows: 220px;
+  }
+  .site .gallery .g-item.size-wide,
+  .site .gallery .g-item.size-big {
+    grid-column: span 1;
+  }
+  .site .gallery .g-item.size-big {
+    grid-row: span 1;
   }
   .site .areas ul {
     grid-template-columns: repeat(2, 1fr);

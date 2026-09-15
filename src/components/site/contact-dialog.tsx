@@ -1,6 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { XIcon } from "lucide-react";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
 
@@ -8,6 +9,7 @@ import { Icon } from "@/components/site/icons";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
   DialogFooter,
@@ -15,16 +17,12 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import {
-  Field,
-  FieldError,
-  FieldGroup,
-  FieldLabel,
-} from "@/components/ui/field";
+import { Field, FieldError, FieldGroup } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useCreateContact } from "@/hooks/use-contact";
 import { ApiError } from "@/lib/api-client";
+import { cn } from "@/lib/utils";
 import {
   contactInputSchema,
   type ContactInput,
@@ -35,9 +33,9 @@ type FormValues = ContactInput;
 // bg-neutral-* (not bg-muted): site.css redefines --muted for its own mockup text color,
 // which collides with the shadcn --muted design token used by the bg-muted/text-muted utilities.
 const FIELD_CLASS =
-  "h-[45px] rounded-lg border-transparent bg-neutral-100 dark:bg-neutral-800";
+  "h-12 rounded-lg border-transparent bg-neutral-100 px-4 dark:bg-neutral-800";
 const TEXTAREA_CLASS =
-  "rounded-lg border-transparent bg-neutral-100 dark:bg-neutral-800";
+  "field-sizing-fixed h-[120px] resize-y rounded-lg border-transparent bg-neutral-100 p-4 dark:bg-neutral-800";
 
 /** "Get In Touch" nav CTA — opens a generic contact modal. */
 export function ContactDialog() {
@@ -90,73 +88,43 @@ export function ContactDialog() {
           </Button>
         }
       />
-      <DialogContent className="z-70 p-6 sm:max-w-lg">
-        <div className="site flex flex-col gap-4">
-          <DialogHeader>
-            <DialogTitle>Get In Touch</DialogTitle>
-            <DialogDescription>
-              Send us a message and we&apos;ll get back to you shortly.
-            </DialogDescription>
-          </DialogHeader>
-          <form onSubmit={onSubmit} noValidate>
-            <FieldGroup>
-              <div className="grid gap-4 sm:grid-cols-2">
-                <Controller
-                  control={form.control}
-                  name="firstName"
-                  render={({ field, fieldState }) => (
-                    <Field data-invalid={fieldState.invalid}>
-                      <FieldLabel htmlFor="ct-first-name">
-                        First name
-                      </FieldLabel>
-                      <Input
-                        id="ct-first-name"
-                        placeholder="First name"
-                        autoComplete="given-name"
-                        className={FIELD_CLASS}
-                        {...field}
-                      />
-                      <FieldError
-                        errors={
-                          fieldState.error ? [fieldState.error] : undefined
-                        }
-                      />
-                    </Field>
-                  )}
-                />
-                <Controller
-                  control={form.control}
-                  name="lastName"
-                  render={({ field, fieldState }) => (
-                    <Field data-invalid={fieldState.invalid}>
-                      <FieldLabel htmlFor="ct-last-name">Last name</FieldLabel>
-                      <Input
-                        id="ct-last-name"
-                        placeholder="Last name"
-                        autoComplete="family-name"
-                        className={FIELD_CLASS}
-                        {...field}
-                      />
-                      <FieldError
-                        errors={
-                          fieldState.error ? [fieldState.error] : undefined
-                        }
-                      />
-                    </Field>
-                  )}
-                />
-              </div>
+      <DialogContent
+        className="z-70 gap-0 overflow-hidden p-0 sm:max-w-lg"
+        showCloseButton={false}
+      >
+        <DialogClose
+          render={
+            <Button
+              variant="ghost"
+              size="icon-sm"
+              className="absolute top-4 right-4"
+            />
+          }
+        >
+          <XIcon />
+          <span className="sr-only">Close</span>
+        </DialogClose>
+        <DialogHeader className="gap-2 px-6 pt-6 pb-4">
+          <DialogTitle className="font-heading text-xl">
+            Get In Touch
+          </DialogTitle>
+          <DialogDescription>
+            Send us a message and we&apos;ll get back to you shortly.
+          </DialogDescription>
+        </DialogHeader>
+        <form onSubmit={onSubmit} noValidate>
+          <FieldGroup className="px-6 pb-6">
+            <div className="grid gap-4 sm:grid-cols-2">
               <Controller
                 control={form.control}
-                name="email"
+                name="firstName"
                 render={({ field, fieldState }) => (
                   <Field data-invalid={fieldState.invalid}>
-                    <FieldLabel htmlFor="ct-email">Email ID</FieldLabel>
                     <Input
-                      id="ct-email"
-                      type="email"
-                      placeholder="you@example.com"
-                      autoComplete="email"
+                      id="ct-first-name"
+                      aria-label="First name"
+                      placeholder="First name"
+                      autoComplete="given-name"
                       className={FIELD_CLASS}
                       {...field}
                     />
@@ -168,73 +136,122 @@ export function ContactDialog() {
               />
               <Controller
                 control={form.control}
-                name="phone"
+                name="lastName"
                 render={({ field, fieldState }) => (
                   <Field data-invalid={fieldState.invalid}>
-                    <FieldLabel htmlFor="ct-phone">Phone</FieldLabel>
+                    <Input
+                      id="ct-last-name"
+                      aria-label="Last name"
+                      placeholder="Last name"
+                      autoComplete="family-name"
+                      className={FIELD_CLASS}
+                      {...field}
+                    />
+                    <FieldError
+                      errors={fieldState.error ? [fieldState.error] : undefined}
+                    />
+                  </Field>
+                )}
+              />
+            </div>
+            <Controller
+              control={form.control}
+              name="email"
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <Input
+                    id="ct-email"
+                    type="email"
+                    aria-label="Email ID"
+                    placeholder="you@example.com"
+                    autoComplete="email"
+                    className={FIELD_CLASS}
+                    {...field}
+                  />
+                  <FieldError
+                    errors={fieldState.error ? [fieldState.error] : undefined}
+                  />
+                </Field>
+              )}
+            />
+            <Controller
+              control={form.control}
+              name="phone"
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <div className="relative">
+                    <span className="pointer-events-none absolute inset-y-0 left-0 flex items-center gap-2 pl-4 text-sm font-medium text-neutral-500 dark:text-neutral-400">
+                      +91
+                      <span className="h-5 w-px bg-neutral-300 dark:bg-neutral-600" />
+                    </span>
                     <Input
                       id="ct-phone"
                       inputMode="numeric"
+                      aria-label="Phone"
                       placeholder="10-digit mobile"
                       autoComplete="tel"
-                      className={FIELD_CLASS}
+                      maxLength={10}
+                      className={cn(FIELD_CLASS, "pl-16")}
                       {...field}
+                      onChange={(e) =>
+                        field.onChange(
+                          e.target.value.replace(/\D/g, "").slice(0, 10),
+                        )
+                      }
                     />
-                    <FieldError
-                      errors={fieldState.error ? [fieldState.error] : undefined}
-                    />
-                  </Field>
-                )}
-              />
-              <Controller
-                control={form.control}
-                name="subject"
-                render={({ field, fieldState }) => (
-                  <Field data-invalid={fieldState.invalid}>
-                    <FieldLabel htmlFor="ct-subject">Subject</FieldLabel>
-                    <Input
-                      id="ct-subject"
-                      placeholder="What is this about?"
-                      className={FIELD_CLASS}
-                      {...field}
-                    />
-                    <FieldError
-                      errors={fieldState.error ? [fieldState.error] : undefined}
-                    />
-                  </Field>
-                )}
-              />
-              <Controller
-                control={form.control}
-                name="message"
-                render={({ field, fieldState }) => (
-                  <Field data-invalid={fieldState.invalid}>
-                    <FieldLabel htmlFor="ct-message">Message</FieldLabel>
-                    <Textarea
-                      id="ct-message"
-                      rows={3}
-                      placeholder="How can we help?"
-                      className={TEXTAREA_CLASS}
-                      {...field}
-                    />
-                    <FieldError
-                      errors={fieldState.error ? [fieldState.error] : undefined}
-                    />
-                  </Field>
-                )}
-              />
-            </FieldGroup>
-            <DialogFooter className="mt-6">
-              <Button
-                type="submit"
-                variant="copper"
-                disabled={create.isPending}
-              >
-                {create.isPending ? "Sending…" : "Send"}
-              </Button>
-            </DialogFooter>
-          </form>
-        </div>
+                  </div>
+                  <FieldError
+                    errors={fieldState.error ? [fieldState.error] : undefined}
+                  />
+                </Field>
+              )}
+            />
+            <Controller
+              control={form.control}
+              name="subject"
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <Input
+                    id="ct-subject"
+                    aria-label="Subject"
+                    placeholder="What is this about?"
+                    className={FIELD_CLASS}
+                    {...field}
+                  />
+                  <FieldError
+                    errors={fieldState.error ? [fieldState.error] : undefined}
+                  />
+                </Field>
+              )}
+            />
+            <Controller
+              control={form.control}
+              name="message"
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <Textarea
+                    id="ct-message"
+                    aria-label="Message"
+                    placeholder="How can we help?"
+                    className={TEXTAREA_CLASS}
+                    {...field}
+                  />
+                  <FieldError
+                    errors={fieldState.error ? [fieldState.error] : undefined}
+                  />
+                </Field>
+              )}
+            />
+          </FieldGroup>
+          <DialogFooter className="mx-0 mb-0 gap-2 rounded-none border-t bg-transparent px-6 py-4">
+            <DialogClose render={<Button type="button" variant="outline" />}>
+              Cancel
+            </DialogClose>
+            <Button type="submit" variant="copper" disabled={create.isPending}>
+              {create.isPending ? "Sending…" : "Send"}
+            </Button>
+          </DialogFooter>
+        </form>
       </DialogContent>
     </Dialog>
   );

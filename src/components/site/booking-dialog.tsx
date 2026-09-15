@@ -69,7 +69,8 @@ const APPLIANCE_ICON: Record<ApplianceType, IconKey> = {
   other: "tool",
 };
 
-const FIELD_CLASS = "h-12 rounded-xl px-4.5";
+const FIELD_CLASS =
+  "h-12 rounded-xl border-transparent bg-neutral-100 px-4.5 dark:bg-neutral-800";
 
 const emptyFormValues: FormValues = {
   firstName: "",
@@ -129,7 +130,7 @@ function OptionalTag() {
 function ContactFields({ control }: { control: Control<FormValues> }) {
   return (
     <>
-      <div className="grid gap-6 sm:grid-cols-2">
+      <div className="grid gap-4 sm:grid-cols-2">
         <Controller
           control={control}
           name="firstName"
@@ -181,7 +182,7 @@ function ContactFields({ control }: { control: Control<FormValues> }) {
           )}
         />
       </div>
-      <div className="grid gap-6 sm:grid-cols-2">
+      <div className="grid gap-4 sm:grid-cols-2">
         <Controller
           control={control}
           name="email"
@@ -330,7 +331,7 @@ function ServiceFields({ control }: { control: Control<FormValues> }) {
               id="bk-message"
               rows={3}
               placeholder="e.g. AC not cooling, water leakage"
-              className="rounded-xl p-4.5"
+              className="rounded-xl border-transparent bg-neutral-100 p-4.5 dark:bg-neutral-800"
               {...field}
               value={field.value ?? ""}
             />
@@ -376,7 +377,7 @@ function AddressFields({
 
   return (
     <>
-      <div className="grid gap-6 sm:grid-cols-2">
+      <div className="grid gap-4 sm:grid-cols-2">
         <Controller
           control={control}
           name="country"
@@ -479,7 +480,7 @@ function AddressFields({
           }
         />
       </div>
-      <div className="grid gap-6 sm:grid-cols-2">
+      <div className="grid gap-4 sm:grid-cols-2">
         <Controller
           control={control}
           name="city"
@@ -713,9 +714,10 @@ export function BookingDialog({ phone }: { phone: string }) {
           onSubmit={onSubmit}
           noValidate
           className="site flex h-full flex-col overflow-hidden"
+          style={{ background: "transparent" }}
         >
           <div className="from-brand-copper via-brand-copper2 to-brand-gold h-1 shrink-0 bg-linear-to-r" />
-          <DrawerHeader className="border-(--line) from-brand-cream/70 dark:from-brand-ink2/50 flex-row items-center gap-5 border-b bg-linear-to-b to-transparent px-9 py-8">
+          <DrawerHeader className="border-(--line) from-brand-cream/70 dark:from-brand-ink2/50 flex-row items-center gap-5 border-b bg-linear-to-b to-transparent px-6 py-6">
             <span className="from-brand-copper2 to-brand-copper flex size-12 shrink-0 items-center justify-center rounded-2xl bg-linear-135 text-white shadow-[0_8px_20px_rgba(184,113,47,.35)]">
               <FieldIcon name="tool" className="size-5" />
             </span>
@@ -740,19 +742,19 @@ export function BookingDialog({ phone }: { phone: string }) {
               <span className="sr-only">Close</span>
             </DrawerClose>
           </DrawerHeader>
-          <div className="flex-1 overflow-y-auto px-9 py-9">
-            <FieldGroup className="gap-10">
-              <div className="flex flex-col gap-6">
+          <div className="flex-1 overflow-y-auto px-5! py-6! sm:px-8 sm:py-8">
+            <FieldGroup>
+              <div className="flex flex-col gap-4">
                 <SectionHeading step={1} title="Your details" />
                 <ContactFields control={form.control} />
               </div>
 
-              <div className="border-(--line) flex flex-col gap-6 border-t pt-8">
+              <div className="border-(--line) flex flex-col gap-4 border-t pt-8!">
                 <SectionHeading step={2} title="Service details" />
                 <ServiceFields control={form.control} />
               </div>
 
-              <div className="border-(--line) flex flex-col gap-6 border-t pt-8">
+              <div className="border-(--line) flex flex-col gap-4 border-t pt-8!">
                 <SectionHeading step={3} title="Address" />
                 <AddressFields
                   control={form.control}
@@ -761,7 +763,7 @@ export function BookingDialog({ phone }: { phone: string }) {
               </div>
             </FieldGroup>
           </div>
-          <DrawerFooter className="border-(--line) bg-popover/95 flex-row justify-end gap-3 border-t px-9 py-7 backdrop-blur-sm">
+          <DrawerFooter className="border-(--line) bg-popover/95 flex-row justify-end gap-2 border-t px-6 py-4 backdrop-blur-sm">
             <Button
               type="button"
               variant="outline"

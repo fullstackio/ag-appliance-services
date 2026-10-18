@@ -23,7 +23,15 @@ function Heading({ dark }: { dark?: boolean }) {
   );
 }
 
-function Cards({ n, className, dark }: { n: number; className: string; dark?: boolean }) {
+function Cards({
+  n,
+  className,
+  dark,
+}: {
+  n: number;
+  className: string;
+  dark?: boolean;
+}) {
   return (
     <>
       {Array.from({ length: n }, (_, i) => (
@@ -146,17 +154,9 @@ export function SiteSkeleton() {
       <section className="sec gallery">
         <div className="wrap">
           <Heading />
-          <div className="tabs flex justify-center gap-2">
-            <Cards n={5} className="h-9 w-24 rounded-full" />
-          </div>
-          <div className="grid">
-            <Sk className="g big rounded-[18px]" />
-            <Sk className="g rounded-[18px]" />
-            <Sk className="g tall rounded-[18px]" />
-            <Sk className="g rounded-[18px]" />
-            <Sk className="g wide rounded-[18px]" />
-            <Sk className="g rounded-[18px]" />
-          </div>
+        </div>
+        <div className="gallery-full flex gap-4.5">
+          <Cards n={5} className="h-85 w-1/5 shrink-0 rounded-[18px]" />
         </div>
       </section>
 
@@ -196,7 +196,10 @@ export function SiteSkeleton() {
 
       {/* cta band */}
       <section className="cta" style={{ padding: "0 0 70px" }}>
-        <div className="wrap" style={{ background: "none", boxShadow: "none", padding: 0 }}>
+        <div
+          className="wrap"
+          style={{ background: "none", boxShadow: "none", padding: 0 }}
+        >
           <Sk className="h-[140px] w-full rounded-[18px]" />
         </div>
       </section>

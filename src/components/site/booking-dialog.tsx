@@ -4,10 +4,11 @@ import { useEffect, useMemo } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { City, Country, State } from "country-state-city";
-import { XIcon } from "lucide-react";
+import { Loader2, XIcon } from "lucide-react";
 import {
   Controller,
   type Control,
+  type Resolver,
   useForm,
   type UseFormSetValue,
   useWatch,
@@ -15,6 +16,14 @@ import {
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
+import {
+  Combobox,
+  ComboboxContent,
+  ComboboxEmpty,
+  ComboboxInput,
+  ComboboxItem,
+  ComboboxList,
+} from "@/components/ui/combobox";
 import {
   Drawer,
   DrawerClose,
@@ -31,17 +40,11 @@ import {
   FieldLabel,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { useCreateBooking } from "@/hooks/use-bookings";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { ApiError } from "@/lib/api-client";
+import { touchedError } from "@/lib/form-utils";
 import { cn } from "@/lib/utils";
 import {
   APPLIANCE_LABELS,
@@ -56,7 +59,12 @@ import { useBookingStore } from "@/store/useBookingStore";
 
 import { Icon } from "./icons";
 
-type FormValues = BookingInput;
+// appliance starts unselected ("") until the user picks one or a service card
+// pre-fills it; the schema only accepts a real ApplianceType, so the form is
+// invalid (submit stays disabled) until a real selection replaces the sentinel
+type FormValues = Omit<BookingInput, "appliance"> & {
+  appliance: ApplianceType | "";
+};
 
 const APPLIANCE_ICON: Record<ApplianceType, IconKey> = {
   ac: "ac",
@@ -72,12 +80,29 @@ const APPLIANCE_ICON: Record<ApplianceType, IconKey> = {
 const FIELD_CLASS =
   "h-12 rounded-xl border-transparent bg-neutral-100 px-4.5 dark:bg-neutral-800";
 
+const APPLIANCE_ITEMS = APPLIANCE_TYPES.map((a) => ({
+  value: a,
+  label: APPLIANCE_LABELS[a],
+}));
+
+/** Combobox `itemToStringLabel` is called with either the plain selected value (to
+ * render the input's text) or the full { value, label } item (while filtering the
+ * list as you type) — look the label up either way. */
+function comboboxItemToStringLabel(
+  items: Array<{ value: string; label: string }>,
+) {
+  return (v: string | { value: string; label: string }) =>
+    typeof v === "string"
+      ? (items.find((i) => i.value === v)?.label ?? v)
+      : v.label;
+}
+
 const emptyFormValues: FormValues = {
   firstName: "",
   lastName: "",
   email: "",
   phone: "",
-  appliance: "ac",
+  appliance: "",
   company: "",
   country: "IN",
   state: "",
@@ -130,12 +155,12 @@ function OptionalTag() {
 function ContactFields({ control }: { control: Control<FormValues> }) {
   return (
     <>
-      <div className="grid gap-4 sm:grid-cols-2">
+      <div className="grid grid-cols-2 gap-3 sm:gap-4">
         <Controller
           control={control}
           name="firstName"
           render={({ field, fieldState }) => (
-            <Field data-invalid={fieldState.invalid}>
+            <Field data-invalid={fieldState.isTouched && fieldState.invalid}>
               <FieldLabel
                 htmlFor="bk-first-name"
                 className="text-muted-foreground gap-1.5 text-xs font-semibold tracking-wide uppercase"
@@ -150,9 +175,7 @@ function ContactFields({ control }: { control: Control<FormValues> }) {
                 className={FIELD_CLASS}
                 {...field}
               />
-              <FieldError
-                errors={fieldState.error ? [fieldState.error] : undefined}
-              />
+              <FieldError errors={touchedError(fieldState)} />
             </Field>
           )}
         />
@@ -160,7 +183,7 @@ function ContactFields({ control }: { control: Control<FormValues> }) {
           control={control}
           name="lastName"
           render={({ field, fieldState }) => (
-            <Field data-invalid={fieldState.invalid}>
+            <Field data-invalid={fieldState.isTouched && fieldState.invalid}>
               <FieldLabel
                 htmlFor="bk-last-name"
                 className="text-muted-foreground gap-1.5 text-xs font-semibold tracking-wide uppercase"
@@ -175,9 +198,7 @@ function ContactFields({ control }: { control: Control<FormValues> }) {
                 className={FIELD_CLASS}
                 {...field}
               />
-              <FieldError
-                errors={fieldState.error ? [fieldState.error] : undefined}
-              />
+              <FieldError errors={touchedError(fieldState)} />
             </Field>
           )}
         />
@@ -187,7 +208,7 @@ function ContactFields({ control }: { control: Control<FormValues> }) {
           control={control}
           name="email"
           render={({ field, fieldState }) => (
-            <Field data-invalid={fieldState.invalid}>
+            <Field data-invalid={fieldState.isTouched && fieldState.invalid}>
               <FieldLabel
                 htmlFor="bk-email"
                 className="text-muted-foreground gap-1.5 text-xs font-semibold tracking-wide uppercase"
@@ -204,9 +225,7 @@ function ContactFields({ control }: { control: Control<FormValues> }) {
                 className={FIELD_CLASS}
                 {...field}
               />
-              <FieldError
-                errors={fieldState.error ? [fieldState.error] : undefined}
-              />
+              <FieldError errors={touchedError(fieldState)} />
             </Field>
           )}
         />
@@ -214,7 +233,7 @@ function ContactFields({ control }: { control: Control<FormValues> }) {
           control={control}
           name="phone"
           render={({ field, fieldState }) => (
-            <Field data-invalid={fieldState.invalid}>
+            <Field data-invalid={fieldState.isTouched && fieldState.invalid}>
               <FieldLabel
                 htmlFor="bk-phone"
                 className="text-muted-foreground gap-1.5 text-xs font-semibold tracking-wide uppercase"
@@ -230,9 +249,7 @@ function ContactFields({ control }: { control: Control<FormValues> }) {
                 className={FIELD_CLASS}
                 {...field}
               />
-              <FieldError
-                errors={fieldState.error ? [fieldState.error] : undefined}
-              />
+              <FieldError errors={touchedError(fieldState)} />
             </Field>
           )}
         />
@@ -241,7 +258,7 @@ function ContactFields({ control }: { control: Control<FormValues> }) {
         control={control}
         name="company"
         render={({ field, fieldState }) => (
-          <Field data-invalid={fieldState.invalid}>
+          <Field data-invalid={fieldState.isTouched && fieldState.invalid}>
             <FieldLabel
               htmlFor="bk-company"
               className="text-muted-foreground gap-1.5 text-xs font-semibold tracking-wide uppercase"
@@ -258,9 +275,7 @@ function ContactFields({ control }: { control: Control<FormValues> }) {
               {...field}
               value={field.value ?? ""}
             />
-            <FieldError
-              errors={fieldState.error ? [fieldState.error] : undefined}
-            />
+            <FieldError errors={touchedError(fieldState)} />
           </Field>
         )}
       />
@@ -275,7 +290,7 @@ function ServiceFields({ control }: { control: Control<FormValues> }) {
         control={control}
         name="appliance"
         render={({ field, fieldState }) => (
-          <Field data-invalid={fieldState.invalid}>
+          <Field data-invalid={fieldState.isTouched && fieldState.invalid}>
             <FieldLabel
               htmlFor="bk-appliance"
               className="text-muted-foreground gap-1.5 text-xs font-semibold tracking-wide uppercase"
@@ -286,31 +301,35 @@ function ServiceFields({ control }: { control: Control<FormValues> }) {
               />
               Service type
             </FieldLabel>
-            <Select
-              value={field.value}
-              onValueChange={(v) => field.onChange(v)}
+            <Combobox
+              items={APPLIANCE_ITEMS}
+              value={field.value || null}
+              onValueChange={(v) => field.onChange(v ?? "")}
+              itemToStringLabel={comboboxItemToStringLabel(APPLIANCE_ITEMS)}
             >
-              <SelectTrigger
+              <ComboboxInput
                 id="bk-appliance"
-                className={cn(FIELD_CLASS, "w-full")}
-              >
-                <SelectValue placeholder="Select service type" />
-              </SelectTrigger>
-              <SelectContent>
-                {APPLIANCE_TYPES.map((a) => (
-                  <SelectItem key={a} value={a}>
-                    <FieldIcon
-                      name={APPLIANCE_ICON[a]}
-                      className="text-muted-foreground"
-                    />
-                    {APPLIANCE_LABELS[a]}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            <FieldError
-              errors={fieldState.error ? [fieldState.error] : undefined}
-            />
+                placeholder="Select service type"
+                onBlur={field.onBlur}
+                showClear
+                className={FIELD_CLASS}
+              />
+              <ComboboxContent>
+                <ComboboxEmpty>No matching service</ComboboxEmpty>
+                <ComboboxList>
+                  {(item: (typeof APPLIANCE_ITEMS)[number]) => (
+                    <ComboboxItem key={item.value} value={item.value}>
+                      <FieldIcon
+                        name={APPLIANCE_ICON[item.value]}
+                        className="text-muted-foreground"
+                      />
+                      {item.label}
+                    </ComboboxItem>
+                  )}
+                </ComboboxList>
+              </ComboboxContent>
+            </Combobox>
+            <FieldError errors={touchedError(fieldState)} />
           </Field>
         )}
       />
@@ -318,7 +337,7 @@ function ServiceFields({ control }: { control: Control<FormValues> }) {
         control={control}
         name="message"
         render={({ field, fieldState }) => (
-          <Field data-invalid={fieldState.invalid}>
+          <Field data-invalid={fieldState.isTouched && fieldState.invalid}>
             <FieldLabel
               htmlFor="bk-message"
               className="text-muted-foreground gap-1.5 text-xs font-semibold tracking-wide uppercase"
@@ -335,9 +354,7 @@ function ServiceFields({ control }: { control: Control<FormValues> }) {
               {...field}
               value={field.value ?? ""}
             />
-            <FieldError
-              errors={fieldState.error ? [fieldState.error] : undefined}
-            />
+            <FieldError errors={touchedError(fieldState)} />
           </Field>
         )}
       />
@@ -375,6 +392,19 @@ function AddressFields({
     [country, state],
   );
 
+  const countryItems = useMemo(
+    () => countries.map((c) => ({ value: c.isoCode, label: c.name })),
+    [countries],
+  );
+  const stateItems = useMemo(
+    () => states.map((s) => ({ value: s.isoCode, label: s.name })),
+    [states],
+  );
+  const cityItems = useMemo(
+    () => cities.map((c) => ({ value: c.name, label: c.name })),
+    [cities],
+  );
+
   return (
     <>
       <div className="grid gap-4 sm:grid-cols-2">
@@ -382,7 +412,7 @@ function AddressFields({
           control={control}
           name="country"
           render={({ field, fieldState }) => (
-            <Field data-invalid={fieldState.invalid}>
+            <Field data-invalid={fieldState.isTouched && fieldState.invalid}>
               <FieldLabel
                 htmlFor="bk-country"
                 className="text-muted-foreground gap-1.5 text-xs font-semibold tracking-wide uppercase"
@@ -390,31 +420,35 @@ function AddressFields({
                 <FieldIcon name="globe" className="text-brand-copper" />
                 Country
               </FieldLabel>
-              <Select
-                value={field.value}
+              <Combobox
+                items={countryItems}
+                value={field.value || null}
                 onValueChange={(v) => {
-                  field.onChange(v);
+                  field.onChange(v ?? "");
                   setValue("state", "");
                   setValue("city", "");
                 }}
+                itemToStringLabel={comboboxItemToStringLabel(countryItems)}
               >
-                <SelectTrigger
+                <ComboboxInput
                   id="bk-country"
-                  className={cn(FIELD_CLASS, "w-full")}
-                >
-                  <SelectValue placeholder="Select country" />
-                </SelectTrigger>
-                <SelectContent>
-                  {countries.map((c) => (
-                    <SelectItem key={c.isoCode} value={c.isoCode}>
-                      {c.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <FieldError
-                errors={fieldState.error ? [fieldState.error] : undefined}
-              />
+                  placeholder="Select country"
+                  onBlur={field.onBlur}
+                  showClear
+                  className={FIELD_CLASS}
+                />
+                <ComboboxContent>
+                  <ComboboxEmpty>No matching country</ComboboxEmpty>
+                  <ComboboxList>
+                    {(item: (typeof countryItems)[number]) => (
+                      <ComboboxItem key={item.value} value={item.value}>
+                        {item.label}
+                      </ComboboxItem>
+                    )}
+                  </ComboboxList>
+                </ComboboxContent>
+              </Combobox>
+              <FieldError errors={touchedError(fieldState)} />
             </Field>
           )}
         />
@@ -423,7 +457,7 @@ function AddressFields({
           name="state"
           render={({ field, fieldState }) =>
             country && states.length === 0 ? (
-              <Field data-invalid={fieldState.invalid}>
+              <Field data-invalid={fieldState.isTouched && fieldState.invalid}>
                 <FieldLabel
                   htmlFor="bk-state"
                   className="text-muted-foreground gap-1.5 text-xs font-semibold tracking-wide uppercase"
@@ -437,12 +471,10 @@ function AddressFields({
                   className={FIELD_CLASS}
                   {...field}
                 />
-                <FieldError
-                  errors={fieldState.error ? [fieldState.error] : undefined}
-                />
+                <FieldError errors={touchedError(fieldState)} />
               </Field>
             ) : (
-              <Field data-invalid={fieldState.invalid}>
+              <Field data-invalid={fieldState.isTouched && fieldState.invalid}>
                 <FieldLabel
                   htmlFor="bk-state"
                   className="text-muted-foreground gap-1.5 text-xs font-semibold tracking-wide uppercase"
@@ -450,31 +482,35 @@ function AddressFields({
                   <FieldIcon name="pin" className="text-brand-copper" />
                   State
                 </FieldLabel>
-                <Select
-                  value={field.value}
+                <Combobox
+                  items={stateItems}
+                  value={field.value || null}
                   disabled={!country}
                   onValueChange={(v) => {
-                    field.onChange(v);
+                    field.onChange(v ?? "");
                     setValue("city", "");
                   }}
+                  itemToStringLabel={comboboxItemToStringLabel(stateItems)}
                 >
-                  <SelectTrigger
+                  <ComboboxInput
                     id="bk-state"
-                    className={cn(FIELD_CLASS, "w-full")}
-                  >
-                    <SelectValue placeholder="Select state" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {states.map((s) => (
-                      <SelectItem key={s.isoCode} value={s.isoCode}>
-                        {s.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                <FieldError
-                  errors={fieldState.error ? [fieldState.error] : undefined}
-                />
+                    placeholder="Select state"
+                    onBlur={field.onBlur}
+                    showClear
+                    className={FIELD_CLASS}
+                  />
+                  <ComboboxContent>
+                    <ComboboxEmpty>No matching state</ComboboxEmpty>
+                    <ComboboxList>
+                      {(item: (typeof stateItems)[number]) => (
+                        <ComboboxItem key={item.value} value={item.value}>
+                          {item.label}
+                        </ComboboxItem>
+                      )}
+                    </ComboboxList>
+                  </ComboboxContent>
+                </Combobox>
+                <FieldError errors={touchedError(fieldState)} />
               </Field>
             )
           }
@@ -486,7 +522,7 @@ function AddressFields({
           name="city"
           render={({ field, fieldState }) =>
             state && cities.length === 0 ? (
-              <Field data-invalid={fieldState.invalid}>
+              <Field data-invalid={fieldState.isTouched && fieldState.invalid}>
                 <FieldLabel
                   htmlFor="bk-city"
                   className="text-muted-foreground gap-1.5 text-xs font-semibold tracking-wide uppercase"
@@ -500,12 +536,10 @@ function AddressFields({
                   className={FIELD_CLASS}
                   {...field}
                 />
-                <FieldError
-                  errors={fieldState.error ? [fieldState.error] : undefined}
-                />
+                <FieldError errors={touchedError(fieldState)} />
               </Field>
             ) : (
-              <Field data-invalid={fieldState.invalid}>
+              <Field data-invalid={fieldState.isTouched && fieldState.invalid}>
                 <FieldLabel
                   htmlFor="bk-city"
                   className="text-muted-foreground gap-1.5 text-xs font-semibold tracking-wide uppercase"
@@ -513,28 +547,32 @@ function AddressFields({
                   <FieldIcon name="pin" className="text-brand-copper" />
                   City
                 </FieldLabel>
-                <Select
-                  value={field.value}
+                <Combobox
+                  items={cityItems}
+                  value={field.value || null}
                   disabled={!state}
-                  onValueChange={(v) => field.onChange(v)}
+                  onValueChange={(v) => field.onChange(v ?? "")}
+                  itemToStringLabel={comboboxItemToStringLabel(cityItems)}
                 >
-                  <SelectTrigger
+                  <ComboboxInput
                     id="bk-city"
-                    className={cn(FIELD_CLASS, "w-full")}
-                  >
-                    <SelectValue placeholder="Select city" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {cities.map((c) => (
-                      <SelectItem key={c.name} value={c.name}>
-                        {c.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                <FieldError
-                  errors={fieldState.error ? [fieldState.error] : undefined}
-                />
+                    placeholder="Select city"
+                    onBlur={field.onBlur}
+                    showClear
+                    className={FIELD_CLASS}
+                  />
+                  <ComboboxContent>
+                    <ComboboxEmpty>No matching city</ComboboxEmpty>
+                    <ComboboxList>
+                      {(item: (typeof cityItems)[number]) => (
+                        <ComboboxItem key={item.value} value={item.value}>
+                          {item.label}
+                        </ComboboxItem>
+                      )}
+                    </ComboboxList>
+                  </ComboboxContent>
+                </Combobox>
+                <FieldError errors={touchedError(fieldState)} />
               </Field>
             )
           }
@@ -543,7 +581,7 @@ function AddressFields({
           control={control}
           name="zipCode"
           render={({ field, fieldState }) => (
-            <Field data-invalid={fieldState.invalid}>
+            <Field data-invalid={fieldState.isTouched && fieldState.invalid}>
               <FieldLabel
                 htmlFor="bk-zip"
                 className="text-muted-foreground gap-1.5 text-xs font-semibold tracking-wide uppercase"
@@ -558,9 +596,7 @@ function AddressFields({
                 className={FIELD_CLASS}
                 {...field}
               />
-              <FieldError
-                errors={fieldState.error ? [fieldState.error] : undefined}
-              />
+              <FieldError errors={touchedError(fieldState)} />
             </Field>
           )}
         />
@@ -569,7 +605,7 @@ function AddressFields({
         control={control}
         name="address"
         render={({ field, fieldState }) => (
-          <Field data-invalid={fieldState.invalid}>
+          <Field data-invalid={fieldState.isTouched && fieldState.invalid}>
             <FieldLabel
               htmlFor="bk-address"
               className="text-muted-foreground gap-1.5 text-xs font-semibold tracking-wide uppercase"
@@ -583,9 +619,7 @@ function AddressFields({
               className={FIELD_CLASS}
               {...field}
             />
-            <FieldError
-              errors={fieldState.error ? [fieldState.error] : undefined}
-            />
+            <FieldError errors={touchedError(fieldState)} />
           </Field>
         )}
       />
@@ -593,7 +627,7 @@ function AddressFields({
         control={control}
         name="landmark"
         render={({ field, fieldState }) => (
-          <Field data-invalid={fieldState.invalid}>
+          <Field data-invalid={fieldState.isTouched && fieldState.invalid}>
             <FieldLabel
               htmlFor="bk-landmark"
               className="text-muted-foreground gap-1.5 text-xs font-semibold tracking-wide uppercase"
@@ -609,9 +643,7 @@ function AddressFields({
               {...field}
               value={field.value ?? ""}
             />
-            <FieldError
-              errors={fieldState.error ? [fieldState.error] : undefined}
-            />
+            <FieldError errors={touchedError(fieldState)} />
           </Field>
         )}
       />
@@ -629,14 +661,17 @@ export function BookingDialog({ phone }: { phone: string }) {
   const isCompact = useIsMobile(1024);
 
   const form = useForm<FormValues>({
-    resolver: zodResolver(bookingInputSchema),
+    // bookingInputSchema requires a real ApplianceType; the "" sentinel used
+    // before a selection is made correctly fails validation, but the resolver's
+    // inferred type doesn't know about that widened local sentinel type
+    resolver: zodResolver(bookingInputSchema) as Resolver<FormValues>,
+    mode: "onTouched",
     defaultValues: {
       firstName: draft.firstName,
       lastName: draft.lastName,
       email: draft.email,
       phone: draft.phone,
-      appliance:
-        (appliance as ApplianceType | undefined) ?? (draft.appliance || "ac"),
+      appliance: (appliance as ApplianceType | undefined) || draft.appliance,
       company: draft.company,
       country: draft.country || "IN",
       state: draft.state,
@@ -656,6 +691,14 @@ export function BookingDialog({ phone }: { phone: string }) {
       form.setValue("appliance", appliance as ApplianceType);
     }
   }, [open, appliance, form]);
+
+  // compute isValid as soon as the dialog opens, so the submit button starts
+  // disabled instead of waiting for the first field blur
+  useEffect(() => {
+    if (open) {
+      void form.trigger();
+    }
+  }, [open, form]);
 
   // persist the draft (Zustand + localStorage) when the dialog closes so input isn't lost
   const handleOpenChange = (next: boolean) => {
@@ -680,7 +723,9 @@ export function BookingDialog({ phone }: { phone: string }) {
 
   const onSubmit = form.handleSubmit(async (values) => {
     try {
-      await create.mutateAsync(values);
+      // handleSubmit only runs this once validation passes, so appliance is
+      // guaranteed to be a real ApplianceType here, never the "" sentinel
+      await create.mutateAsync(values as BookingInput);
       toast.success("Booking received!", {
         description: `We'll call you on ${values.phone} shortly to confirm.`,
       });
@@ -717,13 +762,13 @@ export function BookingDialog({ phone }: { phone: string }) {
           style={{ background: "transparent" }}
         >
           <div className="from-brand-copper via-brand-copper2 to-brand-gold h-1 shrink-0 bg-linear-to-r" />
-          <DrawerHeader className="border-(--line) from-brand-cream/70 dark:from-brand-ink2/50 flex-row items-center gap-5 border-b bg-linear-to-b to-transparent px-6 py-6">
+          <DrawerHeader className="border-(--line) from-brand-cream/70 dark:from-brand-ink2/50 group-data-[swipe-axis=y]/drawer-popup:text-left flex-row items-center gap-3 border-b bg-linear-to-b to-transparent px-5 py-4">
             <span className="from-brand-copper2 to-brand-copper flex size-12 shrink-0 items-center justify-center rounded-2xl bg-linear-135 text-white shadow-[0_8px_20px_rgba(184,113,47,.35)]">
               <FieldIcon name="tool" className="size-5" />
             </span>
-            <div className="flex flex-1 flex-col gap-1">
-              <DrawerTitle className="text-lg">Book a Service</DrawerTitle>
-              <DrawerDescription>
+            <div className="flex flex-1 flex-col gap-0.5">
+              <DrawerTitle className="text-sm">Book a Service</DrawerTitle>
+              <DrawerDescription className="text-xs">
                 Tell us about the appliance and we&apos;ll call back to confirm
                 a same-day visit.
               </DrawerDescription>
@@ -763,7 +808,7 @@ export function BookingDialog({ phone }: { phone: string }) {
               </div>
             </FieldGroup>
           </div>
-          <DrawerFooter className="border-(--line) bg-popover/95 flex-row justify-end gap-2 border-t px-6 py-4 backdrop-blur-sm">
+          <DrawerFooter className="border-(--line) bg-popover/95 flex-row justify-start gap-2 border-t px-6 py-4 backdrop-blur-sm">
             <Button
               type="button"
               variant="outline"
@@ -776,9 +821,16 @@ export function BookingDialog({ phone }: { phone: string }) {
               type="submit"
               variant="copper"
               className="h-12 flex-1 rounded-xl px-6 sm:flex-none"
-              disabled={create.isPending}
+              disabled={!form.formState.isValid || create.isPending}
             >
-              {create.isPending ? "Sending…" : "📅 Confirm Booking"}
+              {create.isPending ? (
+                <>
+                  <Loader2 className="animate-spin" />
+                  Sending…
+                </>
+              ) : (
+                "📅 Confirm Booking"
+              )}
             </Button>
           </DrawerFooter>
         </form>

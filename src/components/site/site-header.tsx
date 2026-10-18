@@ -233,13 +233,13 @@ export function SiteHeader({ settings, menu, base = "" }: SiteHeaderProps) {
                     {settings.tagline}
                   </SheetDescription>
                 </SheetHeader>
-                <nav className="flex flex-1 flex-col gap-1 overflow-y-auto px-4 py-4">
+                <nav className="mobile-nav flex-1 overflow-y-auto">
                   {items.map((item) => (
                     <a
                       key={item.id}
                       href={sectionHref(item.href, base)}
                       onClick={() => setMobileOpen(false)}
-                      className="hover:bg-muted rounded-md px-3 py-2 text-sm font-medium"
+                      className="mobile-nav-link"
                     >
                       {item.label}
                     </a>

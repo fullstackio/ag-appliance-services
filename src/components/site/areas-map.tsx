@@ -69,21 +69,28 @@ const RIVER_PTS: Pt[] = RIVER_D.split(/[ML]/)
   .map((pair) => pair.trim().split(" ").map(Number) as Pt);
 
 /** Where to write the river name: the vertex nearest to `frac` of the view height, angled along the river. */
-function riverLabel(view: Box, frac: number): { x: number; y: number; angle: number } | null {
+function riverLabel(
+  view: Box,
+  frac: number,
+): { x: number; y: number; angle: number } | null {
   const targetY = view.y + view.h * frac;
   const inView = RIVER_PTS.map((pt, i) => ({ pt, i })).filter(
     ({ pt }) =>
-      pt[0] > view.x && pt[0] < view.x + view.w && pt[1] > view.y && pt[1] < view.y + view.h
+      pt[0] > view.x &&
+      pt[0] < view.x + view.w &&
+      pt[1] > view.y &&
+      pt[1] < view.y + view.h,
   );
   if (inView.length < 2) {
     return null;
   }
   const best = inView.reduce((a, b) =>
-    Math.abs(b.pt[1] - targetY) < Math.abs(a.pt[1] - targetY) ? b : a
+    Math.abs(b.pt[1] - targetY) < Math.abs(a.pt[1] - targetY) ? b : a,
   );
   const prev = RIVER_PTS[Math.max(0, best.i - 3)] as Pt;
   const next = RIVER_PTS[Math.min(RIVER_PTS.length - 1, best.i + 3)] as Pt;
-  let angle = (Math.atan2(next[1] - prev[1], next[0] - prev[0]) * 180) / Math.PI;
+  let angle =
+    (Math.atan2(next[1] - prev[1], next[0] - prev[0]) * 180) / Math.PI;
   if (angle > 90) {
     angle -= 180;
   } else if (angle < -90) {
@@ -149,12 +156,18 @@ function clipHalf(poly: Pt[], a: Pt, b: Pt): Pt[] {
     if (sc <= 0) {
       if (sp > 0) {
         const t = sp / (sp - sc);
-        out.push([prev[0] + (cur[0] - prev[0]) * t, prev[1] + (cur[1] - prev[1]) * t]);
+        out.push([
+          prev[0] + (cur[0] - prev[0]) * t,
+          prev[1] + (cur[1] - prev[1]) * t,
+        ]);
       }
       out.push(cur);
     } else if (sp <= 0) {
       const t = sp / (sp - sc);
-      out.push([prev[0] + (cur[0] - prev[0]) * t, prev[1] + (cur[1] - prev[1]) * t]);
+      out.push([
+        prev[0] + (cur[0] - prev[0]) * t,
+        prev[1] + (cur[1] - prev[1]) * t,
+      ]);
     }
   }
   return out;
@@ -176,7 +189,8 @@ function hull(points: Pt[]): Pt[] {
   for (const p of pts) {
     while (
       lower.length >= 2 &&
-      cross(lower[lower.length - 2] as Pt, lower[lower.length - 1] as Pt, p) <= 0
+      cross(lower[lower.length - 2] as Pt, lower[lower.length - 1] as Pt, p) <=
+        0
     ) {
       lower.pop();
     }
@@ -186,7 +200,8 @@ function hull(points: Pt[]): Pt[] {
   for (const p of [...pts].reverse()) {
     while (
       upper.length >= 2 &&
-      cross(upper[upper.length - 2] as Pt, upper[upper.length - 1] as Pt, p) <= 0
+      cross(upper[upper.length - 2] as Pt, upper[upper.length - 1] as Pt, p) <=
+        0
     ) {
       upper.pop();
     }
@@ -213,7 +228,10 @@ function offsetHull(h: Pt[], d: number): Pt[] {
     const a = norm(n1);
     const b = norm(n2);
     // two offset points per vertex give a rounded corner
-    out.push([cur[0] + a[0] * d, cur[1] + a[1] * d], [cur[0] + b[0] * d, cur[1] + b[1] * d]);
+    out.push(
+      [cur[0] + a[0] * d, cur[1] + a[1] * d],
+      [cur[0] + b[0] * d, cur[1] + b[1] * d],
+    );
   }
   return out;
 }
@@ -242,7 +260,7 @@ function clipToConvex(poly: Pt[], region: Pt[]): Pt[] {
  */
 function voronoi(
   pins: Pin[],
-  view: Box
+  view: Box,
 ): { cells: Array<{ name: string; points: string }>; region: string } {
   const pad = Math.max(view.w, view.h);
   const frame: Pt[] = [
@@ -252,7 +270,8 @@ function voronoi(
     [view.x - pad, view.y + view.h + pad],
   ];
   const region = offsetHull(hull(pins.map((p) => [p.x, p.y] as Pt)), MARGIN);
-  const fmt = (poly: Pt[]) => poly.map(([x, y]) => `${x.toFixed(2)},${y.toFixed(2)}`).join(" ");
+  const fmt = (poly: Pt[]) =>
+    poly.map(([x, y]) => `${x.toFixed(2)},${y.toFixed(2)}`).join(" ");
   const cells = pins.map((p) => {
     let poly = frame;
     for (const q of pins) {
@@ -282,17 +301,20 @@ export function AreasMap({ items }: { items: AreaItem[] }) {
       { name: "", x: 0, y: 0 },
       { name: "", x: MW, y: MH },
     ],
-    ASPECT
+    ASPECT,
   );
   const beltView = viewFor(pins, ASPECT, 1.1);
   const view = zoomed ? beltView : stateView;
   const label = riverLabel(view, zoomed ? 0.3 : 0.55);
   const { cells } = voronoi(pins, stateView);
   // draw the active pin last so its label paints on top
-  const ordered = [...pins].sort((a, b) => Number(a.name === active) - Number(b.name === active));
+  const ordered = [...pins].sort(
+    (a, b) => Number(a.name === active) - Number(b.name === active),
+  );
   const u = view.h / 100; // 1% of the visible height, for stroke/dot sizing
 
-  const toggle = (name: string) => setActive((cur) => (cur === name ? null : name));
+  const toggle = (name: string) =>
+    setActive((cur) => (cur === name ? null : name));
 
   return (
     <>
@@ -303,11 +325,16 @@ export function AreasMap({ items }: { items: AreaItem[] }) {
           return (
             <li
               key={a.name}
-              className={cn(on && "is-active", hovered === a.name && "is-hover")}
+              className={cn(
+                on && "is-active",
+                hovered === a.name && "is-hover",
+              )}
               onMouseEnter={hasPin ? () => setHovered(a.name) : undefined}
               onMouseLeave={hasPin ? () => setHovered(null) : undefined}
               onClick={hasPin ? () => toggle(a.name) : undefined}
-              onKeyDown={hasPin ? (e) => e.key === "Enter" && toggle(a.name) : undefined}
+              onKeyDown={
+                hasPin ? (e) => e.key === "Enter" && toggle(a.name) : undefined
+              }
               tabIndex={hasPin ? 0 : undefined}
               role={hasPin ? "button" : undefined}
               aria-pressed={hasPin ? on : undefined}
@@ -318,126 +345,143 @@ export function AreasMap({ items }: { items: AreaItem[] }) {
         })}
       </ul>
 
-      <div className="map" role="img" aria-label="Map of the Kolkata areas we serve">
-        <motion.svg
-          initial={false}
-          animate={{ viewBox: `${view.x} ${view.y} ${view.w} ${view.h}` }}
-          transition={{ duration: 0.9, ease: [0.4, 0, 0.2, 1] }}
-          preserveAspectRatio="xMidYMid slice"
-          aria-hidden="true"
-          style={{ ["--u" as string]: `${u}px` }}
-        >
-          <defs>
-            {/* halftone dot grids — land (dim), areas (copper), hovered / active (gold, white) */}
-            {(
-              [
-                ["ag-dots-land", "rgba(255,255,255,0.42)", 0.2],
-                ["ag-dots-cell", "#D4924A", 0.24],
-                ["ag-dots-hover", "#E8B25C", 0.28],
-                ["ag-dots-active", "#FFD98A", 0.34],
-              ] as const
-            ).map(([id, color, r]) => (
-              <pattern
-                key={id}
-                id={id}
-                patternUnits="userSpaceOnUse"
-                width={u * 1.25}
-                height={u * 1.25}
-              >
-                <circle cx={u * 0.625} cy={u * 0.625} r={u * r} fill={color} />
-              </pattern>
-            ))}
-          </defs>
-          {/* plain land */}
-          <g className="land">
-            {DISTRICTS.map((d) => (
-              <path key={d.name} d={d.d} className="landmass" />
-            ))}
-          </g>
-          {/* area cells — the belt is inland, so no land clip (avoids slivers along district seams) */}
-          <g className="cells">
-            {cells.map((c) => (
-              <polygon
-                key={c.name}
-                points={c.points}
-                className={cn(
-                  "cell",
-                  active === c.name && "is-active",
-                  hovered === c.name && "is-hover"
-                )}
-                onClick={() => toggle(c.name)}
-                onMouseEnter={() => setHovered(c.name)}
-                onMouseLeave={() => setHovered(null)}
-              >
-                <title>{c.name}</title>
-              </polygon>
-            ))}
-          </g>
+      <div
+        className="map"
+        role="img"
+        aria-label="Map of the Kolkata areas we serve"
+      >
+        <div className="map-frame">
+          <motion.svg
+            initial={false}
+            animate={{ viewBox: `${view.x} ${view.y} ${view.w} ${view.h}` }}
+            transition={{ duration: 0.9, ease: [0.4, 0, 0.2, 1] }}
+            preserveAspectRatio="xMidYMid slice"
+            aria-hidden="true"
+            style={{ ["--u" as string]: `${u}px` }}
+          >
+            <defs>
+              {/* halftone dot grids — land (dim), areas (copper), hovered / active (gold, white) */}
+              {(
+                [
+                  ["ag-dots-land", "rgba(255,255,255,0.42)", 0.2],
+                  ["ag-dots-cell", "#D4924A", 0.24],
+                  ["ag-dots-hover", "#E8B25C", 0.28],
+                  ["ag-dots-active", "#FFD98A", 0.34],
+                ] as const
+              ).map(([id, color, r]) => (
+                <pattern
+                  key={id}
+                  id={id}
+                  patternUnits="userSpaceOnUse"
+                  width={u * 1.25}
+                  height={u * 1.25}
+                >
+                  <circle
+                    cx={u * 0.625}
+                    cy={u * 0.625}
+                    r={u * r}
+                    fill={color}
+                  />
+                </pattern>
+              ))}
+            </defs>
+            {/* plain land */}
+            <g className="land">
+              {DISTRICTS.map((d) => (
+                <path key={d.name} d={d.d} className="landmass" />
+              ))}
+            </g>
+            {/* area cells — the belt is inland, so no land clip (avoids slivers along district seams) */}
+            <g className="cells">
+              {cells.map((c) => (
+                <polygon
+                  key={c.name}
+                  points={c.points}
+                  className={cn(
+                    "cell",
+                    active === c.name && "is-active",
+                    hovered === c.name && "is-hover",
+                  )}
+                  onClick={() => toggle(c.name)}
+                  onMouseEnter={() => setHovered(c.name)}
+                  onMouseLeave={() => setHovered(null)}
+                >
+                  <title>{c.name}</title>
+                </polygon>
+              ))}
+            </g>
 
-          {/* Ganga / Hooghly */}
-          <g className="river">
-            <path d={RIVER_D} className="river-glow" />
-            <path d={RIVER_D} className="river-line" />
-            {label ? (
-              <text
-                className="river-label"
-                transform={`translate(${label.x.toFixed(2)} ${label.y.toFixed(2)}) rotate(${label.angle.toFixed(1)})`}
-                dy={-u * 2.2}
-                textAnchor="middle"
-              >
-                GANGA · HOOGHLY
-              </text>
-            ) : null}
-          </g>
-
-          {/* small bullet markers */}
-          {ordered.map((p) => {
-            const on = active === p.name;
-            return (
-              <g
-                key={p.name}
-                className={cn("dot", on && "is-active", hovered === p.name && "is-hover")}
-                transform={`translate(${p.x.toFixed(2)} ${p.y.toFixed(2)})`}
-                onMouseEnter={() => setHovered(p.name)}
-                onMouseLeave={() => setHovered(null)}
-                role="button"
-                tabIndex={0}
-                aria-label={p.name}
-                aria-pressed={on}
-                onClick={() => toggle(p.name)}
-                onKeyDown={(e) => e.key === "Enter" && toggle(p.name)}
-              >
-                <title>{p.name}</title>
-                <circle className="hit" r={u * 2.2} />
-                <circle className="ring" r={u * 1.1} />
-                <circle className="core" r={u * 0.55} />
-                <text className="tag" y={-u * 2.1} textAnchor="middle">
-                  {p.name}
+            {/* Ganga / Hooghly */}
+            <g className="river">
+              <path d={RIVER_D} className="river-glow" />
+              <path d={RIVER_D} className="river-line" />
+              {label ? (
+                <text
+                  className="river-label"
+                  transform={`translate(${label.x.toFixed(2)} ${label.y.toFixed(2)}) rotate(${label.angle.toFixed(1)})`}
+                  dy={-u * 2.2}
+                  textAnchor="middle"
+                >
+                  GANGA · HOOGHLY
                 </text>
-              </g>
-            );
-          })}
-        </motion.svg>
-        <div className="map-zoom" role="group" aria-label="Map zoom">
-          <button
-            type="button"
-            className={cn(zoomed && "on")}
-            aria-pressed={zoomed}
-            onClick={() => setZoomed(true)}
-          >
-            Service area
-          </button>
-          <button
-            type="button"
-            className={cn(!zoomed && "on")}
-            aria-pressed={!zoomed}
-            onClick={() => setZoomed(false)}
-          >
-            West Bengal
-          </button>
+              ) : null}
+            </g>
+
+            {/* small bullet markers */}
+            {ordered.map((p) => {
+              const on = active === p.name;
+              return (
+                <g
+                  key={p.name}
+                  className={cn(
+                    "dot",
+                    on && "is-active",
+                    hovered === p.name && "is-hover",
+                  )}
+                  transform={`translate(${p.x.toFixed(2)} ${p.y.toFixed(2)})`}
+                  onMouseEnter={() => setHovered(p.name)}
+                  onMouseLeave={() => setHovered(null)}
+                  role="button"
+                  tabIndex={0}
+                  aria-label={p.name}
+                  aria-pressed={on}
+                  onClick={() => toggle(p.name)}
+                  onKeyDown={(e) => e.key === "Enter" && toggle(p.name)}
+                >
+                  <title>{p.name}</title>
+                  <circle className="hit" r={u * 2.2} />
+                  <circle className="ring" r={u * 1.1} />
+                  <circle className="core" r={u * 0.55} />
+                  <text className="tag" y={-u * 2.1} textAnchor="middle">
+                    {p.name}
+                  </text>
+                </g>
+              );
+            })}
+          </motion.svg>
+          <div className="map-zoom" role="group" aria-label="Map zoom">
+            <button
+              type="button"
+              className={cn(zoomed && "on")}
+              aria-pressed={zoomed}
+              onClick={() => setZoomed(true)}
+            >
+              Service area
+            </button>
+            <button
+              type="button"
+              className={cn(!zoomed && "on")}
+              aria-pressed={!zoomed}
+              onClick={() => setZoomed(false)}
+            >
+              West Bengal
+            </button>
+          </div>
         </div>
         <span className="lbl">
-          {zoomed ? "Kolkata · North 24 Parganas" : "West Bengal · service areas highlighted"}
+          {zoomed
+            ? "Kolkata · North 24 Parganas"
+            : "West Bengal · service areas highlighted"}
         </span>
       </div>
     </>

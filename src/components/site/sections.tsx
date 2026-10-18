@@ -21,7 +21,8 @@ function MultiLine({ text }: { text: string }) {
   return (
     <>
       {lines.map((line, i) => (
-        <span key={line}>
+        // eslint-disable-next-line react/no-array-index-key -- static split of one string, line order never changes
+        <span key={i}>
           {line}
           {i < lines.length - 1 ? <br /> : null}
         </span>
@@ -110,6 +111,7 @@ export function Services({
                 [1100, 1],
                 [640, 1],
               ]}
+              compactShow={1.2}
               label="Service categories"
             >
               {categories.items.map((cat) => (
@@ -210,7 +212,13 @@ export function Steps({ section }: { section: SectionOf<"steps"> }) {
 }
 
 // ---------------------------------------------------------------- video cta
-export function VideoCta({ section }: { section: SectionOf<"video"> }) {
+export function VideoCta({
+  section,
+  settings,
+}: {
+  section: SectionOf<"video">;
+  settings: SiteSettings;
+}) {
   if (!section.visible) {
     return null;
   }
@@ -237,6 +245,15 @@ export function VideoCta({ section }: { section: SectionOf<"video"> }) {
       ) : null}
       <div className="wrap">
         <ScrollReveal className="video-head">
+          <div className="video-logo-wrap">
+            <Image
+              className="video-logo"
+              src={settings.logo}
+              alt={settings.businessName}
+              width={220}
+              height={220}
+            />
+          </div>
           <span className="tag">{section.pill}</span>
           <h2>
             <AccentHeading
@@ -301,6 +318,7 @@ export function Testimonials({
               [1100, 1],
               [640, 1],
             ]}
+            compactShow={1.2}
             autoplay={false}
             onDark
             label="Customer reviews"
@@ -344,8 +362,9 @@ export function Brands({ section }: { section: SectionOf<"brands"> }) {
         />
       </div>
       <div className="logos">
-        {rows.map((row) => (
-          <div className="strip" key={row[0]?.name ?? "row"}>
+        {rows.map((row, r) => (
+          // eslint-disable-next-line react/no-array-index-key -- fixed 3-row split, rows never reorder
+          <div className="strip" key={r}>
             {["a", "b"].flatMap((dup) =>
               row.map((b) => (
                 // eslint-disable-next-line @next/next/no-img-element -- SVG logos, no optimisation needed

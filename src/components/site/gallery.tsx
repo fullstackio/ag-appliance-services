@@ -4,6 +4,7 @@ import { useState } from "react";
 
 import Image from "next/image";
 
+import { CardSlider } from "@/components/site/card-slider";
 import { SectionHeading } from "@/components/site/section-heading";
 import {
   Dialog,
@@ -11,26 +12,19 @@ import {
   DialogDescription,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
 import type { SectionOf } from "@/lib/validations/content";
 
 type Item = SectionOf<"gallery">["items"][number];
 
 /**
- * Gallery grid: a bento/masonry-style CSS grid where each item's `size` field
- * (normal/big/tall/wide) controls its column/row span, so cards vary in scale
- * across the layout instead of riding a uniform-size slider row.
+ * Gallery slider: a single row of equal-size cards (react-slick, via CardSlider)
+ * instead of a filterable bento grid — each card carries its own category chip,
+ * so there's no separate tab/filter control to keep in sync.
  */
 
 export function Gallery({ section }: { section: SectionOf<"gallery"> }) {
-  const [tab, setTab] = useState<string>(section.tabs[0] ?? "All");
   const [zoom, setZoom] = useState<Item | null>(null);
-
-  const items =
-    tab === "All"
-      ? section.items
-      : section.items.filter((i) => i.category === tab);
 
   if (!section.visible) {
     return null;
@@ -45,48 +39,44 @@ export function Gallery({ section }: { section: SectionOf<"gallery"> }) {
           accent={section.headingAccent}
           subtitle={section.subtitle}
         />
-        <Tabs value={tab} onValueChange={(v) => setTab(String(v))}>
-          <TabsList className="tabs" variant="line">
-            {section.tabs.map((t) => (
-              <TabsTrigger key={t} value={t}>
-                {t}
-              </TabsTrigger>
-            ))}
-          </TabsList>
-        </Tabs>
       </div>
       <div className="gallery-full">
-        <div className="g-grid">
-          {items.map((g) => (
-            <div className={cn("g-item", `size-${g.size}`)} key={g.title}>
-              <button
-                type="button"
-                className={cn(
-                  "g",
-                  g.feature && "feature",
-                  "cursor-pointer border-0 p-0 text-left",
-                )}
-                onClick={() => setZoom(g)}
-                aria-label={`Open ${g.title}`}
-              >
-                <Image
-                  src={g.image}
-                  alt={g.title}
-                  fill
-                  sizes="(max-width: 640px) 92vw, (max-width: 1100px) 46vw, 24vw"
-                />
-                <span className="chip">{g.chip}</span>
-                <div className="cap">
-                  <div>
-                    <b>{g.title}</b>
-                    <small>{g.subtitle}</small>
-                  </div>
-                  <span className="zoom">⤢</span>
+        <CardSlider
+          perView={4.5}
+          dots={false}
+          autoplay={false}
+          loop={false}
+          label="Recent work gallery"
+        >
+          {section.items.map((g) => (
+            <button
+              type="button"
+              key={g.title}
+              className={cn(
+                "g",
+                g.feature && "feature",
+                "cursor-pointer border-0 p-0 text-left",
+              )}
+              onClick={() => setZoom(g)}
+              aria-label={`Open ${g.title}`}
+            >
+              <Image
+                src={g.image}
+                alt={g.title}
+                fill
+                sizes="(max-width: 640px) 85vw, (max-width: 1100px) 45vw, 22vw"
+              />
+              <span className="chip">{g.chip}</span>
+              <div className="cap">
+                <div>
+                  <b>{g.title}</b>
+                  <small>{g.subtitle}</small>
                 </div>
-              </button>
-            </div>
+                <span className="zoom">⤢</span>
+              </div>
+            </button>
           ))}
-        </div>
+        </CardSlider>
       </div>
 
       <Dialog open={Boolean(zoom)} onOpenChange={(o) => !o && setZoom(null)}>

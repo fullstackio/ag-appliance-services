@@ -17,6 +17,12 @@ interface CardSliderProps {
   autoplaySpeed?: number;
   /** set false for a manual (swipe / dots) carousel */
   autoplay?: boolean;
+  /** set false to stop at the last card instead of wrapping back to the first */
+  loop?: boolean;
+  /** set false to hide the pagination dots (swipe-only) */
+  dots?: boolean;
+  /** cards visible in the compact (mobile/tablet) layout — a peek of the next card */
+  compactShow?: number;
   className?: string;
   /** dots on a dark section → light dots */
   onDark?: boolean;
@@ -82,6 +88,9 @@ export function CardSlider({
   ],
   autoplaySpeed = 4200,
   autoplay = true,
+  loop = true,
+  dots = true,
+  compactShow = 1.4,
   className,
   onDark,
   label,
@@ -94,7 +103,7 @@ export function CardSlider({
     responsive,
   );
   const show = Math.min(rawShow, count);
-  const canLoop = count > show;
+  const canLoop = loop && count > show;
   // mobile / tablet: no autoplay, no loop — browse by swipe or dots, one card at a time, centred
   const infinite = compact ? false : canLoop;
   const effectiveAutoplay = autoplay && !compact && canLoop;
@@ -103,7 +112,7 @@ export function CardSlider({
       <Slider
         key={`${show}-${compact}`} // re-initialise slick when the layout mode changes
         className={cn("card-slider", onDark && "on-dark", className)}
-        dots
+        dots={dots}
         arrows={false}
         infinite={infinite}
         autoplay={effectiveAutoplay}
@@ -112,7 +121,7 @@ export function CardSlider({
         pauseOnHover
         centerMode={false}
         centerPadding="0px"
-        slidesToShow={compact ? 1.4 : show}
+        slidesToShow={compact ? compactShow : show}
         slidesToScroll={1}
         cssEase="cubic-bezier(0.4, 0, 0.2, 1)"
         dotsClass="slick-dots card-dots"

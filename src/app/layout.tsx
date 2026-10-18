@@ -1,4 +1,4 @@
-import { Geist_Mono, Poppins } from "next/font/google";
+import localFont from "next/font/local";
 
 import { QueryProvider } from "@/components/providers/query-provider";
 import { ThemeProvider } from "@/components/providers/theme-provider";
@@ -9,16 +9,53 @@ import { SITE_URL } from "@/lib/seo";
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
 
-const poppins = Poppins({
+const poppins = localFont({
   variable: "--font-poppins",
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800"],
   display: "swap",
+  src: [
+    {
+      path: "../fonts/poppins/poppins-400.woff2",
+      weight: "400",
+      style: "normal",
+    },
+    {
+      path: "../fonts/poppins/poppins-500.woff2",
+      weight: "500",
+      style: "normal",
+    },
+    {
+      path: "../fonts/poppins/poppins-600.woff2",
+      weight: "600",
+      style: "normal",
+    },
+    {
+      path: "../fonts/poppins/poppins-700.woff2",
+      weight: "700",
+      style: "normal",
+    },
+    {
+      path: "../fonts/poppins/poppins-800.woff2",
+      weight: "800",
+      style: "normal",
+    },
+  ],
 });
 
-const geistMono = Geist_Mono({
+const geistMono = localFont({
   variable: "--font-geist-mono",
-  subsets: ["latin"],
+  display: "swap",
+  src: [
+    {
+      path: "../fonts/geist-mono/geistmono-400.ttf",
+      weight: "400",
+      style: "normal",
+    },
+    {
+      path: "../fonts/geist-mono/geistmono-700.ttf",
+      weight: "700",
+      style: "normal",
+    },
+  ],
 });
 
 export const metadata: Metadata = {

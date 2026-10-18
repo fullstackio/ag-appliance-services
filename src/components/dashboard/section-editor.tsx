@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
 import {
   ArrowDown,
@@ -31,7 +31,6 @@ import { Textarea } from "@/components/ui/textarea";
 import { useResetSection, useSaveSection, useSection } from "@/hooks/use-admin";
 import { ApiError } from "@/lib/api-client";
 import {
-  GALLERY_SIZES,
   type IconKey,
   type Section,
   type SectionKey,
@@ -102,16 +101,9 @@ const ITEM_FIELDS: Record<SectionKey, FieldDef[]> = {
   ],
   gallery: [
     { name: "image", label: "Image", type: "image", wide: true },
-    { name: "chip", label: "Chip label", type: "text" },
-    { name: "category", label: "Category (matches a tab)", type: "text" },
+    { name: "chip", label: "Chip label (shown on the card)", type: "text" },
     { name: "title", label: "Title", type: "text" },
     { name: "subtitle", label: "Subtitle", type: "text" },
-    {
-      name: "size",
-      label: "Tile size",
-      type: "select",
-      options: GALLERY_SIZES,
-    },
     { name: "feature", label: "Highlight (copper outline)", type: "boolean" },
   ],
   brands: [
@@ -278,12 +270,22 @@ export function SectionEditor({ sectionKey }: { sectionKey: SectionKey }) {
   // Local edits win; otherwise show the server document. Saving/resetting clears local edits.
   const draft: AnyRecord | null =
     edited ?? (data ? (data as unknown as AnyRecord) : null);
+  const draftItems = draft?.items as AnyRecord[] | undefined;
+  // Items have no stable id in the data model (see src/lib/validations/content.ts) — assign one
+  // client-side, once per item, so list keys survive reorder/add/remove instead of pointing at
+  // the wrong row (array-index keys break when `move`/`remove` shift positions).
+  const items = useMemo(
+    () =>
+      (draftItems ?? []).map((it) =>
+        typeof it._key === "string" ? it : { ...it, _key: crypto.randomUUID() },
+      ),
+    [draftItems],
+  );
 
   if (isLoading || !draft) {
     return <Skeleton className="h-64 w-full" />;
   }
 
-  const items = (draft.items as AnyRecord[] | undefined) ?? [];
   const setTop = (k: string, v: unknown) => setDraft({ ...draft, [k]: v });
   const setItem = (i: number, k: string, v: unknown) =>
     setDraft({
@@ -408,28 +410,6 @@ export function SectionEditor({ sectionKey }: { sectionKey: SectionKey }) {
                 </Field>
               </>
             ) : null}
-            {sectionKey === "gallery" ? (
-              <Field>
-                <FieldLabel htmlFor="top-tabs">
-                  Filter tabs (comma separated, first is “All”)
-                </FieldLabel>
-                <Input
-                  id="top-tabs"
-                  value={((draft.tabs as string[] | undefined) ?? []).join(
-                    ", ",
-                  )}
-                  onChange={(e) =>
-                    setTop(
-                      "tabs",
-                      e.target.value
-                        .split(",")
-                        .map((s) => s.trim())
-                        .filter(Boolean),
-                    )
-                  }
-                />
-              </Field>
-            ) : null}
             {HAS_CTAS.includes(sectionKey) ? (
               <div className="grid gap-4 sm:grid-cols-2">
                 {(["primaryCta", "secondaryCta"] as const).map((k) => {
@@ -481,8 +461,10 @@ export function SectionEditor({ sectionKey }: { sectionKey: SectionKey }) {
           </CardHeader>
           <CardContent className="space-y-4">
             {items.map((item, i) => (
-              // eslint-disable-next-line react/no-array-index-key -- positional rows, no stable id
-              <div key={i} className="bg-card relative rounded-lg border p-4">
+              <div
+                key={item._key as string}
+                className="bg-card relative rounded-lg border p-4"
+              >
                 <div className="mb-3 flex items-center justify-between">
                   <span className="text-muted-foreground text-xs font-semibold tracking-wide uppercase">
                     #{i + 1}

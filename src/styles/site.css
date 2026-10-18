@@ -199,6 +199,26 @@
 .site .nav-burger {
   display: none;
 }
+/* mobile sheet menu — plain <a> tags inside .site lose Tailwind's padding utilities to the
+   zero-specificity reset above (that reset is unlayered, Tailwind's utilities are @layer'd,
+   and unlayered CSS always wins), so the spacing is set explicitly here instead. */
+.site .mobile-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 16px;
+}
+.site .mobile-nav .mobile-nav-link {
+  display: block;
+  padding: 10px 12px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background-color 0.15s ease;
+}
+.site .mobile-nav .mobile-nav-link:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
 /* 11 menu items: tighten before handing over to the burger */
 @media (max-width: 1700px) {
   .site nav ul {
@@ -1047,6 +1067,9 @@
   margin-right: 10px;
 }
 .site .map {
+  position: relative;
+}
+.site .map-frame {
   height: 520px;
   border-radius: 20px;
   background:
@@ -1059,7 +1082,7 @@
   border: 1px solid rgba(232, 178, 92, 0.3);
   position: relative;
 }
-.site .map {
+.site .map-frame {
   overflow: hidden; /* keep the river inside the rounded frame */
 }
 .site .map svg {
@@ -1189,7 +1212,7 @@ html:not(.dark) .site .map .landmass {
 .site .map .dot.is-active .core {
   fill: var(--gold);
 }
-.site .map .map-zoom {
+.site .map-frame .map-zoom {
   position: absolute;
   top: 14px;
   right: 14px;
@@ -1270,6 +1293,7 @@ html:not(.dark) .site .map .landmass {
   align-items: center;
   color: #fff;
   box-shadow: 0 20px 40px rgba(184, 113, 47, 0.3);
+  max-width: 1024px;
 }
 .site .cta h3 {
   font-size: 28px;
@@ -1504,45 +1528,28 @@ html:not(.dark) .site .map .landmass {
   border-color: var(--gold);
   box-shadow: none;
 }
-/* gallery: a bento-style CSS grid (not a slider) — each card's `size` field
-   (normal/big/tall/wide) sets its column/row span so cards vary in scale, like a
-   portfolio showcase grid. grid-auto-flow: dense backfills gaps left by spanning
-   cards with later normal-sized items. */
+/* gallery: a single-row, full-bleed card slider (react-slick, via CardSlider) —
+   every card is the same fixed height; each one carries its own category chip,
+   so there's no separate filter/tab control to keep in sync with it. */
 .site .gallery .gallery-full {
   width: 100%;
-}
-.site .gallery .g-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  grid-auto-rows: 160px;
-  grid-auto-flow: dense;
-  gap: 18px;
-  padding: 6px 0; /* room for card glow */
-}
-.site .gallery .g-item {
-  position: relative;
-}
-.site .gallery .g-item.size-wide {
-  grid-column: span 2;
-}
-.site .gallery .g-item.size-tall {
-  grid-row: span 2;
-}
-.site .gallery .g-item.size-big {
-  grid-column: span 2;
-  grid-row: span 2;
-}
-.site .gallery .g-item .g {
-  display: block;
-  width: 100%;
-  height: 100%;
+  margin-top: 36px;
 }
 .site .g {
   position: relative;
+  display: block;
+  width: 100%;
   border-radius: 18px;
   overflow: hidden;
   background: #222;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18);
+}
+/* .card-slide > * (a 3-class selector, see the card-slider rules above) sets
+   height:100% on every slide's direct child — it wins over a plain `.site .g`
+   rule at equal specificity because it comes first, so `.g` needs the extra
+   `.gallery` qualifier to tie on specificity and win on source order instead. */
+.site .gallery .g {
+  height: 340px;
 }
 .site .g img {
   width: 100%;
@@ -1617,26 +1624,6 @@ html:not(.dark) .site .map .landmass {
   gap: 12px;
   margin-top: 30px;
 }
-.site .gallery .tabs {
-  display: flex;
-  justify-content: center;
-  gap: 8px;
-  margin: -10px 0 30px;
-}
-.site .gallery .tabs span {
-  font-size: 12.5px;
-  font-weight: 500;
-  padding: 8px 16px;
-  border-radius: 999px;
-  border: 1px solid var(--line);
-  background: #fff;
-  color: var(--muted);
-}
-.site .gallery .tabs span.on {
-  background: var(--copper);
-  color: #fff;
-  border-color: var(--copper);
-}
 .dark .site {
   --paper: #141416;
   --ink: #f2ece4;
@@ -1676,8 +1663,7 @@ html:not(.dark) .site .map .landmass {
 .dark .site .testi .card,
 .dark .site .brands .b,
 .dark .site .q,
-.dark .site .step .ico,
-.dark .site .gallery .tabs span {
+.dark .site .step .ico {
   background: #1e1e21;
   border-color: #2e2e32;
   color: #f2ece4;
@@ -1706,10 +1692,6 @@ html:not(.dark) .site .map .landmass {
 }
 .dark .site .cat {
   background: #1e1e21;
-}
-.dark .site .gallery .tabs span.on {
-  background: var(--copper);
-  color: #fff;
 }
 .dark .site footer {
   background: #0a0a0b;
@@ -1742,7 +1724,7 @@ html:not(.dark) .site .map .landmass {
 .site .testi .card {
   box-shadow: 0 0 24px rgba(232, 178, 92, 0.14);
 }
-.site .map {
+.site .map-frame {
   box-shadow: 0 0 34px rgba(232, 178, 92, 0.22);
   border-color: rgba(232, 178, 92, 0.5);
 }
@@ -1852,6 +1834,62 @@ html:not(.dark) .site .map .landmass {
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+.site .video .video-logo-wrap {
+  position: relative;
+  display: inline-flex;
+  margin-bottom: 18px;
+}
+.site .video .video-logo-wrap::before {
+  content: "";
+  position: absolute;
+  inset: -10px;
+  border-radius: 50%;
+  background: conic-gradient(
+    from 0deg,
+    #0a1a4f,
+    #1d4ed8,
+    #60a5fa,
+    #1d4ed8,
+    #0a1a4f
+  );
+  filter: blur(12px);
+  opacity: 0.8;
+  z-index: 0;
+  animation:
+    ag-logo-glow-spin 6s linear infinite,
+    ag-logo-glow-pulse 2.6s ease-in-out infinite;
+}
+.site .video .video-logo {
+  position: relative;
+  z-index: 1;
+  width: 220px;
+  height: 220px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid rgba(232, 178, 92, 0.6);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+}
+@keyframes ag-logo-glow-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes ag-logo-glow-pulse {
+  0%,
+  100% {
+    opacity: 0.65;
+    filter: blur(10px);
+  }
+  50% {
+    opacity: 1;
+    filter: blur(16px);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .site .video .video-logo-wrap::before {
+    animation: none;
+  }
 }
 .site .video .tag {
   display: inline-block;
@@ -2109,9 +2147,6 @@ html:not(.dark) .site .map .landmass {
 .site .q .q-head span {
   transition: transform 0.2s;
 }
-.site .gallery .tabs span {
-  cursor: pointer;
-}
 .site .wa {
   position: fixed;
   right: 28px;
@@ -2172,10 +2207,6 @@ html:not(.dark) .site .map .landmass {
     transform: rotate(90deg);
     padding: 10px 0;
   }
-  .site .gallery .g-grid {
-    grid-template-columns: repeat(2, 1fr);
-    grid-auto-rows: 200px;
-  }
   .site .areas .wrap {
     grid-template-columns: 1fr;
     grid-template-rows: none; /* stacked: follow DOM order (pill, heading, list, map) */
@@ -2189,7 +2220,17 @@ html:not(.dark) .site .map .landmass {
     grid-row: auto;
   }
   .site .areas .map {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .site .areas .map-frame {
     height: 360px;
+  }
+  .site .areas .map .lbl {
+    position: static; /* out of the map frame — avoids overlapping the zoom toggle on narrow screens */
+    align-self: center;
+    font-size: 10px;
   }
   .site .faq .cols {
     grid-template-columns: 1fr;
@@ -2280,6 +2321,10 @@ html:not(.dark) .site .map .landmass {
   .site .video p {
     font-size: 13px;
   }
+  .site .video .video-logo {
+    width: 150px;
+    height: 150px;
+  }
   .site .cta h3 {
     font-size: 18px;
   }
@@ -2296,16 +2341,8 @@ html:not(.dark) .site .map .landmass {
   .site footer .cols {
     grid-template-columns: 1fr;
   }
-  .site .gallery .g-grid {
-    grid-template-columns: 1fr;
-    grid-auto-rows: 220px;
-  }
-  .site .gallery .g-item.size-wide,
-  .site .gallery .g-item.size-big {
-    grid-column: span 1;
-  }
-  .site .gallery .g-item.size-big {
-    grid-row: span 1;
+  .site .gallery .g {
+    height: 240px;
   }
   .site .areas ul {
     grid-template-columns: repeat(2, 1fr);
@@ -2315,22 +2352,24 @@ html:not(.dark) .site .map .landmass {
   }
   .site .stats .wrap {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    row-gap: 20px;
-    padding: 20px 14px;
+    row-gap: 12px;
+    padding: 14px 12px;
+    border-radius: 14px;
   }
   .site .stats .s {
     border-left: 0;
-    gap: 10px;
+    gap: 8px;
   }
   .site .stats .ic {
-    width: 30px;
-    height: 30px;
+    width: 20px;
+    height: 20px;
   }
   .site .stats b {
-    font-size: 22px;
+    font-size: 16px;
   }
   .site .stats span {
-    font-size: 11px;
+    font-size: 10px;
+    line-height: 1.25;
   }
 
   /* ---- app-like density: smaller type & icons across the board on phones ---- */
@@ -2492,43 +2531,6 @@ html:not(.dark) .site .map .landmass {
   line-height: 1.6;
   padding-top: 10px;
 }
-.site .gallery .tabs {
-  height: auto;
-  width: 100%;
-  padding: 0;
-  background: none;
-  border-radius: 0;
-  gap: 8px;
-  flex-wrap: wrap; /* 5 filter tabs wrap on phones instead of overflowing the viewport */
-  justify-content: center;
-}
-.site .gallery .tabs button {
-  flex: none; /* override the shadcn Tabs default flex-1 so pills size to their label */
-  font-size: 12.5px;
-  font-weight: 500;
-  padding: 8px 16px;
-  height: auto;
-  border-radius: 999px;
-  border: 1px solid var(--line);
-  background: #fff;
-  color: var(--muted);
-  cursor: pointer;
-  box-shadow: none;
-}
-.site .gallery .tabs button::after {
-  display: none;
-}
-.dark .site .gallery .tabs button {
-  background: #1e1e21;
-  border-color: #2e2e32;
-  color: #f2ece4;
-}
-.site .gallery .tabs button[data-active] {
-  background: var(--copper);
-  color: #fff;
-  border-color: var(--copper);
-}
-
 /* ---- theme toggle: animate colour changes ---- */
 .site,
 .site *,
@@ -2561,7 +2563,6 @@ html:not(.dark) .site .map .landmass {
 .site .btn,
 .site .wa,
 .site .mode,
-.site .gallery .tabs button,
 .site .item a,
 .site .profile,
 .site .social a span {
@@ -2573,12 +2574,10 @@ html:not(.dark) .site .map .landmass {
     border-color 0.25s;
 }
 .site .btn:hover,
-.site .gallery .tabs button:hover,
 .site .item a:hover {
   transform: translateY(-2px);
 }
-.site .btn:active,
-.site .gallery .tabs button:active {
+.site .btn:active {
   transform: translateY(0);
   transition-duration: 0.08s;
 }

@@ -51,11 +51,15 @@ async function HomeContent() {
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: jsonLdString(localBusinessJsonLd(content)) }}
+        dangerouslySetInnerHTML={{
+          __html: jsonLdString(localBusinessJsonLd(content)),
+        }}
       />
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: jsonLdString(websiteJsonLd(settings)) }}
+        dangerouslySetInnerHTML={{
+          __html: jsonLdString(websiteJsonLd(settings)),
+        }}
       />
       {sections.faqs.items.length ? (
         <script
@@ -69,10 +73,13 @@ async function HomeContent() {
       <main>
         {banner ? <Hero banner={banner} settings={settings} /> : null}
         <Stats section={sections.stats} settings={settings} />
-        <Services section={sections.services} categories={sections.serviceCategories} />
+        <Services
+          section={sections.services}
+          categories={sections.serviceCategories}
+        />
         <Why section={sections.why} />
         <Steps section={sections.steps} />
-        <VideoCta section={sections.video} />
+        <VideoCta section={sections.video} settings={settings} />
         <Testimonials section={sections.testimonials} />
         <Gallery section={sections.gallery} />
         <Brands section={sections.brands} />
@@ -80,7 +87,11 @@ async function HomeContent() {
         <Faqs section={sections.faqs} />
         <CtaBand section={sections.cta} />
       </main>
-      <SiteFooter settings={settings} quick={menus.footerQuick} services={menus.footerServices} />
+      <SiteFooter
+        settings={settings}
+        quick={menus.footerQuick}
+        services={menus.footerServices}
+      />
       <WhatsAppFab number={settings.whatsapp} />
       <BookingDialog phone={settings.phone} />
     </>

@@ -27,6 +27,49 @@
   display: block;
   max-width: 100%;
 }
+/* visible keyboard-focus ring on every interactive element — most of the site only had this
+   on two specific components before, leaving plain links/buttons with no focus indicator */
+.site a:focus-visible,
+.site button:focus-visible,
+.site [tabindex]:focus-visible,
+.site input:focus-visible,
+.site [role="button"]:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+/* pause/play toggle overlaid on the hero slider and the autoplaying card carousels
+   (Why / Testimonials / Service categories) — keeps auto-rotation stoppable (WCAG 2.2.2) */
+.site .card-slider-wrap {
+  position: relative;
+}
+.site .slider-pause {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 5;
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: rgba(18, 18, 18, 0.55);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  cursor: pointer;
+}
+.site .slider-pause:hover {
+  background: rgba(18, 18, 18, 0.75);
+}
+/* .slider-pause's own `display: grid` above outranks the UA stylesheet's bare
+   `[hidden] { display: none }`, so the hidden attribute needs an explicit override here */
+.site .slider-pause[hidden] {
+  display: none;
+}
+.site .slider-pause svg {
+  width: 16px;
+  height: 16px;
+}
 .site {
   --ink: #121212;
   --ink2: #1c1c1e;
@@ -39,6 +82,12 @@
   --paper: #fbf8f3;
   --muted: #6b6259;
   --line: #e7ded2;
+  /* copper-family text/glyph colour on a background that can be light (default theme) or
+     dark (.dark theme) — var(--copper)/var(--gold) read at ~2:1-3.9:1 against light
+     backgrounds (fails WCAG 1.4.3's 4.5:1 for normal text), so text-sized uses read this
+     instead: bronze clears 4.5:1 on light backgrounds, and the dark-theme override below
+     swaps back to copper, which already clears 4.5:1 against the dark-theme background. */
+  --copper-text: var(--bronze);
   /* animated-glow sweep: copper (matches the logo) in light mode, gold in dark — see .dark .site override */
   --glow-1: var(--copper2);
   --glow-2: var(--copper);
@@ -65,13 +114,13 @@
   letter-spacing: -0.01em;
 }
 .site .accent {
-  color: var(--copper2);
+  color: var(--copper-text);
 }
 .site .pill {
   display: inline-block;
   background: var(--copper);
   color: #fff;
-  font-size: 11px;
+  font-size: clamp(10px, 9.58px + 0.111vw, 11px);
   font-weight: 600;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -86,12 +135,14 @@
   margin-bottom: 40px;
 }
 .site .sec-head h2 {
-  font-size: 38px;
+  /* fluid between the 20px phone target and the 38px desktop size — no more hard
+     jump exactly at the 640px breakpoint */
+  font-size: clamp(20px, 12.4px + 2vw, 38px);
   margin: 14px 0 10px;
 }
 .site .sec-head p {
   color: var(--muted);
-  font-size: 15px;
+  font-size: clamp(13px, 12.16px + 0.222vw, 15px);
 }
 .site .dark .sec-head p {
   color: #bfb4a6;
@@ -101,7 +152,7 @@
   align-items: center;
   gap: 8px;
   font-weight: 600;
-  font-size: 14px;
+  font-size: clamp(13px, 12.58px + 0.111vw, 14px);
   padding: 13px 24px;
   border-radius: 10px;
   text-decoration: none;
@@ -174,14 +225,14 @@
 }
 .site .brand .name {
   font-weight: 800;
-  font-size: 20px;
+  font-size: clamp(14px, 11.47px + 0.667vw, 20px);
   line-height: 1.05;
   letter-spacing: 0.02em;
 }
 .site .brand .name span {
   display: block;
   color: var(--copper);
-  font-size: 15px;
+  font-size: clamp(10px, 7.89px + 0.556vw, 15px);
   letter-spacing: 0.14em;
 }
 .site nav ul {
@@ -241,8 +292,8 @@
   }
 }
 .site nav li.active {
-  color: var(--copper);
-  border-bottom: 2px solid var(--copper);
+  color: var(--copper-text);
+  border-bottom: 2px solid var(--copper-text);
   padding-bottom: 4px;
 }
 .site .nav-cta {
@@ -293,7 +344,7 @@
   background: rgba(232, 178, 92, 0.14);
   border: 1px solid rgba(232, 178, 92, 0.45);
   color: var(--gold);
-  font-size: 11px;
+  font-size: clamp(10px, 9.58px + 0.111vw, 11px);
   letter-spacing: 0.16em;
   font-weight: 600;
   padding: 7px 14px;
@@ -301,12 +352,12 @@
   margin-bottom: 22px;
 }
 .site .hero h1 {
-  font-size: 56px;
+  font-size: clamp(24px, 10.5px + 3.56vw, 56px);
   line-height: 1.08;
 }
 .site .hero p {
   margin: 22px 0 30px;
-  font-size: 17px;
+  font-size: clamp(13px, 11.31px + 0.444vw, 17px);
   line-height: 1.7;
   color: #d8cfc3;
   max-width: 470px;
@@ -327,7 +378,7 @@
   align-items: center;
   gap: 14px;
   text-align: left;
-  font-size: 12px;
+  font-size: clamp(11px, 10.58px + 0.111vw, 12px);
   line-height: 1.4;
   color: #e8dfd2;
   padding: 14px 16px;
@@ -527,13 +578,13 @@
   color: var(--gold);
 }
 .site .stats b {
-  font-size: 30px;
+  font-size: clamp(16px, 10.09px + 1.556vw, 30px);
   color: var(--gold);
   display: block;
   line-height: 1;
 }
 .site .stats span {
-  font-size: 14px;
+  font-size: clamp(10px, 8.31px + 0.444vw, 14px);
   color: #e8dfd2;
 }
 .site .services .grid {
@@ -695,12 +746,12 @@
   }
 }
 .site .svc b {
-  font-size: 14px;
+  font-size: clamp(13px, 12.58px + 0.111vw, 14px);
   display: block;
 }
 .site .svc small {
   color: var(--muted);
-  font-size: 12px;
+  font-size: clamp(11px, 10.58px + 0.111vw, 12px);
   display: block;
   margin-top: 6px;
   line-height: 1.5;
@@ -777,7 +828,7 @@
 }
 .site .cat h3 {
   color: var(--gold);
-  font-size: 17px;
+  font-size: clamp(15px, 14.16px + 0.222vw, 17px);
   letter-spacing: 0.04em;
   text-transform: uppercase;
   margin-bottom: 12px;
@@ -794,7 +845,7 @@
   gap: 7px;
 }
 .site .chips span {
-  font-size: 12px;
+  font-size: clamp(11px, 10.58px + 0.111vw, 12px);
   background: rgba(255, 255, 255, 0.07);
   border: 1px solid rgba(255, 255, 255, 0.14);
   padding: 5px 10px;
@@ -833,12 +884,12 @@
   color: var(--copper);
 }
 .site .why b {
-  font-size: 14px;
+  font-size: clamp(13px, 12.58px + 0.111vw, 14px);
   display: block;
   margin-bottom: 8px;
 }
 .site .why p {
-  font-size: 12px;
+  font-size: clamp(11.5px, 11.29px + 0.056vw, 12px);
   color: var(--muted);
   line-height: 1.55;
 }
@@ -862,7 +913,7 @@
   font-weight: 700;
   display: grid;
   place-items: center;
-  font-size: 18px;
+  font-size: clamp(15px, 13.73px + 0.333vw, 18px);
   flex: none;
 }
 .site .step .ico {
@@ -882,16 +933,16 @@
 }
 .site .step b {
   display: block;
-  font-size: 15px;
+  font-size: clamp(14px, 13.58px + 0.111vw, 15px);
   margin-bottom: 4px;
 }
 .site .step p {
-  font-size: 12.5px;
+  font-size: clamp(11.5px, 11.08px + 0.111vw, 12.5px);
   color: var(--muted);
   line-height: 1.55;
 }
 .site .arrow {
-  color: var(--copper2);
+  color: var(--copper-text);
   text-align: center;
   font-size: 26px;
 }
@@ -913,13 +964,13 @@
   padding: 24px;
 }
 .site .stars {
-  color: var(--gold);
+  color: var(--copper-text);
   font-size: 15px;
   letter-spacing: 2px;
   margin-bottom: 12px;
 }
 .site .testi p {
-  font-size: 13.5px;
+  font-size: clamp(12.5px, 12.08px + 0.111vw, 13.5px);
   line-height: 1.65;
   font-style: italic;
   color: #3c352e;
@@ -940,15 +991,15 @@
   place-items: center;
   color: #fff;
   font-weight: 700;
-  font-size: 14px;
+  font-size: clamp(12px, 11.16px + 0.222vw, 14px);
 }
 .site .person b {
-  font-size: 13px;
+  font-size: clamp(12px, 11.58px + 0.111vw, 13px);
   display: block;
 }
 .site .person small {
   color: var(--muted);
-  font-size: 11.5px;
+  font-size: clamp(10.5px, 10.08px + 0.111vw, 11.5px);
 }
 .site .brands .row {
   display: flex;
@@ -1023,7 +1074,7 @@
   grid-row: 1 / span 5;
 }
 .site .areas h2 {
-  font-size: 38px;
+  font-size: clamp(20px, 12.4px + 2vw, 38px);
   line-height: 1.15;
   margin: 12px 0 18px;
 }
@@ -1296,12 +1347,12 @@ html:not(.dark) .site .map .landmass {
   max-width: 1024px;
 }
 .site .cta h3 {
-  font-size: 28px;
+  font-size: clamp(18px, 13.8px + 1.11vw, 28px);
   margin-bottom: 6px;
 }
 .site .cta p {
   opacity: 0.9;
-  font-size: 14px;
+  font-size: clamp(12.5px, 11.87px + 0.167vw, 14px);
 }
 .site .cta .actions {
   display: flex;
@@ -1326,13 +1377,13 @@ html:not(.dark) .site .map .landmass {
 .site footer h4 {
   color: #fff;
   font-weight: 700; /* browser default in the mockup; Tailwind preflight resets it */
-  font-size: 15px;
+  font-size: clamp(14px, 13.58px + 0.111vw, 15px);
   margin-bottom: 16px;
   letter-spacing: 0.04em;
 }
 .site footer ul {
   list-style: none;
-  font-size: 13.5px;
+  font-size: clamp(12.5px, 12.08px + 0.111vw, 13.5px);
   line-height: 2.1;
 }
 .site footer .about {
@@ -1632,6 +1683,8 @@ html:not(.dark) .site .map .landmass {
   --glow-1: var(--gold);
   --glow-2: #f5cf8e;
   --book-cta-ring: 220, 38, 38;
+  /* dark theme's --paper is near-black, so plain copper already clears 4.5:1 here */
+  --copper-text: var(--copper);
   background: var(--paper);
   color: var(--ink);
 }
@@ -1904,13 +1957,13 @@ html:not(.dark) .site .map .landmass {
   margin-bottom: 18px;
 }
 .site .video h2 {
-  font-size: 46px;
+  font-size: clamp(20px, 9px + 2.89vw, 46px);
   line-height: 1.12;
   max-width: 820px;
 }
 .site .video p {
   margin: 18px 0 32px;
-  font-size: 16px;
+  font-size: clamp(13px, 11.73px + 0.333vw, 16px);
   line-height: 1.7;
   color: #ebdfcf;
   max-width: 640px;
@@ -2118,8 +2171,10 @@ html:not(.dark) .site .map .landmass {
 .site nav li a {
   display: inline-block;
 }
-.site .hero h1 .accent,
-.site .accent {
+/* hero is always a dark photo/gradient background regardless of theme, so its accent word
+   keeps the brighter copper2 (passes 3:1 large-text contrast there); every other .accent
+   (on a background that may be light) uses --copper-text, set above */
+.site .hero h1 .accent {
   color: var(--copper2);
 }
 .site .q {
@@ -2260,9 +2315,9 @@ html:not(.dark) .site .map .landmass {
   .site .areas.sec {
     padding: 32px 0;
   }
-  /* app-like heading scale on phones */
+  /* app-like heading scale on phones — font-size is fluid (clamp) now, line-height still
+     needs a tighter phone-only value */
   .site .hero h1 {
-    font-size: 24px;
     line-height: 1.2;
   }
   .site .visual .badge {
@@ -2296,43 +2351,17 @@ html:not(.dark) .site .map .landmass {
     width: 26px;
     height: 26px;
   }
-  .site .svc b {
-    font-size: 13px;
-  }
-  .site .svc small {
-    font-size: 11px;
-  }
-  .site .sec-head h2,
-  .site .areas h2 {
-    font-size: 20px;
-  }
-  .site .sec-head p {
-    font-size: 13px;
-  }
   .site .video {
     height: auto;
     min-height: 0;
     padding: 60px 0;
   }
   .site .video h2 {
-    font-size: 20px;
     line-height: 1.25;
-  }
-  .site .video p {
-    font-size: 13px;
   }
   .site .video .video-logo {
     width: 150px;
     height: 150px;
-  }
-  .site .cta h3 {
-    font-size: 18px;
-  }
-  .site .cta p {
-    font-size: 12.5px;
-  }
-  .site .cat h3 {
-    font-size: 14px;
   }
   .site .trust {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -2364,11 +2393,7 @@ html:not(.dark) .site .map .landmass {
     width: 20px;
     height: 20px;
   }
-  .site .stats b {
-    font-size: 16px;
-  }
   .site .stats span {
-    font-size: 10px;
     line-height: 1.25;
   }
 
@@ -2378,7 +2403,6 @@ html:not(.dark) .site .map .landmass {
     height: 18px;
   }
   .site .pill {
-    font-size: 10px;
     padding: 5px 12px;
   }
   .site nav .wrap {
@@ -2391,19 +2415,11 @@ html:not(.dark) .site .map .landmass {
     width: 38px;
     height: 38px;
   }
-  .site .brand .name {
-    font-size: 14px;
-  }
-  .site .brand .name span {
-    font-size: 10px;
-  }
   .site .hero .tag {
-    font-size: 10px;
     padding: 5px 12px;
     margin-bottom: 16px;
   }
   .site .hero p {
-    font-size: 13px;
     margin: 16px 0 22px;
   }
   .site .hero .actions {
@@ -2415,7 +2431,6 @@ html:not(.dark) .site .map .landmass {
     min-width: 0;
   }
   .site .btn {
-    font-size: 13px;
     padding: 11px 18px;
   }
   .site .trust {
@@ -2423,7 +2438,6 @@ html:not(.dark) .site .map .landmass {
     margin-top: 28px;
   }
   .site .trust div {
-    font-size: 11px;
     padding: 10px 12px;
   }
   .site .trust .ic {
@@ -2434,16 +2448,9 @@ html:not(.dark) .site .map .landmass {
     width: 44px;
     height: 44px;
   }
-  .site .why b {
-    font-size: 13px;
-  }
-  .site .why p {
-    font-size: 11.5px;
-  }
   .site .step .num {
     width: 36px;
     height: 36px;
-    font-size: 15px;
   }
   .site .step .ico {
     width: 56px;
@@ -2453,42 +2460,18 @@ html:not(.dark) .site .map .landmass {
     width: 24px;
     height: 24px;
   }
-  .site .step b {
-    font-size: 14px;
-  }
-  .site .step p {
-    font-size: 11.5px;
-  }
   .site .testi .stars {
     font-size: 13px;
   }
   .site .testi p {
-    font-size: 12.5px;
     min-height: auto;
   }
   .site .avatar {
     width: 34px;
     height: 34px;
-    font-size: 12px;
-  }
-  .site .person b {
-    font-size: 12px;
-  }
-  .site .person small {
-    font-size: 10.5px;
-  }
-  .site .cat h3 {
-    font-size: 15px;
   }
   .site .chips span {
-    font-size: 11px;
     padding: 4px 8px;
-  }
-  .site footer h4 {
-    font-size: 14px;
-  }
-  .site footer ul {
-    font-size: 12.5px;
   }
   .site .copy {
     flex-direction: column;
@@ -2624,7 +2607,7 @@ html:not(.dark) .site .map .landmass {
   transition: transform 0.25s ease-out;
 }
 .site nav li:hover a {
-  color: var(--copper);
+  color: var(--copper-text);
 }
 .site nav li:hover a::after {
   transform: scaleX(1);
@@ -2688,7 +2671,7 @@ html:not(.dark) .site .map .landmass {
   margin: 0 auto;
 }
 .site .legal-head h1 {
-  font-size: 44px;
+  font-size: clamp(26px, 18.4px + 2vw, 44px);
   line-height: 1.1;
   margin: 16px 0 14px;
 }
@@ -2711,12 +2694,12 @@ html:not(.dark) .site .map .landmass {
   line-height: 1.75;
 }
 .site .legal-body h2 {
-  font-size: 20px;
+  font-size: clamp(17px, 15.73px + 0.333vw, 20px);
   margin: 34px 0 10px;
   padding-top: 6px;
 }
 .site .legal-body h3 {
-  font-size: 16px;
+  font-size: clamp(14px, 13.16px + 0.222vw, 16px);
   margin: 22px 0 8px;
   color: var(--copper);
 }
@@ -2799,15 +2782,6 @@ html:not(.dark) .site .map .landmass {
   text-decoration-color: var(--gold);
 }
 @media (max-width: 640px) {
-  .site .legal-head h1 {
-    font-size: 26px;
-  }
-  .site .legal-body h2 {
-    font-size: 17px;
-  }
-  .site .legal-body h3 {
-    font-size: 14px;
-  }
   .site .legal-body table {
     display: block;
     overflow-x: auto;

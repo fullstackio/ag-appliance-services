@@ -12,13 +12,17 @@ import "@/styles/site.css";
 export const revalidate = 3600;
 
 /** Shared chrome for the legal pages: site header/footer with links pointing back home. */
-export default async function LegalLayout({ children }: { children: ReactNode }) {
+export default async function LegalLayout({
+  children,
+}: {
+  children: ReactNode;
+}) {
   const { settings, menus } = await getSiteContent();
   return (
     <div className="site">
       <SmoothScroll />
       <SiteHeader settings={settings} menu={menus.header} base="/" />
-      <main className="legal">
+      <main id="main-content" className="legal">
         <div className="wrap">{children}</div>
       </main>
       <SiteFooter

@@ -6,9 +6,14 @@ import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 
 import type { Metadata } from "next";
 
-export const metadata: Metadata = { title: "Dashboard — AG Appliance Services" };
+export const metadata: Metadata = {
+  title: "Dashboard — AG Appliance Services",
+  robots: { index: false, follow: false },
+};
 
-export default async function DashboardLayout({ children }: LayoutProps<"/dashboard">) {
+export default async function DashboardLayout({
+  children,
+}: LayoutProps<"/dashboard">) {
   const session = await auth();
   if (!session?.user || session.user.status !== "active") {
     redirect("/login?callbackUrl=/dashboard");
@@ -16,7 +21,9 @@ export default async function DashboardLayout({ children }: LayoutProps<"/dashbo
   return (
     <SidebarProvider>
       <AppSidebar user={session.user} />
-      <SidebarInset className="min-h-screen">{children}</SidebarInset>
+      <SidebarInset id="main-content" className="min-h-screen">
+        {children}
+      </SidebarInset>
     </SidebarProvider>
   );
 }

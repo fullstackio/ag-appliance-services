@@ -19,9 +19,17 @@ interface AuthCardProps {
   footer: ReactNode;
 }
 
-export function AuthCard({ title, description, children, footer }: AuthCardProps) {
+export function AuthCard({
+  title,
+  description,
+  children,
+  footer,
+}: AuthCardProps) {
   return (
-    <main className="from-brand-cream to-background flex min-h-screen items-center justify-center bg-linear-to-b p-6">
+    <main
+      id="main-content"
+      className="from-brand-cream to-background flex min-h-screen items-center justify-center bg-linear-to-b p-6"
+    >
       <div className="w-full max-w-md">
         <Link href="/" className="mb-6 flex items-center justify-center gap-3">
           <Image
@@ -32,8 +40,12 @@ export function AuthCard({ title, description, children, footer }: AuthCardProps
             className="rounded-full shadow-md"
           />
           <div className="leading-tight">
-            <div className="text-lg font-extrabold tracking-wide">AG APPLIANCE</div>
-            <div className="text-brand-copper text-sm font-bold tracking-[.14em]">SERVICES</div>
+            <div className="text-lg font-extrabold tracking-wide">
+              AG APPLIANCE
+            </div>
+            <div className="text-brand-copper text-sm font-bold tracking-[.14em]">
+              SERVICES
+            </div>
           </div>
         </Link>
         <Card className="shadow-xl">
@@ -42,7 +54,9 @@ export function AuthCard({ title, description, children, footer }: AuthCardProps
             <CardDescription>{description}</CardDescription>
           </CardHeader>
           <CardContent>{children}</CardContent>
-          <CardFooter className="text-muted-foreground justify-center text-sm">{footer}</CardFooter>
+          <CardFooter className="text-muted-foreground justify-center text-sm">
+            {footer}
+          </CardFooter>
         </Card>
       </div>
     </main>

@@ -5,7 +5,10 @@ import { RegisterForm } from "@/components/auth/register-form";
 
 import type { Metadata } from "next";
 
-export const metadata: Metadata = { title: "Register — AG Appliance Dashboard" };
+export const metadata: Metadata = {
+  title: "Register — AG Appliance Dashboard",
+  robots: { index: false, follow: false },
+};
 
 export default function RegisterPage() {
   return (
@@ -15,7 +18,10 @@ export default function RegisterPage() {
       footer={
         <span>
           Already registered?{" "}
-          <Link href="/login" className="text-brand-copper font-medium hover:underline">
+          <Link
+            href="/login"
+            className="text-brand-copper font-medium hover:underline"
+          >
             Sign in
           </Link>
         </span>

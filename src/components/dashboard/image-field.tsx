@@ -14,10 +14,18 @@ interface ImageFieldProps {
   onChange: (url: string) => void;
   id?: string;
   aspect?: string;
+  /** Used to build the preview thumbnail's alt text, e.g. "Hero banner" → "Hero banner preview". */
+  label?: string;
 }
 
 /** Text input for an image path + upload button with preview. */
-export function ImageField({ value, onChange, id, aspect = "aspect-video" }: ImageFieldProps) {
+export function ImageField({
+  value,
+  onChange,
+  id,
+  aspect = "aspect-video",
+  label = "Image",
+}: ImageFieldProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [busy, setBusy] = useState(false);
 
@@ -46,7 +54,11 @@ export function ImageField({ value, onChange, id, aspect = "aspect-video" }: Ima
       >
         {value ? (
           // eslint-disable-next-line @next/next/no-img-element -- arbitrary uploaded paths
-          <img src={value} alt="" className="h-full w-full object-cover" />
+          <img
+            src={value}
+            alt={`${label} preview`}
+            className="h-full w-full object-cover"
+          />
         ) : (
           <div className="text-muted-foreground grid h-full place-items-center text-xs">
             No image

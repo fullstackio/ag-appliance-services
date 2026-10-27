@@ -70,7 +70,7 @@ async function HomeContent() {
 
       <SmoothScroll />
       <SiteHeader settings={settings} menu={menus.header} />
-      <main>
+      <main id="main-content">
         {banner ? <Hero banner={banner} settings={settings} /> : null}
         <Stats section={sections.stats} settings={settings} />
         <Services

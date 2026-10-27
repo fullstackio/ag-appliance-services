@@ -90,6 +90,12 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={`${poppins.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col" suppressHydrationWarning>
+        <a
+          href="#main-content"
+          className="bg-brand-copper focus:not-sr-only sr-only fixed top-2 left-2 z-50 rounded-md px-4 py-2 text-sm font-semibold text-white shadow-lg"
+        >
+          Skip to content
+        </a>
         <ThemeProvider>
           <QueryProvider>
             {children}

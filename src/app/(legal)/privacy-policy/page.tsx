@@ -1,15 +1,16 @@
 import { getSiteContent } from "@/lib/content/get-content";
+import { buildPageMetadata } from "@/lib/seo";
 
 import { LegalPage } from "../legal-page";
 
 import type { Metadata } from "next";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildPageMetadata({
   title: "Privacy Policy",
   description:
     "How AG Appliance Services collects, uses and protects the personal information you share when booking an appliance repair.",
-  alternates: { canonical: "/privacy-policy" },
-};
+  path: "/privacy-policy",
+});
 
 export default async function PrivacyPolicyPage() {
   const { settings } = await getSiteContent();

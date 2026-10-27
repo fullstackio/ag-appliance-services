@@ -7,7 +7,10 @@ import { LoginForm } from "@/components/auth/login-form";
 
 import type { Metadata } from "next";
 
-export const metadata: Metadata = { title: "Sign in — AG Appliance Dashboard" };
+export const metadata: Metadata = {
+  title: "Sign in — AG Appliance Dashboard",
+  robots: { index: false, follow: false },
+};
 
 export default function LoginPage() {
   return (
@@ -17,7 +20,10 @@ export default function LoginPage() {
       footer={
         <span>
           New here?{" "}
-          <Link href="/register" className="text-brand-copper font-medium hover:underline">
+          <Link
+            href="/register"
+            className="text-brand-copper font-medium hover:underline"
+          >
             Create an account
           </Link>
         </span>

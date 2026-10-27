@@ -2,6 +2,8 @@
 
 import { type ReactNode, useEffect, useRef, useState } from "react";
 
+import { useReducedMotion } from "framer-motion";
+import { Pause, Play } from "lucide-react";
 import Slider from "react-slick";
 
 import { cn } from "@/lib/utils";
@@ -106,9 +108,13 @@ export function CardSlider({
   const canLoop = loop && count > show;
   // mobile / tablet: no autoplay, no loop — browse by swipe or dots, one card at a time, centred
   const infinite = compact ? false : canLoop;
-  const effectiveAutoplay = autoplay && !compact && canLoop;
+  const reduceMotion = useReducedMotion();
+  const [paused, setPaused] = useState(false);
+  const wouldAutoplay = autoplay && !compact && canLoop;
+  const effectiveAutoplay = wouldAutoplay && !reduceMotion && !paused;
+  const playing = !reduceMotion && !paused;
   return (
-    <div ref={wrapRef}>
+    <div ref={wrapRef} className="card-slider-wrap">
       <Slider
         key={`${show}-${compact}`} // re-initialise slick when the layout mode changes
         className={cn("card-slider", onDark && "on-dark", className)}
@@ -138,6 +144,27 @@ export function CardSlider({
           </div>
         ))}
       </Slider>
+      {/* mounted whenever the caller requested autoplay at all (a static prop, stable for the
+          component's lifetime) and only hidden via the `hidden` attribute for the current
+          compact/looping state — toggling `hidden` is a plain attribute update, unlike
+          conditionally mounting the button, which would otherwise unmount/remount in the same
+          render as the Slider's `key`-driven remount above and confuse React's reconciliation. */}
+      {autoplay ? (
+        <button
+          type="button"
+          className="slider-pause"
+          hidden={!wouldAutoplay}
+          aria-pressed={!playing}
+          aria-label={
+            playing
+              ? `Pause ${label.toLowerCase()} autoplay`
+              : `Play ${label.toLowerCase()} autoplay`
+          }
+          onClick={() => setPaused((p) => !p)}
+        >
+          {playing ? <Pause /> : <Play />}
+        </button>
+      ) : null}
     </div>
   );
 }

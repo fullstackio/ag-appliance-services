@@ -33,7 +33,8 @@ export const defaultSettings: SiteSettings = {
     whatsapp: "https://wa.me/919123667075",
     google: "#",
   },
-  googleBusinessUrl: "#",
+  googleBusinessUrl:
+    "https://www.google.com/search?q=AG+Appliance+Services&stick=H4sIAAAAAAAAAONgU1I1qLBISzJIMUtLMzdOSbI0NrS0MqhINExOMTYzSzY2SU02szQ3XsQq6uiu4FhQkJOZmJecqhCcWlSWmZxaDAAHt3MIQQAAAA",
   copyright: "AG Appliance Services. All Rights Reserved.", // year is prefixed dynamically at render
   legalText: "Privacy Policy • Terms & Conditions",
   seoTitle: "AG Appliance Services — Appliance Repair Service in Kolkata",

@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 
 import { CookieSettingsLink } from "@/components/site/cookie-settings-link";
@@ -20,16 +21,37 @@ export const LEGAL_LINKS = [
   { href: "/cookies-policy", label: "Cookie Policy" },
 ] as const;
 
-export function SiteFooter({ settings, quick, services, base = "" }: SiteFooterProps) {
+export function SiteFooter({
+  settings,
+  quick,
+  services,
+  base = "",
+}: SiteFooterProps) {
   const social = [
-    { key: "f", href: settings.social.facebook, label: "Facebook" },
-    { key: "ig", href: settings.social.instagram, label: "Instagram" },
+    {
+      key: "f",
+      icon: "/brands/facebook.svg",
+      href: settings.social.facebook,
+      label: "Facebook",
+    },
+    {
+      key: "ig",
+      icon: "/brands/instagram.svg",
+      href: settings.social.instagram,
+      label: "Instagram",
+    },
     {
       key: "wa",
+      icon: "/brands/whatsapp.svg",
       href: settings.social.whatsapp || `https://wa.me/${settings.whatsapp}`,
       label: "WhatsApp",
     },
-    { key: "G", href: settings.social.google || settings.googleBusinessUrl, label: "Google" },
+    {
+      key: "G",
+      icon: "/brands/google.svg",
+      href: settings.social.google || settings.googleBusinessUrl,
+      label: "Google",
+    },
   ];
   return (
     <footer>
@@ -39,17 +61,21 @@ export function SiteFooter({ settings, quick, services, base = "" }: SiteFooterP
             <Brand settings={settings} light base={base} />
             <p className="about">{settings.footerAbout}</p>
             <div className="social">
-              {social.map((s) => (
-                <a
-                  key={s.key}
-                  href={s.href || "#"}
-                  aria-label={s.label}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  <span>{s.key}</span>
-                </a>
-              ))}
+              {social
+                .filter((s) => s.href)
+                .map((s) => (
+                  <a
+                    key={s.key}
+                    href={s.href}
+                    aria-label={s.label}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    <span>
+                      <Image src={s.icon} alt="" width={18} height={18} />
+                    </span>
+                  </a>
+                ))}
             </div>
           </div>
           <div>
@@ -80,7 +106,8 @@ export function SiteFooter({ settings, quick, services, base = "" }: SiteFooterP
             <h4>Contact Us</h4>
             <ul>
               <li>
-                📞 <a href={`tel:${settings.phone}`}>{settings.phone}</a> (Call / WhatsApp)
+                📞 <a href={`tel:${settings.phone}`}>{settings.phone}</a> (Call
+                / WhatsApp)
               </li>
               <li>
                 ✉ <a href={`mailto:${settings.email}`}>{settings.email}</a>

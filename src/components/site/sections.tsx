@@ -372,6 +372,8 @@ export function Brands({ section }: { section: SectionOf<"brands"> }) {
                   key={`${dup}-${b.name}`}
                   src={b.logo}
                   alt={b.name}
+                  width={130}
+                  height={30}
                   loading="lazy"
                 />
               )),
@@ -441,26 +443,34 @@ export function CtaBand({ section }: { section: SectionOf<"cta"> }) {
 export function ProfileCards({ settings }: { settings: SiteSettings }) {
   return (
     <div className="profiles">
-      <a
-        className="profile"
-        href={settings.googleBusinessUrl || "#"}
-        target="_blank"
-        rel="noreferrer"
-      >
-        <b>
-          <Image src="/brands/google.svg" alt="Google" width={18} height={18} />
-          Google
-        </b>
-        FIND US ON GOOGLE
-        <div
-          className="bar"
-          style={{
-            background: "linear-gradient(135deg,var(--copper2),var(--bronze))",
-          }}
+      {settings.googleBusinessUrl ? (
+        <a
+          className="profile"
+          href={settings.googleBusinessUrl}
+          target="_blank"
+          rel="noreferrer"
         >
-          BUSINESS PROFILE
-        </div>
-      </a>
+          <b>
+            <Image
+              src="/brands/google.svg"
+              alt="Google"
+              width={18}
+              height={18}
+            />
+            Google
+          </b>
+          FIND US ON GOOGLE
+          <div
+            className="bar"
+            style={{
+              background:
+                "linear-gradient(135deg,var(--copper2),var(--bronze))",
+            }}
+          >
+            BUSINESS PROFILE
+          </div>
+        </a>
+      ) : null}
       <a
         className="profile"
         href={`https://wa.me/${settings.whatsapp}`}

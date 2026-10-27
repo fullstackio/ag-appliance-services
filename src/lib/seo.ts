@@ -2,12 +2,69 @@
  * SEO helpers: page metadata + JSON-LD structured data built from CMS content.
  * Author: Avijit Ghosh
  */
+import { defaultSettings } from "@/lib/content/defaults";
 import { env } from "@/lib/env";
 import type { SiteContent, SiteSettings } from "@/lib/validations/content";
 
 import type { Metadata } from "next";
 
 export const SITE_URL = env.NEXT_PUBLIC_SITE_URL.replace(/\/$/, "");
+
+/** Matches the title template in src/app/layout.tsx — openGraph/twitter titles don't go
+ * through that template automatically, so static pages (legal, etc.) apply it here by hand. */
+const TITLE_SUFFIX = ` | ${defaultSettings.businessName}`;
+
+/**
+ * Default preview image for pages that don't need a page-specific one — the same 1200×630
+ * image served by src/app/opengraph-image.tsx (and re-exported by twitter-image.tsx). Next.js
+ * only auto-attaches that file-convention image when a route's metadata has no `openGraph`
+ * object at all; any route that sets its own `openGraph` (e.g. via buildPageMetadata below)
+ * must therefore reference it explicitly, or og:image/twitter:image disappear for that route.
+ * Keep width/height/type here in sync with the `size`/`contentType` exports in that file.
+ */
+const DEFAULT_OG_IMAGE = {
+  url: "/opengraph-image",
+  width: 1200,
+  height: 630,
+  type: "image/png",
+  alt: "AG Appliance Services — Appliance Repair in Kolkata",
+};
+const DEFAULT_TWITTER_IMAGE = { ...DEFAULT_OG_IMAGE, url: "/twitter-image" };
+
+/**
+ * Full page metadata (title, description, canonical, Open Graph, Twitter card) for a static,
+ * public, indexable page that isn't the homepage — e.g. the legal pages. Uses the shared
+ * default preview image above unless `images` overrides it with a page-specific one.
+ */
+export function buildPageMetadata(opts: {
+  title: string;
+  description: string;
+  path: string;
+  images?: NonNullable<Metadata["openGraph"]>["images"];
+}): Metadata {
+  const { title, description, path, images } = opts;
+  const fullTitle = `${title}${TITLE_SUFFIX}`;
+  return {
+    title,
+    description,
+    alternates: { canonical: path },
+    openGraph: {
+      type: "website",
+      locale: "en_IN",
+      url: path,
+      siteName: defaultSettings.businessName,
+      title: fullTitle,
+      description,
+      images: images ?? [DEFAULT_OG_IMAGE],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: fullTitle,
+      description,
+      images: images ?? [DEFAULT_TWITTER_IMAGE],
+    },
+  };
+}
 
 const KEYWORDS = [
   "appliance repair Kolkata",
@@ -58,7 +115,8 @@ export function buildHomeMetadata(settings: SiteSettings): Metadata {
   };
 }
 
-const isRealUrl = (u: string | undefined): u is string => Boolean(u && /^https?:\/\//.test(u));
+const isRealUrl = (u: string | undefined): u is string =>
+  Boolean(u && /^https?:\/\//.test(u));
 
 /** schema.org LocalBusiness — powers the Google Business rich result. */
 export function localBusinessJsonLd(content: SiteContent) {
@@ -89,14 +147,30 @@ export function localBusinessJsonLd(content: SiteContent) {
       .map((name) => ({ "@type": "Place", name: `${name}, Kolkata` })),
     openingHoursSpecification: {
       "@type": "OpeningHoursSpecification",
-      dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+      dayOfWeek: [
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday",
+        "Sunday",
+      ],
       opens: openH,
       closes: closeH,
     },
-    sameAs: Object.values(settings.social).concat(settings.googleBusinessUrl).filter(isRealUrl),
+    sameAs: Object.values(settings.social)
+      .concat(settings.googleBusinessUrl)
+      .filter(isRealUrl),
     makesOffer: sections.services.items.map((s) => ({
       "@type": "Offer",
-      itemOffered: { "@type": "Service", name: s.title, description: s.subtitle },
+      itemOffered: {
+        "@type": "Service",
+        name: s.title,
+        description: s.subtitle,
+        areaServed: { "@type": "City", name: "Kolkata" },
+        provider: { "@id": `${SITE_URL}/#business` },
+      },
     })),
     aggregateRating: sections.testimonials.items.length
       ? {
@@ -108,6 +182,19 @@ export function localBusinessJsonLd(content: SiteContent) {
           reviewCount: sections.testimonials.items.length,
         }
       : undefined,
+    // individual reviews (in addition to the aggregate above) — eligible for star-rating
+    // rich results on their own, not just the page-level average.
+    review: sections.testimonials.items.map((t) => ({
+      "@type": "Review",
+      author: { "@type": "Person", name: t.name },
+      reviewRating: {
+        "@type": "Rating",
+        ratingValue: t.rating,
+        bestRating: 5,
+        worstRating: 1,
+      },
+      reviewBody: t.quote,
+    })),
   };
 }
 

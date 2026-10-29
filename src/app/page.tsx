@@ -37,8 +37,8 @@ import "@/styles/site.css";
 export const revalidate = 300;
 
 export async function generateMetadata(): Promise<Metadata> {
-  const { settings } = await getSiteContent();
-  return buildHomeMetadata(settings);
+  const { settings, banners } = await getSiteContent();
+  return buildHomeMetadata(settings, banners[0]?.image);
 }
 
 /** Data-dependent part of the page — streams in behind <SiteSkeleton />. */

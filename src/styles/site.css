@@ -418,22 +418,14 @@
   object-position: 60% 30%;
 }
 .site .visual .hero-slider,
-.site .visual .slick-list,
-.site .visual .slick-track,
-.site .visual .hero-slide,
-.site .visual .slick-slide > div {
+.site .visual .hero-slide {
   position: absolute;
   inset: 0;
   height: 100%;
 }
-.site .visual .slick-track,
-.site .visual .slick-slide > div {
-  position: relative;
+.site .visual .hero-slide {
+  transition: opacity 0.9s cubic-bezier(0.4, 0, 0.2, 1);
 }
-.site .visual .slick-slide {
-  height: 100%;
-}
-/* react-slick forces inline display:block on the list → lay the items out as inline-blocks */
 .site .visual .hero-dots {
   position: absolute;
   right: 22px;
